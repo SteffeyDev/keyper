@@ -8,11 +8,12 @@
 * Auto copy password to clipboard
 
 ## Data Contained in App
-* Email / Site Login
+* Email
+* Username / Site Login
 * Site URL
 * Password
 * Notes
-* tags / groups
+* Tags
 
 ## Tech Stack
 
@@ -22,7 +23,7 @@
 
 ### Web Front End
 * AngularJS
-* Bootstrap
+* Bootstrap?
 
 ### Android App
 * Develop with Android Studio
