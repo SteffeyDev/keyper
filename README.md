@@ -19,7 +19,7 @@
 
 ### Backend
 * Database - MongoDB
-* API - Python (Flask or Django)
+* API - Python (Flask)
 
 ### Web Front End
 * AngularJS
