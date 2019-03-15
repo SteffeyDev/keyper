@@ -10,10 +10,7 @@ app.config.from_object(__name__)
 def hello_world():
 	return 'Helo world'
 
-MONGODB_HOST = 'localhost'
-MONGODB_PORT = 27017
-
-connection = Connection(app.config['MONGODB_HOST'], app.config['MONGODB_PORT'])
+connection = Connection()
 
 @connection.register
 class User(Document):
