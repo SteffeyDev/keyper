@@ -28,7 +28,7 @@
 ### Backend
 * Database - MongoDB
 * API - Python (Flask)
-** Mongokit
+  *Mongoengine
 
 ### Web Front End
 * AngularJS
