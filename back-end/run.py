@@ -29,3 +29,11 @@ def insert():
 	with switch_collection(User, 'users') as toAdd:
 		newUser.save(validate=True)
 	return 'New user added'
+
+@app.route('/delete', methods=['GET', 'POST'])
+def delete():
+	error = None
+	user = str(request.form['username'])
+	with switch_collection(User, 'users') as toDel:
+		User.objects(username=user).delete()
+	return 'User has been deleted'
