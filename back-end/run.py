@@ -37,3 +37,9 @@ def delete():
 	with switch_collection(User, 'users') as toDel:
 		User.objects(username=user).delete()
 	return 'User has been deleted'
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
