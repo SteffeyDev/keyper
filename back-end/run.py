@@ -1,5 +1,6 @@
 import re, os, datetime
 from flask import Flask, request
+from flask_jwt import JWT, jwt_required, current_identity
 from mongoengine import *
 from mongoengine.context_managers import switch_collection
 
@@ -40,6 +41,11 @@ def delete():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+	return True
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
+	return True
+
+if __name__ == '__main__':
+	app.run()
