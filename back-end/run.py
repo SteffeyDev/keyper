@@ -1,10 +1,17 @@
+#!/usr/bin/python3
+
 import re, os, datetime
-from flask import Flask, request
+from flask import Flask, request, session
+import pyotp
 from flask_jwt import JWT, jwt_required, current_identity
 from mongoengine import *
 from mongoengine.context_managers import switch_collection
 
 app = Flask(__name__)
+
+SECRET_KEY = os.environ.get("SECRET_KEY")
+if not SECRET_KEY:
+	raise ValueError("No secret key set in OS for API")
 
 # db = keyper, mongodb://172.0.0.1:27017
 connect('keyper')
