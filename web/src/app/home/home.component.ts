@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 
 export interface PasswordEntry {
-  name?: string;
+  title?: string;
   url?: string;
-  username?: string;
+  usertitle?: string;
   email?: string;
   password?: string;
   tags?: [string];
@@ -12,9 +12,9 @@ export interface PasswordEntry {
 }
 
 const PASSWORD_DATA: PasswordEntry[] = [
-  { name: 'Apple', url: 'apple.com', username: 'test@icloud.com', password: 'iloveapple' },
-  { name: 'Google', url: 'google.com', username: 'test@gmail.com', password: 'ilovegoogle' },
-  { name: 'Microsoft', url: 'microsoft.com', username: 'test@outlook.com', password: 'ilovemicrosoft' },
+  { title: 'Apple', url: 'apple.com', usertitle: 'test@icloud.com', password: 'iloveapple' },
+  { title: 'Google', url: 'google.com', usertitle: 'test@gmail.com', password: 'ilovegoogle' },
+  { title: 'Microsoft', url: 'microsoft.com', usertitle: 'test@outlook.com', password: 'ilovemicrosoft' },
 ];
 
 @Component({
@@ -23,7 +23,7 @@ const PASSWORD_DATA: PasswordEntry[] = [
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'url', 'username', 'email', 'password'];
+  displayedColumns: string[] = ['title', 'url', 'username', 'email', 'password'];
   dataSource = new MatTableDataSource(PASSWORD_DATA);
 
   applyFilter(filterValue: string) {

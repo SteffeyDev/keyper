@@ -6,7 +6,7 @@ User = {
 			'title': str,
 			'username': str,
 			'email': str,
-			'sitePass': str,
+			'password': str,
 			'url': str,
 			'tags' : [str],
 			'notes' : str,
