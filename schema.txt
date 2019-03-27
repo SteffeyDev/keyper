@@ -1,0 +1,16 @@
+User = {
+		'username': str,
+		'email': str,
+		'password': str,
+		'sites' = {
+			'title': str,
+			'username': str,
+			'email': str,
+			'sitePass': str,
+			'url': str,
+			'tags' : [str],
+			'notes' : str,
+			'dateAdded': datetime.datetime,
+			'dateLastUsed': datetime.datetime
+		}
+	}
