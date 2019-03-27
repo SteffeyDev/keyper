@@ -15,6 +15,8 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 if not SECRET_KEY:
 	raise ValueError("No secret key set in OS for API")
 
+app.secret_key = SECRET_KEY
+
 # db = keyper, mongodb://172.0.0.1:27017
 connect('keyper')
 
@@ -44,22 +46,39 @@ def insert():
 
 @app.route('/delete', methods=['GET', 'POST'])
 def delete():
-	error = None
-	user = str(request.form['username'])
-	with switch_collection(User, 'users') as toDel:
-		User.objects(username=user).delete()
-	return 'User has been deleted'
+	if 'username' in session:
+		error = None
+		user = str(request.form['username'])
+		with switch_collection(User, 'users') as toDel:
+			User.objects(username=user).delete()
+			return 'User has been deleted'
+
+	return 'Not logged in!'
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	user = request.form['username']
 	User.objects(username = user)
 	#check_password_hash(pw_hash, password)
+
+	session['username'] = user #should be done after login
 	return 'Logged in as %s' %user
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
 	return True
+
+@app.route('/getsession')
+def getsession():
+	if 'username' in session:
+		return session['username']
+
+	return 'Not logged in!'
+
+@app.route('/dropsession')
+def dropsession():
+	session.pop('username', None)
+	return 'Dropped from session!'
 
 if __name__ == '__main__':
 	app.run()
