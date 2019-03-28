@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">KeyperMobile</string>
+    <string name="title_activity_home">Passwords</string>
+    <string name="title_activity_edit_password">Edit Password</string>
+    <string name="title_activity_password_generator">Password Generator</string>
+    <string name="title_activity_search">Search</string>
 </resources>
