@@ -16,12 +16,28 @@
 
   <ng-container matColumnDef="url">
     <th mat-header-cell *matHeaderCellDef> URL </th>
-    <td mat-cell *matCellDef="let entry"> {{entry.url}} </td>
+    <td mat-cell *matCellDef="let entry">
+      <span>{{entry.url}}</span>
+      <button
+        (click)="entry.openUrl()"
+        matTooltip="Go to URL"
+        mat-icon-button>
+        <mat-icon aria-hidden="false" aria-label="Go to URL">launch</mat-icon>
+      </button>
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="username">
     <th mat-header-cell *matHeaderCellDef> Username </th>
-    <td mat-cell *matCellDef="let entry"> {{entry.username}} </td>
+    <td mat-cell *matCellDef="let entry">
+      <span>{{entry.username}}</span>
+      <button
+        (click)="entry.copyUsername()"
+        matTooltip="Copy Username"
+        mat-icon-button>
+        <mat-icon aria-hidden="false" aria-label="Copy Username">file_copy</mat-icon>
+      </button>
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="email">
@@ -31,7 +47,32 @@
 
   <ng-container matColumnDef="password">
     <th mat-header-cell *matHeaderCellDef> Password </th>
-    <td mat-cell *matCellDef="let entry"> {{entry.password}} </td>
+    <td mat-cell *matCellDef="let entry">
+      <ng-container *ngIf="entry.passwordVisible; else elseBlock">
+        <span>{{entry.password}}</span>
+        <button
+          (click)="entry.showPassword()"
+          matTooltip="Hide Password"
+          mat-icon-button>
+          <mat-icon aria-hidden="false" aria-label="Hide Password">visibility_off</mat-icon>
+        </button>
+      </ng-container>
+      <ng-template #elseBlock>
+        <span>••••••••••</span>
+        <button
+          (click)="entry.showPassword()"
+          matTooltip="Show Password"
+          mat-icon-button>
+          <mat-icon aria-hidden="false" aria-label="Show Password">visibility</mat-icon>
+        </button>
+      </ng-template>
+      <button
+        (click)="entry.copyPassword()"
+        matTooltip="Copy Password"
+        mat-icon-button>
+        <mat-icon aria-hidden="false" aria-label="Copy Password">file_copy</mat-icon>
+      </button>
+    </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
