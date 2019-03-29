@@ -13,6 +13,7 @@ import { MatButtonModule, MatFormFieldModule, MatInputModule, MatSliderModule, M
   MatMenuModule, MatTableModule, MatSortModule, MatProgressBarModule, MatIconModule, MatTooltipModule } from '@angular/material';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { InputComponent } from './input/input.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     LoginComponent,
     SignupComponent,
     TwoFactorComponent,
-    HomeComponent
+    HomeComponent,
+    InputComponent
   ],
   imports: [
     FlexLayoutModule,
