@@ -4,25 +4,31 @@
 </div>
 
 <mat-form-field>
-  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+  <input #filter type="search" matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
 </mat-form-field>
 
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
   <ng-container matColumnDef="title">
     <th mat-header-cell *matHeaderCellDef> Title </th>
-    <td mat-cell *matCellDef="let entry"> {{entry.title}} </td>
+    <td mat-cell *matCellDef="let entry">
+      <div fxLayoutAlign='start center'>
+        <img height="16" width="16" [src]="'http://www.google.com/s2/favicons?domain=' + entry.url" />
+        <app-input style="padding-left: 10px;" [entry]="entry" field="title"></app-input>
+      </div>
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="url">
     <th mat-header-cell *matHeaderCellDef> URL </th>
     <td mat-cell *matCellDef="let entry">
-      <span>{{entry.url}}</span>
+      <app-input style="padding-left: 10px;" [entry]="entry" field="url"></app-input>
       <button
+        *ngIf="entry.url"
         (click)="entry.openUrl()"
-        matTooltip="Go to URL"
+        matTooltip="Open site in new tab"
         mat-icon-button>
-        <mat-icon aria-hidden="false" aria-label="Go to URL">launch</mat-icon>
+        <mat-icon aria-hidden="false" aria-label="Navigate to website">launch</mat-icon>
       </button>
     </td>
   </ng-container>
@@ -30,8 +36,9 @@
   <ng-container matColumnDef="username">
     <th mat-header-cell *matHeaderCellDef> Username </th>
     <td mat-cell *matCellDef="let entry">
-      <span>{{entry.username}}</span>
+      <app-input [entry]="entry" field="username"></app-input>
       <button
+        *ngIf="entry.username"
         (click)="entry.copyUsername()"
         matTooltip="Copy Username"
         mat-icon-button>
@@ -42,14 +49,23 @@
 
   <ng-container matColumnDef="email">
     <th mat-header-cell *matHeaderCellDef> Email </th>
-    <td mat-cell *matCellDef="let entry"> {{entry.email}} </td>
+    <td mat-cell *matCellDef="let entry">
+      <app-input [entry]="entry" field="email"></app-input>
+      <button
+        *ngIf="entry.email"
+        (click)="entry.copyEmail()"
+        matTooltip="Copy Email"
+        mat-icon-button>
+        <mat-icon aria-hidden="false" aria-label="Copy Email">file_copy</mat-icon>
+      </button>
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="password">
     <th mat-header-cell *matHeaderCellDef> Password </th>
     <td mat-cell *matCellDef="let entry">
       <ng-container *ngIf="entry.passwordVisible; else elseBlock">
-        <span>{{entry.password}}</span>
+        <app-input style="font-family: monospace" [entry]="entry" field="password"></app-input>
         <button
           (click)="entry.showPassword()"
           matTooltip="Hide Password"

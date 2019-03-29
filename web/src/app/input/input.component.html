@@ -1,0 +1,6 @@
+<ng-container>
+  <span *ngIf="!editing" (click)="edit()" matTooltip="Click to edit" style="cursor: pointer">{{ entry[field] }}</span>
+  <mat-form-field *ngIf="editing">
+    <input matInput #str [value]="entry[field]" (blur)="save(str.value)" (keyup.enter)="save(str.value)">
+  </mat-form-field>
+</ng-container>
