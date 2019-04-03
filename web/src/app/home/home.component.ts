@@ -1,5 +1,6 @@
 import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { MatTableDataSource, MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material';
+import yiq from 'yiq';
 
 function copyToClipboard(text: string) {
     const selBox = document.createElement('textarea');
@@ -21,7 +22,7 @@ export class PasswordEntry {
   username?: string;
   email?: string;
   password?: string;
-  tags?: [string];
+  tags?: string[];
   notes?: string;
   passwordVisible: boolean;
 
@@ -31,6 +32,7 @@ export class PasswordEntry {
     this.username = username;
     this.email = email;
     this.password = password;
+    this.tags = [ 'UCF', 'Email', 'Storage', 'Test', 'Test2', 'bbla', 'afs' ];
 
     this.passwordVisible = false;
   }
@@ -58,6 +60,12 @@ export class PasswordEntry {
     }
     window.open(url, '_blank');
   }
+
+  deleteEntry() {
+    if (confirm('Are you sure you want to remove this password entry? You will not be able to recover it if you continue')) {
+      // delete entry, refresh table
+    }
+  }
 }
 
 const PASSWORD_DATA: PasswordEntry[] = [
@@ -81,8 +89,14 @@ const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   ],
 })
 export class HomeComponent implements OnInit {
-  displayedColumns: string[] = ['title', 'url', 'username', 'email', 'password'];
+  displayedColumns: string[] = ['tags', 'title', 'url', 'username', 'email', 'password', 'delete'];
   dataSource = new MatTableDataSource(PASSWORD_DATA);
+  tags: string[] = [];
+  colorMap = {};
+  tagColumnWidth: number;
+  sourceColorList = ['#ff0000', '#f58231', '#ffe119', '#bcf60c', '#3cb44b', '#46f0f0',
+    '#4363d8', '#911eb4', '#f032e9', '#000075', '#aaffc3', '#e6beff', '#8b0000', '#ff0033', '#4b0082', '#5c4033', '#ff69b4'];
+
   @ViewChild('filter') filterEl: ElementRef;
 
   applyFilter(filterValue: string) {
@@ -92,6 +106,17 @@ export class HomeComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    this.tags = Array.from(PASSWORD_DATA.reduce((set, entry) => { entry.tags.forEach(tag => set.add(tag)); return set; }, new Set()));
+    this.tagColumnWidth = 14 * Math.ceil(this.tags.length / 2);
+    this.tags.forEach(tag => { this.colorMap[tag] = this.sourceColorList.pop(); });
+  }
+
+  getColor(tag) {
+    return this.colorMap[tag];
+  }
+
+  getTextColor(tag) {
+    return yiq(this.getColor(tag) || '#d3d3d3');
   }
 
   @HostListener('document:keypress', ['$event'])

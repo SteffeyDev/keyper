@@ -10,7 +10,8 @@ import { HomeComponent } from './home/home.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatFormFieldModule, MatInputModule, MatSliderModule, MatSlideToggleModule,
-  MatMenuModule, MatTableModule, MatSortModule, MatProgressBarModule, MatIconModule, MatTooltipModule } from '@angular/material';
+  MatMenuModule, MatTableModule, MatSortModule, MatProgressBarModule, MatIconModule, MatTooltipModule,
+  MatChipsModule } from '@angular/material';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { InputComponent } from './input/input.component';
@@ -39,7 +40,8 @@ import { InputComponent } from './input/input.component';
     MatSortModule,
     MatProgressBarModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatChipsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
