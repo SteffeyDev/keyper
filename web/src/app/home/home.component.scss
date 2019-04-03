@@ -1,3 +1,60 @@
+@import '../../theme';
+
 table {
   width: 100%;
+  background-color: #f7f7f7;
+}
+
+.tag-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  margin: 3px;
+}
+
+td > div {
+  max-height: 2rem;
+}
+
+.mat-column-tags {
+  padding-right: 10px;
+}
+
+#header {
+  position: relative;
+  color: white;
+  padding-left: 15px;
+}
+
+#upper {
+  padding: 20px;
+  color: white;
+
+  /deep/ .mat-form-field {
+    font-size: 16pt;
+
+    &.mat-focused {
+      .mat-form-field-label {
+        color: white !important;
+      }
+      .mat-form-field-ripple {
+        background-color: white !important;
+      }
+    }
+    .mat-input-element {
+      caret-color: white;
+    }
+    .mat-form-field-label, .mat-form-field-label.mat-focused, .mat-form-field.mat-focused.matform-field-should-float {
+      color: #eaeaea !important;
+    }
+    .mat-form-field-underline, .mat-form-field-underline.mat-focused {
+      background-color: #eaeaea;
+    }
+  }
+}
+
+#addButton {
+  position: absolute;
+  margin-left: 10px;
+  margin-top: -30px;
 }

@@ -27,6 +27,7 @@
     "rxjs": "~6.3.3",
     "tslib": "^1.9.0",
     "typescript-eslint-parser": "^22.0.0",
+    "yiq": "^2.1.0",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {

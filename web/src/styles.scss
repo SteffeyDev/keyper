@@ -1,7 +1,30 @@
 /* You can add global styles to this file, and also import other style files */
-@import "../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css";
+//@import "../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css";
 
-/* Custom theme
-@import "theme.scss";
-@include mat-core();
-@include angular-material-theme($my-theme); */
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+@import '~@angular/material/theming';
+
+// Define a custom mixin that takes in the current theme
+@mixin theme-color-grabber($theme) {
+  // Parse the theme and create variables for each color in the pallete
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  // Create theme specfic styles
+  .bg-primary {
+    background-color: mat-color($primary);
+  }
+  .bg-accent {
+    background-color: mat-color($accent);
+  }
+  .bg-warn {
+    background-color: mat-color($warn);
+  }
+}
+
