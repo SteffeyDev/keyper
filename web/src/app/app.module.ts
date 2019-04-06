@@ -12,6 +12,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatFormFieldModule, MatInputModule, MatSliderModule, MatSlideToggleModule,
   MatMenuModule, MatTableModule, MatSortModule, MatProgressBarModule, MatIconModule, MatTooltipModule,
   MatChipsModule } from '@angular/material';
+import { DndModule } from 'ngx-drag-drop';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { InputComponent } from './input/input.component';
@@ -41,7 +42,8 @@ import { InputComponent } from './input/input.component';
     MatProgressBarModule,
     MatIconModule,
     MatTooltipModule,
-    MatChipsModule
+    MatChipsModule,
+    DndModule
   ],
   providers: [],
   bootstrap: [AppComponent]
