@@ -4429,6 +4429,11 @@ neo-async@^2.5.0, neo-async@^2.6.0:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.0.tgz#b9d15e4d71c6762908654b5183ed38b753340835"
   integrity sha512-MFh0d/Wa7vkKO3Y3LlacqAEeHK0mckVqzDieUKTT+KGxi+zIpeVsFxymkIiRpbpDziHc290Xr9A1O4Om7otoRA==
 
+ngx-drag-drop@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/ngx-drag-drop/-/ngx-drag-drop-1.1.0.tgz#3918c5da6819f1ca43dc44bc31a9fd08d517a337"
+  integrity sha512-n4ZZbLsqj7vnSlX9qJ48BlI/KJwHU9YnpeFXGgY9TOxGrfGzJsPK7ZYvStBwEJ3K8NL4QGAEcBtEuMxO86nU2A==
+
 nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"

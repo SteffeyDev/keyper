@@ -32,7 +32,7 @@ export class PasswordEntry {
     this.username = username;
     this.email = email;
     this.password = password;
-    this.tags = [ 'UCF', 'Email', 'Storage', 'Test', 'Test2', 'bbla', 'afs' ];
+    this.tags = [];
 
     this.passwordVisible = false;
   }
@@ -66,12 +66,52 @@ export class PasswordEntry {
       // delete entry, refresh table
     }
   }
+
+  addTag(tag) {
+    if (this.tags.indexOf(tag) === -1) {
+      this.tags.push(tag);
+    }
+  }
 }
 
 const PASSWORD_DATA: PasswordEntry[] = [
   new PasswordEntry('Apple', 'apple.com', null, 'test@icloud.com', 'iloveapple'),
   new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Microsoft', 'microsoft.com', null, 'test@outlook.com', 'iloveslowcomputers')
+  new PasswordEntry('Microsoft', 'microsoft.com', null, 'test@outlook.com', 'iloveslowcomputers'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
+  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
 ];
 
 const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
@@ -92,12 +132,13 @@ export class HomeComponent implements OnInit {
   displayedColumns: string[] = ['tags', 'title', 'url', 'username', 'email', 'password', 'delete'];
   dataSource = new MatTableDataSource(PASSWORD_DATA);
   tags: string[] = [];
+  newTag: boolean;
   colorMap = {};
-  tagColumnWidth: number;
   sourceColorList = ['#ff0000', '#f58231', '#ffe119', '#bcf60c', '#3cb44b', '#46f0f0',
     '#4363d8', '#911eb4', '#f032e9', '#000075', '#aaffc3', '#e6beff', '#8b0000', '#ff0033', '#4b0082', '#5c4033', '#ff69b4'];
 
   @ViewChild('filter') filterEl: ElementRef;
+  @ViewChild('newTagText') newTagEl: ElementRef;
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -106,9 +147,8 @@ export class HomeComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.tags = Array.from(PASSWORD_DATA.reduce((set, entry) => { entry.tags.forEach(tag => set.add(tag)); return set; }, new Set()));
-    this.tagColumnWidth = 14 * Math.ceil(this.tags.length / 2);
-    this.tags.forEach(tag => { this.colorMap[tag] = this.sourceColorList.pop(); });
+    this.tags = [];
+    this.allTags.forEach(tag => { this.colorMap[tag] = this.sourceColorList.pop(); });
   }
 
   getColor(tag) {
@@ -127,5 +167,32 @@ export class HomeComponent implements OnInit {
       this.applyFilter(event.key);
       this.filterEl.nativeElement.focus();
     }
+  }
+
+  onDrop({ data }, entry) {
+    entry.addTag(data);
+  }
+
+  showNewTag() {
+    this.newTag = true;
+    setTimeout(() => this.newTagEl.nativeElement.focus(), 0);
+  }
+
+  addTag(newTag) {
+    this.tags.push(newTag);
+    this.colorMap[newTag] = this.sourceColorList.pop();
+    this.newTag = false;
+  }
+
+  get visibleTags() {
+    return Array.from(PASSWORD_DATA.reduce((set, entry) => { entry.tags.forEach(tag => set.add(tag)); return set; }, new Set()));
+  }
+
+  get allTags() {
+    return Array.from(PASSWORD_DATA.reduce((set, entry) => { entry.tags.forEach(tag => set.add(tag)); return set; }, new Set(this.tags)));
+  }
+
+  get tagColumnWidth() {
+    return 14 * Math.ceil(this.visibleTags.length / 2);
   }
 }
