@@ -51,6 +51,12 @@ td > div {
       background-color: #eaeaea;
     }
   }
+
+  /deep/ .mat-slider {
+    .mat-slider-thumb.mat-slider-min-value {
+      background-color: white;
+    }
+  }
 }
 
 #addButton {

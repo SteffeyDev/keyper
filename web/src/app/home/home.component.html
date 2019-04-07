@@ -15,13 +15,33 @@
       </button>
     </mat-form-field>
 
-    <div fxFlex style="padding-left: 20px;">
+    <div fxFlex style="padding-left: 20px; padding-right: 20px;">
       <h3 style="margin-top: 0px; margin-bottom: 10px;">Tags</h3>
       <mat-chip-list>
         <mat-chip *ngFor="let tag of allTags" [dndDraggable]="tag" style="z-index: 500;" [style.backgroundColor]="getColor(tag)" [style.color]="getTextColor(tag)">{{ tag }}</mat-chip>
         <mat-chip *ngIf="newTag"><input #newTagText matInput style="font-size: 12pt;" (blur)="addTag(newTagText.value)" (keyup.enter)="addTag(newTagText.value)" /></mat-chip>
         <mat-chip (click)="showNewTag()">New</mat-chip>
       </mat-chip-list>
+    </div>
+
+    <div fxFlex fxLayout="column">
+      <h3 style="margin-top: 0px;">Generate Password</h3>
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <span fxFlex>{{ randomPassword }}</span>
+        <button
+          (click)="newPassword()"
+          matTooltip="Generate New Password"
+          mat-icon-button>
+          <mat-icon aria-hidden="false" aria-label="Generate New Password">refresh</mat-icon>
+        </button>
+        <button
+          (click)="copyPassword()"
+          matTooltip="Copy Password"
+          mat-icon-button>
+          <mat-icon aria-hidden="false" aria-label="Copy Password">file_copy</mat-icon>
+        </button>
+      </div>
+      <mat-slider min="10" max="50" step="1" thumbLabel [(ngModel)]="passwordLength"></mat-slider>
     </div>
   </div>
 

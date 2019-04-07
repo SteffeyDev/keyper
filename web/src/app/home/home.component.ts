@@ -1,6 +1,7 @@
 import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { MatTableDataSource, MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material';
 import yiq from 'yiq';
+import { generate } from 'generate-password-browser';
 
 function copyToClipboard(text: string) {
     const selBox = document.createElement('textarea');
@@ -134,6 +135,9 @@ export class HomeComponent implements OnInit {
   tags: string[] = [];
   newTag: boolean;
   colorMap = {};
+  password: string;
+  passwordLength: number;
+  passwordState: string;
   sourceColorList = ['#ff0000', '#f58231', '#ffe119', '#bcf60c', '#3cb44b', '#46f0f0',
     '#4363d8', '#911eb4', '#f032e9', '#000075', '#aaffc3', '#e6beff', '#8b0000', '#ff0033', '#4b0082', '#5c4033', '#ff69b4'];
 
@@ -144,11 +148,14 @@ export class HomeComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor() { }
+  constructor() {
+    this.passwordLength = 10;
+  }
 
   ngOnInit() {
     this.tags = [];
     this.allTags.forEach(tag => { this.colorMap[tag] = this.sourceColorList.pop(); });
+    this.password = generate();
   }
 
   getColor(tag) {
@@ -194,5 +201,24 @@ export class HomeComponent implements OnInit {
 
   get tagColumnWidth() {
     return 14 * Math.ceil(this.visibleTags.length / 2);
+  }
+
+  get randomPassword() {
+    const state = this.passwordLength + '';
+    if (this.passwordState === state) {
+      return this.password;
+    } else {
+      this.password = generate({ length: this.passwordLength });
+      this.passwordState = state;
+      return this.password;
+    }
+  }
+
+  newPassword() {
+    this.passwordState = '';
+  }
+
+  copyPassword() {
+    copyToClipboard(this.password);
   }
 }
