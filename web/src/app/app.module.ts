@@ -13,6 +13,7 @@ import { MatButtonModule, MatFormFieldModule, MatInputModule, MatSliderModule, M
   MatMenuModule, MatTableModule, MatSortModule, MatProgressBarModule, MatIconModule, MatTooltipModule,
   MatChipsModule } from '@angular/material';
 import { DndModule } from 'ngx-drag-drop';
+import { FormsModule } from '@angular/forms';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { InputComponent } from './input/input.component';
@@ -43,7 +44,8 @@ import { InputComponent } from './input/input.component';
     MatIconModule,
     MatTooltipModule,
     MatChipsModule,
-    DndModule
+    DndModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
