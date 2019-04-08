@@ -11,12 +11,13 @@ import { HomeComponent } from './home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatFormFieldModule, MatInputModule, MatSliderModule, MatSlideToggleModule,
   MatMenuModule, MatTableModule, MatSortModule, MatProgressBarModule, MatIconModule, MatTooltipModule,
-  MatChipsModule } from '@angular/material';
+  MatChipsModule, MatDialogModule, MatCheckboxModule } from '@angular/material';
 import { DndModule } from 'ngx-drag-drop';
 import { FormsModule } from '@angular/forms';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { InputComponent } from './input/input.component';
+import { PGDialogComponent } from './pgdialog/pgdialog.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { InputComponent } from './input/input.component';
     SignupComponent,
     TwoFactorComponent,
     HomeComponent,
-    InputComponent
+    InputComponent,
+    PGDialogComponent
   ],
   imports: [
     FlexLayoutModule,
@@ -45,9 +47,15 @@ import { InputComponent } from './input/input.component';
     MatTooltipModule,
     MatChipsModule,
     DndModule,
-    FormsModule
+    FormsModule,
+    MatDialogModule,
+    MatCheckboxModule
   ],
-  providers: [],
+  entryComponents: [
+    PGDialogComponent
+  ],
+  providers: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
