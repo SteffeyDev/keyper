@@ -1,9 +1,9 @@
 <ng-container>
   <span *ngIf="!editing" (click)="edit()" matTooltip="Click to edit" style="cursor: text">
-    <span *ngIf="entry[field] && entry[field].length > 0">{{ entry[field] }}</span>
-    <span *ngIf="!entry[field] || entry[field].length === 0" style="color: gray">Add {{ field }}</span>
+    <span *ngIf="value && value.length > 0">{{ value }}</span>
+    <span *ngIf="!value || value.length === 0" style="color: gray">Add {{ name }}</span>
   </span>
   <mat-form-field *ngIf="editing">
-    <input matInput #str [value]="entry[field]" (blur)="save(str.value)" (keyup.enter)="save(str.value)">
+    <input matInput #str [(ngModel)]="value" (blur)="save()" (keyup.enter)="save()">
   </mat-form-field>
 </ng-container>

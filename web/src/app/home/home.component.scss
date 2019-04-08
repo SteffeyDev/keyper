@@ -30,8 +30,13 @@ td > div {
   padding: 20px;
   color: white;
 
+  #search {
+    /deep/ .mat-form-field {
+      font-size: 16pt;
+    }
+  }
+
   /deep/ .mat-form-field {
-    font-size: 16pt;
 
     &.mat-focused {
       .mat-form-field-label {

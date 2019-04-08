@@ -1,5 +1,6 @@
-import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
-import { MatTableDataSource, MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/material';
+import { Component, OnInit, HostListener, ViewChild, ElementRef, Inject } from '@angular/core';
+import { MatTableDataSource, MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions, MatDialog } from '@angular/material';
+import { PGDialogComponent, PGConfig } from '../pgdialog/pgdialog.component';
 import yiq from 'yiq';
 import { generate } from 'generate-password-browser';
 
@@ -136,8 +137,7 @@ export class HomeComponent implements OnInit {
   newTag: boolean;
   colorMap = {};
   password: string;
-  passwordLength: number;
-  passwordState: string;
+  passwordConfig: PGConfig;
   sourceColorList = ['#ff0000', '#f58231', '#ffe119', '#bcf60c', '#3cb44b', '#46f0f0',
     '#4363d8', '#911eb4', '#f032e9', '#000075', '#aaffc3', '#e6beff', '#8b0000', '#ff0033', '#4b0082', '#5c4033', '#ff69b4'];
 
@@ -148,14 +148,13 @@ export class HomeComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor() {
-    this.passwordLength = 10;
-  }
+  constructor(public dialog: MatDialog) { }
 
   ngOnInit() {
     this.tags = [];
     this.allTags.forEach(tag => { this.colorMap[tag] = this.sourceColorList.pop(); });
-    this.password = generate();
+    this.passwordConfig = new PGConfig();
+    this.generateNewPassword();
   }
 
   getColor(tag) {
@@ -203,22 +202,28 @@ export class HomeComponent implements OnInit {
     return 14 * Math.ceil(this.visibleTags.length / 2);
   }
 
-  get randomPassword() {
-    const state = this.passwordLength + '';
-    if (this.passwordState === state) {
-      return this.password;
-    } else {
-      this.password = generate({ length: this.passwordLength });
-      this.passwordState = state;
-      return this.password;
-    }
-  }
-
-  newPassword() {
-    this.passwordState = '';
+  generateNewPassword() {
+    this.password = generate(this.passwordConfig);
   }
 
   copyPassword() {
     copyToClipboard(this.password);
+  }
+
+  showPGDialog() {
+    const dialogRef = this.dialog.open(PGDialogComponent, {
+      width: '300px',
+      position: {
+        top: '130px',
+        right: '100px'
+      },
+      autoFocus: false
+    });
+    dialogRef.componentInstance.config = this.passwordConfig;
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.passwordConfig = dialogRef.componentInstance.config;
+      this.password = generate(this.passwordConfig);
+    });
   }
 }

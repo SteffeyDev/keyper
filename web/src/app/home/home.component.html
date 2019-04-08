@@ -7,13 +7,15 @@
   </div>
 
   <div id="upper" class="bg-primary" fxLayout="row">
-    <mat-form-field fxFlex style="font-size: 16pt" dndDropzone (dndDrop)="filter.value=$event.data; applyFilter($event.data);">
-      <input #filter type="search" matInput (keyup)="applyFilter($event.target.value)">
-      <mat-placeholder class="placeholder">Search Passwords</mat-placeholder>
-      <button mat-button *ngIf="filter.value.length" matSuffix mat-icon-button aria-label="Clear" (click)="filter.value=''; applyFilter('')">
-        <mat-icon>close</mat-icon>
-      </button>
-    </mat-form-field>
+    <div fxFlex id="search">
+      <mat-form-field style="font-size: 16pt" dndDropzone (dndDrop)="filter.value=$event.data; applyFilter($event.data);">
+        <input #filter type="search" matInput (keyup)="applyFilter($event.target.value)">
+        <mat-placeholder class="placeholder">Search Passwords</mat-placeholder>
+        <button mat-button *ngIf="filter.value.length" matSuffix mat-icon-button aria-label="Clear" (click)="filter.value=''; applyFilter('')">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
 
     <div fxFlex style="padding-left: 20px; padding-right: 20px;">
       <h3 style="margin-top: 0px; margin-bottom: 10px;">Tags</h3>
@@ -25,11 +27,19 @@
     </div>
 
     <div fxFlex fxLayout="column">
-      <h3 style="margin-top: 0px;">Generate Password</h3>
       <div fxLayout="row" fxLayoutAlign="start center">
-        <span fxFlex>{{ randomPassword }}</span>
+        <h3 style="margin: 0px;">Generate Password</h3>
         <button
-          (click)="newPassword()"
+          (click)="showPGDialog()"
+          matTooltip="Change password complexity"
+          mat-icon-button>
+          <mat-icon aria-hidden="false" aria-label="Change password complexity">settings</mat-icon>
+        </button>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <app-input fxFlex style="font-family: monospace; font-size: 12pt;" [(ngModel)]="password"></app-input>
+        <button
+          (click)="generateNewPassword()"
           matTooltip="Generate New Password"
           mat-icon-button>
           <mat-icon aria-hidden="false" aria-label="Generate New Password">refresh</mat-icon>
@@ -41,7 +51,6 @@
           <mat-icon aria-hidden="false" aria-label="Copy Password">file_copy</mat-icon>
         </button>
       </div>
-      <mat-slider min="10" max="50" step="1" thumbLabel [(ngModel)]="passwordLength"></mat-slider>
     </div>
   </div>
 
@@ -65,7 +74,7 @@
       <td mat-cell *matCellDef="let entry">
         <div fxLayoutAlign='start center'>
           <img height="16" width="16" [src]="'http://www.google.com/s2/favicons?domain=' + entry.url" />
-          <app-input style="padding-left: 10px;" [entry]="entry" field="title"></app-input>
+          <app-input name="title" ngDefaultControl style="padding-left: 10px;" [(ngModel)]="entry.title"></app-input>
         </div>
       </td>
     </ng-container>
@@ -73,7 +82,7 @@
     <ng-container matColumnDef="url">
       <th mat-header-cell *matHeaderCellDef> URL </th>
       <td mat-cell *matCellDef="let entry">
-        <app-input style="padding-left: 10px;" [entry]="entry" field="url"></app-input>
+        <app-input name="url" style="padding-left: 10px;" [(ngModel)]="entry.url"></app-input>
         <button
           *ngIf="entry.url"
           (click)="entry.openUrl()"
@@ -87,7 +96,7 @@
     <ng-container matColumnDef="username">
       <th mat-header-cell *matHeaderCellDef> Username </th>
       <td mat-cell *matCellDef="let entry">
-        <app-input [entry]="entry" field="username"></app-input>
+        <app-input name="username" [(ngModel)]="entry.username"></app-input>
         <button
           *ngIf="entry.username"
           (click)="entry.copyUsername()"
@@ -101,7 +110,7 @@
     <ng-container matColumnDef="email">
       <th mat-header-cell *matHeaderCellDef> Email </th>
       <td mat-cell *matCellDef="let entry">
-        <app-input [entry]="entry" field="email"></app-input>
+        <app-input [(ngModel)]="entry.email"></app-input>
         <button
           *ngIf="entry.email"
           (click)="entry.copyEmail()"
@@ -116,7 +125,7 @@
       <th mat-header-cell *matHeaderCellDef> Password </th>
       <td mat-cell *matCellDef="let entry">
         <ng-container *ngIf="entry.passwordVisible; else elseBlock">
-          <app-input style="font-family: monospace" [entry]="entry" field="password"></app-input>
+          <app-input style="font-family: monospace" [(ngModel)]="entry.password"></app-input>
           <button
             (click)="entry.showPassword()"
             matTooltip="Hide Password"

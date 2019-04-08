@@ -1,0 +1,8 @@
+<p fxLayout="column" fxLayoutAlign="stretch">
+  <span>Length:</span>
+  <mat-slider min="10" max="50" step="1" thumbLabel [(ngModel)]="config.length"></mat-slider>
+  <mat-checkbox [(ngModel)]="config.numbers">Include Numbers</mat-checkbox>
+  <mat-checkbox [(ngModel)]="config.symbols">Include Symbols</mat-checkbox>
+  <mat-checkbox [(ngModel)]="config.uppercase">Include Uppercase</mat-checkbox>
+  <mat-checkbox [(ngModel)]="config.excludeSimilarCharacters">Avoid Ambiguous Characters</mat-checkbox>
+</p>
