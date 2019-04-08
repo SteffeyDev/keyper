@@ -2,9 +2,9 @@
 
 import re, os, datetime
 import json
-from flask import Flask, request, session
+from flask import Flask, request, session, flash
 from flask_bcrypt import Bcrypt
-from flask_login import LoginManager, login_user, logout_user, login_required
+from flask_login import LoginManager, login_user, logout_user, login_required, login_fresh, confirm_login, fresh_login_required
 import pyotp
 from flask_jwt import JWT, jwt_required, current_identity
 from mongoengine import *
@@ -13,7 +13,6 @@ from mongoengine.context_managers import switch_collection
 app = Flask(__name__)
 lm = LoginManager()
 lm.init_app(app)
-lm.login_view = 'login'
 bcrypt = Bcrypt(app)
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
@@ -36,6 +35,7 @@ class User(Document):
 	password = StringField(required=True)
 	sites = ListField(EmbeddedDocumentField(siteInfo))
 
+	#Necessary properties for User class to work with flask_login
 	def is_authenticated(self):
 		return True
 
@@ -51,13 +51,14 @@ class User(Document):
 @lm.user_loader
 def load_user(username):
 	with switch_collection(User, 'users') as toGet:
-		u = User.objects.get(username__exact = username)
-		if not u:
+		user = User.objects.get(username__exact = username)
+		if not user:
 			return None
 
-		return u.to_json()
+		return user
 
 @app.route('/')
+@login_required
 def hello_world():
     return 'Hello, World!'
 
@@ -75,15 +76,25 @@ def insert():
 		except DoesNotExist:
 			with switch_collection(User, 'users') as toAdd:
 				newUser.save(validate=True)
-				return 'New user added'
+				return 'New user added.'
 
 @app.route('/delete', methods=['GET', 'POST'])
+@fresh_login_required
 def delete():
-		error = None
-		user = str(request.form['username'])
-		with switch_collection(User, 'users') as toDel:
-			User.objects(username=user).delete()
-			return 'User has been deleted'
+	if login_fresh() == True:
+		try:
+			error = None
+			user = str(request.form['username'])
+			with switch_collection(User, 'users') as toDel:
+				User.objects(username=user).delete()
+				logout_user()
+				return 'User has been deleted'
+
+		except DoesNotExist:
+				return 'User does not exist.'
+
+	else:
+		return 'Please confirm your password.'
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -93,26 +104,17 @@ def login():
 		try:
 			search = User.objects.get(username__exact = user)
 			if bcrypt.check_password_hash(search.password, password):
-				login_user(search)
-				return 'Logged in as %s' %user
+				login_user(search, remember=True, duration=datetime.timedelta(days=14))
+				return search.to_json(), 'Logged in as %s' %user
 
 			else:
-				return 'Invalid password. Try again.'
+				return 'Invalid username or password. Try again.'
 
 		except DoesNotExist:
 			return 'User does not exist. Try again or register.'
 
-@app.route('/retrieve',  methods=['GET', 'POST'])
-def retrieve():
-	user = str(request.form['username'])
-	try:
-		with switch_collection(User, 'users') as toGet:
-			search = User.objects.get(username__exact = user)
-			return search.to_json()
-	except:
-		return 'User not found.'
-
 @app.route('/logout', methods=['GET', 'POST'])
+@login_required
 def logout():
 	logout_user()
 	return "Logged out successfully."
