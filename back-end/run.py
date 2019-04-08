@@ -20,6 +20,10 @@ if not SECRET_KEY:
 
 app.config['SECRET_KEY'] = SECRET_KEY
 
+TOTP_SECRET = pyotp.random_base32()
+totp = pyotp.TOTP(TOTP_SECRET)
+#print("Current OTP:", totp.now())
+
 # db = keyper, mongodb://172.0.0.1:27017
 #test database below. Eventually replace with real database
 connect('keyper')
