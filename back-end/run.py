@@ -78,7 +78,7 @@ def insert():
 				return 'New user  %s added.' %user
 
 @app.route('/delete', methods=['GET', 'POST'])
-@fresh_login_required
+@login_required
 def delete():
 	if login_fresh() == True:
 		try:
@@ -93,7 +93,7 @@ def delete():
 				return 'User %s does not exist.' %user
 
 	else:
-		return 'Error deleting %s. Please check password' %user
+		return lm.unauthorized()
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
