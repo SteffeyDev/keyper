@@ -3,118 +3,9 @@ import { MatTableDataSource, MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptio
 import { PGDialogComponent, PGConfig } from '../pgdialog/pgdialog.component';
 import yiq from 'yiq';
 import { generate } from 'generate-password-browser';
-
-function copyToClipboard(text: string) {
-    const selBox = document.createElement('textarea');
-    selBox.style.position = 'fixed';
-    selBox.style.left = '0';
-    selBox.style.top = '0';
-    selBox.style.opacity = '0';
-    selBox.value = text;
-    document.body.appendChild(selBox);
-    selBox.focus();
-    selBox.select();
-    document.execCommand('copy');
-    document.body.removeChild(selBox);
-}
-
-export class PasswordEntry {
-  title?: string;
-  url?: string;
-  username?: string;
-  email?: string;
-  password?: string;
-  tags?: string[];
-  notes?: string;
-  passwordVisible: boolean;
-
-  constructor(title: string, url: string, username: string, email: string, password: string) {
-    this.title = title;
-    this.url = url;
-    this.username = username;
-    this.email = email;
-    this.password = password;
-    this.tags = [];
-
-    this.passwordVisible = false;
-  }
-
-  showPassword() {
-    this.passwordVisible = !this.passwordVisible;
-  }
-
-  copyPassword() {
-    copyToClipboard(this.password);
-  }
-
-  copyUsername() {
-    copyToClipboard(this.username);
-  }
-
-  copyEmail() {
-    copyToClipboard(this.email);
-  }
-
-  openUrl() {
-    let url = this.url;
-    if (url.indexOf('http') === -1) {
-      url = 'https://' + url;
-    }
-    window.open(url, '_blank');
-  }
-
-  deleteEntry() {
-    if (confirm('Are you sure you want to remove this password entry? You will not be able to recover it if you continue')) {
-      // delete entry, refresh table
-    }
-  }
-
-  addTag(tag) {
-    if (this.tags.indexOf(tag) === -1) {
-      this.tags.push(tag);
-    }
-  }
-}
-
-const PASSWORD_DATA: PasswordEntry[] = [
-  new PasswordEntry('Apple', 'apple.com', null, 'test@icloud.com', 'iloveapple'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Microsoft', 'microsoft.com', null, 'test@outlook.com', 'iloveslowcomputers'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-  new PasswordEntry('Google', 'google.com', null, 'test@gmail.com', 'ilovegoogle'),
-];
+import { PasswordEntry } from '../entry';
+import { SyncService } from '../sync.service';
+import Utils from '../util';
 
 const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   showDelay: 500,
@@ -132,7 +23,8 @@ const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
 })
 export class HomeComponent implements OnInit {
   displayedColumns: string[] = ['tags', 'title', 'url', 'username', 'email', 'password', 'delete'];
-  dataSource = new MatTableDataSource(PASSWORD_DATA);
+  entries: PasswordEntry[] = [];
+  dataSource = new MatTableDataSource<PasswordEntry>(this.entries);
   tags: string[] = [];
   newTag: boolean;
   colorMap = {};
@@ -148,11 +40,17 @@ export class HomeComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor(public dialog: MatDialog) { }
+  constructor(public dialog: MatDialog, private syncService: SyncService) { }
+
+  getEntries() {
+    this.entries = this.syncService.getEntries();
+    this.dataSource.data = this.entries;
+  }
 
   ngOnInit() {
+    this.getEntries();
     this.tags = [];
-    this.allTags.forEach(tag => { this.colorMap[tag] = this.sourceColorList.pop(); });
+    // this.allTags.forEach(tag => { this.colorMap[tag] = this.sourceColorList.pop(); });
     this.passwordConfig = new PGConfig();
     this.generateNewPassword();
   }
@@ -191,11 +89,11 @@ export class HomeComponent implements OnInit {
   }
 
   get visibleTags() {
-    return Array.from(PASSWORD_DATA.reduce((set, entry) => { entry.tags.forEach(tag => set.add(tag)); return set; }, new Set()));
+    return Array.from(this.entries.reduce((set, entry) => { entry.tags.forEach(tag => set.add(tag)); return set; }, new Set()));
   }
 
   get allTags() {
-    return Array.from(PASSWORD_DATA.reduce((set, entry) => { entry.tags.forEach(tag => set.add(tag)); return set; }, new Set(this.tags)));
+    return Array.from(this.entries.reduce((set, entry) => { entry.tags.forEach(tag => set.add(tag)); return set; }, new Set(this.tags)));
   }
 
   get tagColumnWidth() {
@@ -207,7 +105,7 @@ export class HomeComponent implements OnInit {
   }
 
   copyPassword() {
-    copyToClipboard(this.password);
+    Utils.copyToClipboard(this.password);
   }
 
   showPGDialog() {

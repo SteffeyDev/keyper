@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { PasswordEntry } from '../home/home.component';
 
 const customValueProvider = {
     provide: NG_VALUE_ACCESSOR,
