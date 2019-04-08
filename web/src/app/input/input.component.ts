@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, forwardRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, forwardRef, HostListener } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 const customValueProvider = {
@@ -22,6 +22,11 @@ export class InputComponent implements ControlValueAccessor {
 
   constructor() {
     this.editing = false;
+  }
+
+  @HostListener('focus')
+  focusHandler() {
+    this.edit();
   }
 
   writeValue(value: any) {
