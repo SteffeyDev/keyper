@@ -55,6 +55,11 @@ export class HomeComponent implements OnInit {
     this.generateNewPassword();
   }
 
+  addEntry() {
+    this.entries.unshift(new PasswordEntry(null, null, null, null, null));
+    this.dataSource.data = this.entries;
+  }
+
   getColor(tag) {
     return this.colorMap[tag];
   }
@@ -123,5 +128,10 @@ export class HomeComponent implements OnInit {
       this.passwordConfig = dialogRef.componentInstance.config;
       this.password = generate(this.passwordConfig);
     });
+  }
+
+  deleteEntry(id) {
+    this.entries = this.entries.filter(entry => entry.id !== id);
+    this.dataSource.data = this.entries;
   }
 }
