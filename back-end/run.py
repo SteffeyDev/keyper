@@ -6,7 +6,6 @@ from flask import Flask, request, session, flash
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, login_user, logout_user, login_required, login_fresh, confirm_login, fresh_login_required
 import pyotp
-from flask_jwt import JWT, jwt_required, current_identity
 from mongoengine import *
 from mongoengine.context_managers import switch_collection
 
@@ -23,7 +22,8 @@ app.config['SECRET_KEY'] = SECRET_KEY
 
 # db = keyper, mongodb://172.0.0.1:27017
 #test database below. Eventually replace with real database
-connect('keyper', host='mongodb://test:testUser1@ds161104.mlab.com:61104/practice')
+connect('keyper')
+#connect('keyper', host='mongodb://test:testUser1@ds161104.mlab.com:61104/practice')
 
 # Encrypted site specific password blobs
 class siteInfo(EmbeddedDocument):
@@ -35,7 +35,7 @@ class User(Document):
 	password = StringField(required=True)
 	sites = ListField(EmbeddedDocumentField(siteInfo))
 
-	#Necessary properties for User class to work with flask_login
+	# Necessary properties for User class to work with flask_login
 	def is_authenticated(self):
 		return True
 
@@ -58,7 +58,6 @@ def load_user(username):
 		return user
 
 @app.route('/')
-@login_required
 def hello_world():
     return 'Hello, World!'
 
@@ -76,7 +75,7 @@ def insert():
 		except DoesNotExist:
 			with switch_collection(User, 'users') as toAdd:
 				newUser.save(validate=True)
-				return 'New user added.'
+				return 'New user  %s added.' %user
 
 @app.route('/delete', methods=['GET', 'POST'])
 @fresh_login_required
@@ -88,13 +87,13 @@ def delete():
 			with switch_collection(User, 'users') as toDel:
 				User.objects(username=user).delete()
 				logout_user()
-				return 'User has been deleted'
+				return 'User %s has been deleted' %user
 
 		except DoesNotExist:
-				return 'User does not exist.'
+				return 'User %s does not exist.' %user
 
 	else:
-		return 'Please confirm your password.'
+		return 'Error deleting %s. Please check password' %user
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -105,7 +104,7 @@ def login():
 			search = User.objects.get(username__exact = user)
 			if bcrypt.check_password_hash(search.password, password):
 				login_user(search, remember=True, duration=datetime.timedelta(days=14))
-				return search.to_json(), 'Logged in as %s' %user
+				return search.to_json() + '\tLogged in as %s' %user
 
 			else:
 				return 'Invalid username or password. Try again.'
