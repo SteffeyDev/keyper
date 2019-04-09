@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
-import re, os, datetime
-import json
+import re, os, datetime, json
 from flask import Flask, request, session, flash
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, login_user, logout_user, login_required, login_fresh, confirm_login, fresh_login_required
@@ -22,12 +21,11 @@ app.config['SECRET_KEY'] = SECRET_KEY
 
 TOTP_SECRET = pyotp.random_base32()
 totp = pyotp.TOTP(TOTP_SECRET)
-#print("Current OTP:", totp.now())
 
 # db = keyper, mongodb://172.0.0.1:27017
-#test database below. Eventually replace with real database
 connect('keyper')
-#connect('keyper', host='mongodb://test:testUser1@ds161104.mlab.com:61104/practice')
+# test database below. only need line above in prod.
+# connect('keyper', host='mongodb://test:testUser1@ds161104.mlab.com:61104/practice')
 
 # Encrypted site specific password blobs
 class siteInfo(EmbeddedDocument):
@@ -74,12 +72,14 @@ def insert():
 	with switch_collection(User, 'users') as toGet:
 		try:
 			if User.objects.get(username__exact = str(request.form['username'])):
-				return 'User already exists. Choose a different username, or try logging in.'
+				return 'Registration Error, please try again.'
 
 		except DoesNotExist:
 			with switch_collection(User, 'users') as toAdd:
 				newUser.save(validate=True)
-				return 'New user  %s added.' %user
+				uri = totp.provisioning_uri(request.form['email'], issuer_name ='Kepyer.pro')
+				# totp uri, can be used to generate QR code
+				return uri + '\tNew user added.' 
 
 @app.route('/delete', methods=['GET', 'POST'])
 @login_required
@@ -107,14 +107,23 @@ def login():
 		try:
 			search = User.objects.get(username__exact = user)
 			if bcrypt.check_password_hash(search.password, password):
-				login_user(search, remember=True, duration=datetime.timedelta(days=14))
-				return search.to_json() + '\tLogged in as %s' %user
-
+				if verifyToken(request.form['totpToken']):
+					login_user(search, remember=True, duration=datetime.timedelta(days=14))
+					return search.to_json() + '\tLogged in as %s' %user
+				else:
+					'Incorrect code.'
 			else:
 				return 'Invalid username or password. Try again.'
 
 		except DoesNotExist:
 			return 'User does not exist. Try again or register.'
+
+@app.route('/token', methods=['GET', 'POST'])
+def verifyToken(token):
+	if not totp.verify(token):
+		return 'False'
+	else:
+		return 'True'
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
