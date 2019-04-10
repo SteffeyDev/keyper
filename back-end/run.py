@@ -79,7 +79,7 @@ def insert():
 				newUser.save(validate=True)
 				uri = totp.provisioning_uri(request.form['email'], issuer_name ='Kepyer.pro')
 				# totp uri, can be used to generate QR code
-				return uri + '\tNew user added.' 
+				return uri + '\tNew user added.'
 
 @app.route('/delete', methods=['GET', 'POST'])
 @login_required
@@ -107,11 +107,9 @@ def login():
 		try:
 			search = User.objects.get(username__exact = user)
 			if bcrypt.check_password_hash(search.password, password):
-				if verifyToken(request.form['totpToken']):
-					login_user(search, remember=True, duration=datetime.timedelta(days=14))
-					return search.to_json() + '\tLogged in as %s' %user
-				else:
-					'Incorrect code.'
+				session['user_id'] = user
+				return jsonify(success=True)
+
 			else:
 				return 'Invalid username or password. Try again.'
 
@@ -119,11 +117,17 @@ def login():
 			return 'User does not exist. Try again or register.'
 
 @app.route('/token', methods=['GET', 'POST'])
-def verifyToken(token):
-	if not totp.verify(token):
-		return 'False'
+def verifyToken():
+	if not session['user_id']:
+		return 'Please verify username and password.'
+
 	else:
-		return 'True'
+		if not totp.verify(request.form['token']):
+			return 'False'
+		else:
+			user = User.objects.get(username__exact = session['user_id'])
+			login_user(user, remember=True, duration=datetime.timedelta(days=14))
+			return 'True'
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
