@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/item_home"
+        android:title="@string/title_activity_home" />
+    <item
+        android:id="@+id/item_password_generator"
+        android:title="@string/title_activity_password_generator" />
+    <item
+        android:id="@+id/item_tags"
+        android:title="@string/text_view_tags" />
+    <item
+        android:id="@+id/item_log_out"
+        android:title="@string/title_log_out" />
+</menu>
