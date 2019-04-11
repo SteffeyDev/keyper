@@ -38,6 +38,7 @@ class User(Document):
 	sites = ListField(EmbeddedDocumentField(siteInfo))
 
 	# Necessary properties for User class to work with flask_login
+	# Default to not authed or active
 	def is_authenticated(self):
 		return False
 
@@ -99,6 +100,15 @@ def delete():
 	else:
 		return lm.unauthorized()
 
+@app.route('/returnSites', methods=['GET'])
+@fresh_login_required
+def returnSites():
+	username = request.form['username']
+	with switch_collection(User, 'users') as toGet:
+		userObj = User.objects.get(username__exact = username)
+		return jsonify(userObj.sites)
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	user = request.form['username']
@@ -125,9 +135,15 @@ def verifyToken():
 		if not totp.verify(request.form['token']):
 			return 'False'
 		else:
-			user = User.objects.get(username__exact = session['user_id'])
-			login_user(user, remember=True, force=True, duration=datetime.timedelta(days=14))
-			return 'True'
+			username = session['user_id']
+			with switch_collection(User, 'users') as toGet:
+				try:
+					user = User.objects.get(username__exact = username)
+					login_user(user, remember=True, force=True, duration=datetime.timedelta(days=14))
+					return 'True'
+
+				except DoesNotExist:
+					return 'User does not exist. Try again or register.'
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
