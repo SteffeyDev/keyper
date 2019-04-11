@@ -1,11 +1,13 @@
 @import '~@angular/material/theming';
+//We import our custom scss component here
+@import './styles';
 
-$my-theme-primary: mat-palette($mat-green);
-$my-theme-accent : mat-palette($mat-amber);
-$my-theme-warn   : mat-palette($mat-red);
+@include mat-core();
 
-$my-theme: mat-light-theme(
-    $my-theme-primary,
-    $my-theme-accent,
-    $my-theme-warn
-);
+$theme-primary: mat-palette($mat-purple);
+$theme-accent:  mat-palette($mat-pink, A200, A100, A400);
+$theme-warn:    mat-palette($mat-red);
+$theme: mat-light-theme($theme-primary, $theme-accent, $theme-warn);
+
+@include theme-color-grabber($theme);
+@include angular-material-theme($theme);

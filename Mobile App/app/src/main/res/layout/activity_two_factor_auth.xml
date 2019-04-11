@@ -6,4 +6,51 @@
     android:layout_height="match_parent"
     tools:context=".TwoFactorAuthActivity">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="408dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="16dp"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="1dp"
+        tools:text="2-Factor Authentication" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:background="?android:attr/listDivider"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        tools:layout_editor_absoluteX="1dp" />
+
+    <EditText
+        android:id="@+id/editText2"
+        android:layout_width="238dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="64dp"
+        android:ems="10"
+        android:hint="Enter Code"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider"
+        tools:paddingBottom="10dp" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="238dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="16dp"
+        android:text="VerifyButton"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText2"
+        tools:text="Verify" />
+
 </android.support.constraint.ConstraintLayout>
