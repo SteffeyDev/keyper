@@ -587,6 +587,11 @@ adm-zip@^0.4.9:
   resolved "https://registry.yarnpkg.com/adm-zip/-/adm-zip-0.4.13.tgz#597e2f8cc3672151e1307d3e95cddbc75672314a"
   integrity sha512-fERNJX8sOXfel6qCBCMPvZLzENBEhZTzKqg6vrOW5pvoEaQuJhRU4ndTAh6lHOxn1I6jnz2NHra56ZODM751uw==
 
+aes-js@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/aes-js/-/aes-js-3.1.2.tgz#db9aabde85d5caabbfc0d4f2a4446960f627146a"
+  integrity sha512-e5pEa2kBnBOgR4Y/p20pskXI74UEz7de8ZGVo58asOtvSVG5YAbJeELPZxOmt+Bnz3rX753YKhfIn4X4l1PPRQ==
+
 after@0.8.2:
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/after/-/after-0.8.2.tgz#fedb394f9f0e02aa9768e702bda23b505fae7e1f"
@@ -5658,6 +5663,11 @@ run-queue@^1.0.0, run-queue@^1.0.3:
   integrity sha1-6Eg5bwV9Ij8kOGkkYY4laUFh7Ec=
   dependencies:
     aproba "^1.1.1"
+
+rxjs-observe@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/rxjs-observe/-/rxjs-observe-2.0.0.tgz#6ba6bf6f6939fcc630eff34aa498013263667f77"
+  integrity sha512-JD2b/MBwhQWHHcU4A8Zjp1z6Uu1hS1MzTL1g141EdinZAB+NnWGDUa0TbnajVklV+0vToaUUKINNOU3XOosCWQ==
 
 rxjs@6.3.3, rxjs@~6.3.3:
   version "6.3.3"

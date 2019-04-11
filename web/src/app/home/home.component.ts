@@ -1,5 +1,5 @@
-import { Component, OnInit, HostListener, ViewChild, ElementRef, Inject } from '@angular/core';
-import { MatTableDataSource, MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions, MatDialog } from '@angular/material';
+import { Component, OnInit, HostListener, ViewChild, ElementRef, Inject, } from '@angular/core';
+import { MatTableDataSource, MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions, MatDialog, MatTable } from '@angular/material';
 import { PGDialogComponent, PGConfig } from '../pgdialog/pgdialog.component';
 import yiq from 'yiq';
 import { generate } from 'generate-password-browser';
@@ -23,8 +23,7 @@ const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
 })
 export class HomeComponent implements OnInit {
   displayedColumns: string[] = ['tags', 'title', 'url', 'username', 'email', 'password', 'delete'];
-  entries: PasswordEntry[] = [];
-  dataSource = new MatTableDataSource<PasswordEntry>(this.entries);
+  dataSource = new MatTableDataSource<PasswordEntry>();
   tags: string[] = [];
   newTag: boolean;
   colorMap = {};
@@ -35,6 +34,7 @@ export class HomeComponent implements OnInit {
 
   @ViewChild('filter') filterEl: ElementRef;
   @ViewChild('newTagText') newTagEl: ElementRef;
+  @ViewChild(MatTable) table: MatTable<any>;
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -42,22 +42,21 @@ export class HomeComponent implements OnInit {
 
   constructor(public dialog: MatDialog, private syncService: SyncService) { }
 
-  getEntries() {
-    this.entries = this.syncService.getEntries();
-    this.dataSource.data = this.entries;
+  getEntries(): void {
+    this.syncService.getEntries()
+      .subscribe(entries => this.dataSource.data = entries);
   }
 
   ngOnInit() {
     this.getEntries();
     this.tags = [];
-    // this.allTags.forEach(tag => { this.colorMap[tag] = this.sourceColorList.pop(); });
     this.passwordConfig = new PGConfig();
     this.generateNewPassword();
   }
 
   addEntry() {
-    this.entries.unshift(new PasswordEntry(null, null, null, null, null));
-    this.dataSource.data = this.entries;
+    this.dataSource.data.unshift(new PasswordEntry(this.syncService));
+    this.table.renderRows();
   }
 
   getColor(tag) {
@@ -94,11 +93,12 @@ export class HomeComponent implements OnInit {
   }
 
   get visibleTags() {
-    return Array.from(this.entries.reduce((set, entry) => { entry.tags.forEach(tag => set.add(tag)); return set; }, new Set()));
+    return Array.from(this.dataSource.data.reduce((set, entry) => { entry.tags.forEach(tag => set.add(tag)); return set; }, new Set()));
   }
 
   get allTags() {
-    return Array.from(this.entries.reduce((set, entry) => { entry.tags.forEach(tag => set.add(tag)); return set; }, new Set(this.tags)));
+    return Array.from(this.dataSource.data
+      .reduce((set, entry) => { entry.tags.forEach(tag => set.add(tag)); return set; }, new Set(this.tags)));
   }
 
   get tagColumnWidth() {
@@ -131,7 +131,7 @@ export class HomeComponent implements OnInit {
   }
 
   deleteEntry(id) {
-    this.entries = this.entries.filter(entry => entry.id !== id);
-    this.dataSource.data = this.entries;
+    this.dataSource.data = this.dataSource.data.filter(entry => entry.id !== id);
+    this.table.renderRows();
   }
 }
