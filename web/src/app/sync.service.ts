@@ -18,7 +18,8 @@ function unpad(value) {
   providedIn: 'root'
 })
 export class SyncService {
-  api = 'https://keyper.pro/site';
+  // api = 'https://keyper.pro/site';
+  api = 'http://127.0.0.1:5000/api/';
   key: Uint8Array;
   iv = [ 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36 ];
 
@@ -32,7 +33,7 @@ export class SyncService {
 
   getEntries(): Observable<PasswordEntry[]> {
     const aesCbc = new aes.ModeOfOperation.cbc(this.key, this.iv);
-    return this.http.get<any>(this.api)
+    return this.http.get<any>(this.api + 'sites')
       .pipe(
         map( data => {
           return data.map(dataEntry => {
@@ -54,7 +55,7 @@ export class SyncService {
     }
 
     const aesCbc = new aes.ModeOfOperation.cbc(this.key, this.iv);
-    this.http.post(this.api, { id: entry.id, content: aesCbc.encrypt(aes.utils.utf8.toBytes(pad(entry.serialize()))) })
+    this.http.post(this.api + 'site', { id: entry.id, content: aesCbc.encrypt(aes.utils.utf8.toBytes(pad(entry.serialize()))) })
       .subscribe();
   }
 }

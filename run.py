@@ -1,14 +1,14 @@
 #!/usr/bin/python3
 
 import re, os, datetime, json
-from flask import Flask, request, session, flash, jsonify
+from flask import Flask, request, session, flash, jsonify, make_response
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, login_user, logout_user, login_required, login_fresh, confirm_login, fresh_login_required
 import pyotp
 from mongoengine import *
 from mongoengine.context_managers import switch_collection
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='', static_folder='web/dist/keyper')
 lm = LoginManager()
 lm.init_app(app)
 bcrypt = Bcrypt(app)
@@ -61,10 +61,18 @@ def load_user(username):
 		return user
 
 @app.route('/')
-def hello_world():
-    return 'Hello, World!'
+def root():
+    return app.send_static_file('web/dist/keyper/index.html')
 
-@app.route('/register', methods=['GET','POST'])
+@app.route('/')
+@app.route('/home')
+@app.route('/login')
+@app.route('/signup')
+@app.route('/twofactor')
+def basic_pages(**kwargs):
+    return make_response(open('web/dist/keyper/index.html').read())
+
+@app.route('/api/register', methods=['GET','POST'])
 def insert():
 	error = None
 	# Generate password hash, 12 rounds
@@ -82,7 +90,7 @@ def insert():
 				# totp uri, can be used to generate QR code
 				return uri + '\tNew user added.'
 
-@app.route('/delete', methods=['GET', 'POST'])
+@app.route('/api/delete', methods=['GET', 'POST'])
 @login_required
 def delete():
 	if login_fresh() == True:
@@ -100,7 +108,7 @@ def delete():
 	else:
 		return lm.unauthorized()
 
-@app.route('/returnSites', methods=['GET'])
+@app.route('/api/sites', methods=['GET'])
 @fresh_login_required
 def returnSites():
 	username = request.form['username']
@@ -109,7 +117,7 @@ def returnSites():
 		return jsonify(userObj.sites)
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/api/login', methods=['GET', 'POST'])
 def login():
 	user = request.form['username']
 	password = request.form['password']
@@ -126,7 +134,7 @@ def login():
 		except DoesNotExist:
 			return 'User does not exist. Try again or register.'
 
-@app.route('/token', methods=['GET', 'POST'])
+@app.route('/api/token', methods=['GET', 'POST'])
 def verifyToken():
 	if not session['user_id']:
 		return 'Please verify username and password.'
