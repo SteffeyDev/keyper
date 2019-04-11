@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import re, os, datetime, json
-from flask import Flask, request, session, flash
+from flask import Flask, request, session, flash, jsonify
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, login_user, logout_user, login_required, login_fresh, confirm_login, fresh_login_required
 import pyotp
@@ -39,10 +39,10 @@ class User(Document):
 
 	# Necessary properties for User class to work with flask_login
 	def is_authenticated(self):
-		return True
+		return False
 
 	def is_active(self):
-		return True
+		return False
 
 	def is_anonymous(self):
 		return False
@@ -126,7 +126,7 @@ def verifyToken():
 			return 'False'
 		else:
 			user = User.objects.get(username__exact = session['user_id'])
-			login_user(user, remember=True, duration=datetime.timedelta(days=14))
+			login_user(user, remember=True, force=True, duration=datetime.timedelta(days=14))
 			return 'True'
 
 @app.route('/logout', methods=['GET', 'POST'])
