@@ -1,7 +1,27 @@
 <resources>
-    <string name="app_name">KeyperMobile</string>
+    <string name="app_name">Keyper Mobile</string>
     <string name="title_activity_home">Passwords</string>
     <string name="title_activity_edit_password">Edit Password</string>
     <string name="title_activity_password_generator">Password Generator</string>
     <string name="title_activity_search">Search</string>
+    <string name="switch_letters">Letters</string>
+    <string name="switch_numbers">Numbers</string>
+    <string name="switch_special_characters">Special Characters</string>
+    <string name="text_view_generated">Generated Password</string>
+    <string name="text_view_length">Length</string>
+    <string name="image_button_copy">Copy</string>
+    <string name="text_view_title">Title</string>
+    <string name="text_view_website">Website</string>
+    <string name="text_view_username">Username</string>
+    <string name="text_view_password">Password</string>
+    <string name="text_view_tags">Tags</string>
+    <string name="text_view_notes">Notes</string>
+    <string name="button_delete_password">Delete Password</string>
+    <string name="button_sign_in">Sign In</string>
+    <string name="image_button_generate">Generate Password</string>
+    <string name="image_button_save_password">Save Password</string>
+    <string name="image_button_close">Close</string>
+    <string name="image_button_add_tag">Add tag</string>
+    <string name="title_log_out">Log out</string>
+    <string name="image_button_open_drawer">Open drawer</string>
 </resources>
