@@ -1,10 +1,17 @@
+import { debounceTime, distinctUntilChanged, switchMapTo, takeUntil } from 'rxjs/operators';
+import { observe } from 'rxjs-observe';
 import Util from './util';
+import { SyncService } from './sync.service';
 
 function revisedRandId() {
   return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10);
 }
 
-export class PasswordEntry {
+interface Serializable<T> {
+    deserialize(input: any): T;
+}
+
+export class PasswordEntry implements Serializable<PasswordEntry> {
   id: string;
   title?: string;
   url?: string;
@@ -13,18 +20,54 @@ export class PasswordEntry {
   password?: string;
   tags?: string[];
   notes?: string;
-  passwordVisible: boolean;
+  passwordVisible = true;
 
-  constructor(title: string, url: string, username: string, email: string, password: string) {
-    this.title = title;
-    this.url = url;
-    this.username = username;
-    this.email = email;
-    this.password = password;
+  constructor(private syncService: SyncService) {
+
+    // When creating new entry
     this.tags = [];
-    this.id = revisedRandId();
+    this.id = 'new';
 
-    this.passwordVisible = !password;
+    const { observables, proxy } = observe<PasswordEntry>(this);
+    ['title', 'url', 'username', 'email', 'password', 'tags', 'notes'].forEach(prop => {
+      observables[prop].pipe(
+        debounceTime(400),
+        distinctUntilChanged(),
+      ).subscribe(() => this.sync());
+    });
+    return proxy;
+  }
+
+  deserialize(input: any) {
+    this.id = input.id;
+    this.title = input.title;
+    this.url = input.url;
+    this.username = input.username;
+    this.email = input.email;
+    this.password = input.password;
+    this.tags = input.tags || [];
+    this.notes = input.notes;
+
+    this.passwordVisible = false;
+
+    return this;
+  }
+
+  serialize() {
+    return JSON.stringify({
+      id: this.id,
+      title: this.title,
+      url: this.url,
+      username: this.username,
+      email: this.email,
+      password: this.password,
+      tags: this.tags,
+      notes: this.notes
+    });
+  }
+
+  sync() {
+    this.syncService.syncEntry(this);
   }
 
   showPassword() {
