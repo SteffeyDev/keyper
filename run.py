@@ -125,7 +125,7 @@ def login():
 		try:
 			search = User.objects.get(username__exact = user)
 			if bcrypt.check_password_hash(search.password, password):
-				session['user_id'] = user
+				session['verify'] = user
 				return jsonify(success=True)
 
 			else:
@@ -136,22 +136,34 @@ def login():
 
 @app.route('/api/token', methods=['GET', 'POST'])
 def verifyToken():
-	if not session['user_id']:
+	if not session['verify']:
 		return 'Please verify username and password.'
 
 	else:
 		if not totp.verify(request.form['token']):
 			return 'False'
 		else:
-			username = session['user_id']
+			username = session['verify']
 			with switch_collection(User, 'users') as toGet:
 				try:
 					user = User.objects.get(username__exact = username)
 					login_user(user, remember=True, force=True, duration=datetime.timedelta(days=14))
+					session.pop('verify', None)
 					return 'True'
 
 				except DoesNotExist:
 					return 'User does not exist. Try again or register.'
+
+@app.route('/api/addsites', methods=['POST'])
+@login_required
+def addsites():
+	with switch_collection(User, 'users') as toAdd:
+		info = siteInfo(content = '???')
+		user = User.objects.get(username__exact = session['user_id'])
+		user.update(set__sites = info)
+		user.save(validate = True)
+		return jsonify(user.sites)
+
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
