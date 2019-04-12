@@ -3,8 +3,15 @@ import { observe } from 'rxjs-observe';
 import Util from './util';
 import { SyncService } from './sync.service';
 
-function revisedRandId() {
-  return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10);
+function makeid(length) {
+  let text = '';
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+  for (let i = 0; i < length; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+
+  return text;
 }
 
 interface Serializable<T> {
@@ -26,7 +33,7 @@ export class PasswordEntry implements Serializable<PasswordEntry> {
 
     // When creating new entry
     this.tags = [];
-    this.id = 'new';
+    this.id = makeid(32);
 
     const { observables, proxy } = observe<PasswordEntry>(this);
     ['title', 'url', 'username', 'email', 'password', 'tags', 'notes'].forEach(prop => {

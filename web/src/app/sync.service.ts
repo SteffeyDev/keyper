@@ -32,11 +32,11 @@ export class SyncService {
   }
 
   getEntries(): Observable<PasswordEntry[]> {
-    const aesCbc = new aes.ModeOfOperation.cbc(this.key, this.iv);
     return this.http.get<any>(this.api + 'sites')
       .pipe(
         map( data => {
           return data.map(dataEntry => {
+            const aesCbc = new aes.ModeOfOperation.cbc(this.key, dataEntry.id);
             const entryJson = unpad(aes.utils.utf8.fromBytes(aesCbc.decrypt(dataEntry.content)));
             new PasswordEntry(this).deserialize({ id: dataEntry.id, ...JSON.parse(entryJson) });
           });
@@ -50,12 +50,8 @@ export class SyncService {
   }
 
   syncEntry(entry: PasswordEntry) {
-    if (entry.id === 'new') {
-      delete entry.id;
-    }
-
-    const aesCbc = new aes.ModeOfOperation.cbc(this.key, this.iv);
-    this.http.post(this.api + 'site', { id: entry.id, content: aesCbc.encrypt(aes.utils.utf8.toBytes(pad(entry.serialize()))) })
+    const aesCbc = new aes.ModeOfOperation.cbc(this.key, entry.id);
+    this.http.post(this.api + 'sites', { id: entry.id, content: aesCbc.encrypt(aes.utils.utf8.toBytes(pad(entry.serialize()))) })
       .subscribe();
   }
 
