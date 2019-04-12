@@ -42,6 +42,11 @@ export class HomeComponent implements OnInit {
 
   constructor(public dialog: MatDialog, private syncService: SyncService) { }
 
+  logout() {
+    this.syncService.logout()
+      .subscribe(() => { window.location.href = 'login'; });
+  }
+
   getEntries(): void {
     this.syncService.getEntries()
       .subscribe(entries => this.dataSource.data = entries);

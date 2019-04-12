@@ -1,5 +1,5 @@
 <p fxLayout="column" fxLayoutAlign="stretch">
-  <span>Length:</span>
+  <span>Length: {{ config.length }}</span>
   <mat-slider min="10" max="50" step="1" thumbLabel [(ngModel)]="config.length"></mat-slider>
   <mat-checkbox [(ngModel)]="config.numbers">Include Numbers</mat-checkbox>
   <mat-checkbox [(ngModel)]="config.symbols">Include Symbols</mat-checkbox>

@@ -165,7 +165,7 @@ def addsites():
 		return jsonify(user.sites)
 
 
-@app.route('/logout', methods=['GET', 'POST'])
+@app.route('/api/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
 	logout_user()

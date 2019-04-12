@@ -58,4 +58,8 @@ export class SyncService {
     this.http.post(this.api + 'site', { id: entry.id, content: aesCbc.encrypt(aes.utils.utf8.toBytes(pad(entry.serialize()))) })
       .subscribe();
   }
+
+  logout() {
+    return this.http.get(this.api + 'logout');
+  }
 }
