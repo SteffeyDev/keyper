@@ -41,22 +41,22 @@ public class HomeActivity extends AppCompatActivity {
                 new Password(1,"Google Account","www.google.com", R.drawable.logo_google)
         );
         passwordList.add(
-                new Password(2,"NOT Google Account","www.google.com", R.drawable.logo_google)
+                new Password(2,"NOT Google Account","www.notgoogle.com", R.drawable.logo_google)
         );
         passwordList.add(
-                new Password(3,"NOT Google Account","www.google.com", R.drawable.logo_google)
+                new Password(3,"Goggles Account","www.goggles.com", R.drawable.logo_google)
         );
         passwordList.add(
-                new Password(4,"NOT Google Account","www.google.com", R.drawable.logo_google)
+                new Password(4,"A Account","www.alabama.gov", R.drawable.logo_google)
         );
         passwordList.add(
-                new Password(5,"NOT Google Account","www.google.com", R.drawable.logo_google)
+                new Password(5,"B Account","www.bet.com", R.drawable.logo_google)
         );
         passwordList.add(
-                new Password(6,"NOT Google Account","www.google.com", R.drawable.logo_google)
+                new Password(6,"C Account","www.ComedyCentral.com", R.drawable.logo_google)
         );
         passwordList.add(
-                new Password(7,"NOT Google Account","www.google.com", R.drawable.logo_google)
+                new Password(7,"Desmos","www.Desmos.com", R.drawable.logo_google)
         );
         adapter = new PasswordAdapter(this, passwordList);
         recyclerView.setAdapter(adapter);
