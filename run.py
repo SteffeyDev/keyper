@@ -21,6 +21,7 @@ app.config['SECRET_KEY'] = SECRET_KEY
 
 TOTP_SECRET = pyotp.random_base32()
 totp = pyotp.TOTP(TOTP_SECRET)
+skip_TOTP = False
 
 # db = keyper, mongodb://172.0.0.1:27017
 connect('keyper')
@@ -28,14 +29,15 @@ connect('keyper')
 # connect('keyper', host='mongodb://test:testUser1@ds161104.mlab.com:61104/practice')
 
 # Encrypted site specific password blobs
-class siteInfo(EmbeddedDocument):
+class SiteInfo(EmbeddedDocument):
+	id = StringField()
 	content = BinaryField()
 
 class User(Document):
 	username = StringField(max_length=64, required=True)
 	email = StringField(max_length=64, required=True)
 	password = StringField(required=True)
-	sites = ListField(EmbeddedDocumentField(siteInfo))
+	sites = ListField(EmbeddedDocumentField(SiteInfo))
 
 	# Necessary properties for User class to work with flask_login
 	# Default to not authed or active
@@ -111,7 +113,7 @@ def delete():
 @app.route('/api/sites', methods=['GET'])
 @fresh_login_required
 def returnSites():
-	username = request.form['username']
+	username = session['user_id']
 	with switch_collection(User, 'users') as toGet:
 		userObj = User.objects.get(username__exact = username)
 		return jsonify(userObj.sites)
@@ -125,8 +127,12 @@ def login():
 		try:
 			search = User.objects.get(username__exact = user)
 			if bcrypt.check_password_hash(search.password, password):
-				session['verify'] = user
-				return jsonify(success=True)
+				if skip_TOTP == True:
+					login_user(search)
+					return 'Success'
+				else:
+					session['verify'] = user
+					return jsonify(success=True)
 
 			else:
 				return 'Invalid username or password. Try again.'
@@ -154,15 +160,18 @@ def verifyToken():
 				except DoesNotExist:
 					return 'User does not exist. Try again or register.'
 
-@app.route('/api/addsites', methods=['POST'])
+@app.route('/api/addsites/<id>', methods=['POST'])
 @login_required
-def addsites():
+def addsites(id):
 	with switch_collection(User, 'users') as toAdd:
-		info = siteInfo(content = '???')
 		user = User.objects.get(username__exact = session['user_id'])
-		user.update(set__sites = info)
+		info = SiteInfo(id = id, content = request.get_data())
+		updated = User.objects(id = user.id, sites__id = id).update(set__sites__S__content = info.content)
+		if not updated:
+			User.objects(id = user.id).update_one(push__sites = info)
+
 		user.save(validate = True)
-		return jsonify(user.sites)
+		return 'Success'
 
 
 @app.route('/api/logout', methods=['GET', 'POST'])
