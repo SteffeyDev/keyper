@@ -12,7 +12,7 @@ import { HomeComponent } from './home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule, MatFormFieldModule, MatInputModule, MatSliderModule, MatSlideToggleModule,
   MatMenuModule, MatTableModule, MatSortModule, MatProgressBarModule, MatIconModule, MatTooltipModule,
-  MatChipsModule, MatDialogModule, MatCheckboxModule } from '@angular/material';
+  MatChipsModule, MatDialogModule, MatCheckboxModule, MatSnackBarModule } from '@angular/material';
 import { DndModule } from 'ngx-drag-drop';
 import { FormsModule } from '@angular/forms';
 
@@ -51,7 +51,8 @@ import { PGDialogComponent } from './pgdialog/pgdialog.component';
     FormsModule,
     MatDialogModule,
     MatCheckboxModule,
-    HttpClientModule
+    HttpClientModule,
+    MatSnackBarModule
   ],
   entryComponents: [
     PGDialogComponent

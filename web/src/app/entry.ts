@@ -1,4 +1,5 @@
 import { debounceTime, distinctUntilChanged, switchMapTo, takeUntil } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material';
 import { observe } from 'rxjs-observe';
 import Util from './util';
 import { SyncService } from './sync.service';
@@ -30,20 +31,11 @@ export class PasswordEntry implements Serializable<PasswordEntry> {
   passwordVisible = true;
   lastSync: string;
 
-  constructor(private syncService: SyncService) {
+  constructor(private syncService: SyncService, private snackBar: MatSnackBar) {
 
     // When creating new entry
     this.tags = [];
     this.id = makeid(16);
-
-    const { observables, proxy } = observe<PasswordEntry>(this);
-    ['title', 'url', 'username', 'email', 'password', 'tags', 'notes'].forEach(prop => {
-      observables[prop].pipe(
-        debounceTime(400),
-        distinctUntilChanged(),
-      ).subscribe(() => this.sync());
-    });
-    return proxy;
   }
 
   deserialize(input: any) {
@@ -76,10 +68,13 @@ export class PasswordEntry implements Serializable<PasswordEntry> {
   }
 
   sync() {
-    if (this.serialize() !== this.lastSync) {
-      this.lastSync = this.serialize();
-      this.syncService.syncEntry(this);
-    }
+    setTimeout(() => {
+      if (this.serialize() !== this.lastSync) {
+        this.lastSync = this.serialize();
+        this.syncService.syncEntry(this)
+          .subscribe(() => this.snackBar.open('Saved', null, { duration: 2000 }));
+      }
+    }, 50);
   }
 
   showPassword() {
@@ -88,14 +83,17 @@ export class PasswordEntry implements Serializable<PasswordEntry> {
 
   copyPassword() {
     Util.copyToClipboard(this.password);
+    this.snackBar.open('Password copied to clipboard', null, { duration: 2000 });
   }
 
   copyUsername() {
     Util.copyToClipboard(this.username);
+    this.snackBar.open('Username copied to clipboard', null, { duration: 2000 });
   }
 
   copyEmail() {
     Util.copyToClipboard(this.email);
+    this.snackBar.open('Email copied to clipboard', null, { duration: 2000 });
   }
 
   openUrl() {

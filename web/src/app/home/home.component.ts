@@ -1,5 +1,6 @@
 import { Component, OnInit, HostListener, ViewChild, ElementRef, Inject, } from '@angular/core';
-import { MatTableDataSource, MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions, MatDialog, MatTable } from '@angular/material';
+import { MatTableDataSource, MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions, MatDialog,
+  MatTable, MatSnackBar } from '@angular/material';
 import { PGDialogComponent, PGConfig } from '../pgdialog/pgdialog.component';
 import yiq from 'yiq';
 import { generate } from 'generate-password-browser';
@@ -40,7 +41,7 @@ export class HomeComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor(public dialog: MatDialog, private syncService: SyncService) { }
+  constructor(public dialog: MatDialog, private syncService: SyncService, private snackBar: MatSnackBar) { }
 
   logout() {
     this.syncService.logout()
@@ -49,7 +50,10 @@ export class HomeComponent implements OnInit {
 
   getEntries(): void {
     this.syncService.getEntries()
-      .subscribe(entries => this.dataSource.data = entries);
+      .subscribe(entries => {
+        this.dataSource.data = entries;
+        this.allTags.forEach(tag => this.colorMap[tag] = this.sourceColorList.pop());
+      });
   }
 
   ngOnInit() {
@@ -60,7 +64,7 @@ export class HomeComponent implements OnInit {
   }
 
   addEntry() {
-    this.dataSource.data.unshift(new PasswordEntry(this.syncService));
+    this.dataSource.data.unshift(new PasswordEntry(this.syncService, this.snackBar));
     this.table.renderRows();
   }
 
@@ -84,6 +88,7 @@ export class HomeComponent implements OnInit {
 
   onDrop({ data }, entry) {
     entry.addTag(data);
+    entry.sync();
   }
 
   showNewTag() {
@@ -95,6 +100,11 @@ export class HomeComponent implements OnInit {
     this.tags.push(newTag);
     this.colorMap[newTag] = this.sourceColorList.pop();
     this.newTag = false;
+  }
+
+  removeTag(entry, tag) {
+    entry.tags = entry.tags.filter(t => t !== tag);
+    entry.sync();
   }
 
   get visibleTags() {
@@ -136,7 +146,16 @@ export class HomeComponent implements OnInit {
   }
 
   deleteEntry(id) {
-    this.dataSource.data = this.dataSource.data.filter(entry => entry.id !== id);
-    this.table.renderRows();
+    const removedEntry = this.dataSource.data.filter(entry => entry.id === id)[0];
+    if (confirm(`Are you sure you want to delete the password to the site ${removedEntry.url || removedEntry.title}?`)) {
+      this.dataSource.data = this.dataSource.data.filter(entry => entry.id !== id);
+      this.table.renderRows();
+      this.syncService.deleteEntry(id)
+        .subscribe(() => null, () => {
+          this.dataSource.data.unshift(removedEntry);
+          this.table.renderRows();
+          this.snackBar.open('Could not delete', null, { duration: 5000 });
+        });
+    }
   }
 }
