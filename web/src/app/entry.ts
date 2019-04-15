@@ -28,6 +28,7 @@ export class PasswordEntry implements Serializable<PasswordEntry> {
   tags?: string[];
   notes?: string;
   passwordVisible = true;
+  lastSync: string;
 
   constructor(private syncService: SyncService) {
 
@@ -55,6 +56,7 @@ export class PasswordEntry implements Serializable<PasswordEntry> {
     this.tags = input.tags || [];
     this.notes = input.notes;
 
+    this.lastSync = this.serialize();
     this.passwordVisible = false;
 
     return this;
@@ -74,7 +76,10 @@ export class PasswordEntry implements Serializable<PasswordEntry> {
   }
 
   sync() {
-    this.syncService.syncEntry(this);
+    if (this.serialize() !== this.lastSync) {
+      this.lastSync = this.serialize();
+      this.syncService.syncEntry(this);
+    }
   }
 
   showPassword() {
