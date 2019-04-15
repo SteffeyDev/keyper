@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import re, os, datetime, json
+import os, datetime, json
 from flask import Flask, request, session, flash, jsonify, make_response
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, login_user, logout_user, login_required, login_fresh, confirm_login, fresh_login_required
@@ -24,9 +24,9 @@ totp = pyotp.TOTP(TOTP_SECRET)
 skip_TOTP = False
 
 # db = keyper, mongodb://172.0.0.1:27017
-#connect('keyper')
+connect('keyper')
 # test database below. only need line above in prod.
-connect('keyper', host='mongodb://test:testUser1@ds161104.mlab.com:61104/practice')
+#connect('keyper', host='mongodb://test:testUser1@ds161104.mlab.com:61104/practice')
 
 # Encrypted site specific password blobs
 class SiteInfo(EmbeddedDocument):
@@ -181,4 +181,4 @@ def logout():
 	return "Logged out successfully."
 
 if __name__ == '__main__':
-	app.run()
+	app.run(host='0.0.0.0')
