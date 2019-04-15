@@ -24,9 +24,9 @@ totp = pyotp.TOTP(TOTP_SECRET)
 skip_TOTP = False
 
 # db = keyper, mongodb://172.0.0.1:27017
-connect('keyper')
+#connect('keyper')
 # test database below. only need line above in prod.
-# connect('keyper', host='mongodb://test:testUser1@ds161104.mlab.com:61104/practice')
+connect('keyper', host='mongodb://test:testUser1@ds161104.mlab.com:61104/practice')
 
 # Encrypted site specific password blobs
 class SiteInfo(EmbeddedDocument):
@@ -158,7 +158,7 @@ def returnSites():
 	username = session['user_id']
 	with switch_collection(User, 'users') as toGet:
 		userObj = User.objects.get(username__exact = username)
-		return jsonify(userObj.sites)
+		return jsonify(list(map(lambda site: {"content" : bytes.hex(site.content), "id" : site.id}, userObj.sites)))
 
 @app.route('/api/site/<id>', methods=['POST'])
 @login_required
