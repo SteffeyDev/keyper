@@ -110,15 +110,6 @@ def delete():
 	else:
 		return lm.unauthorized()
 
-@app.route('/api/sites', methods=['GET'])
-@fresh_login_required
-def returnSites():
-	username = session['user_id']
-	with switch_collection(User, 'users') as toGet:
-		userObj = User.objects.get(username__exact = username)
-		return jsonify(userObj.sites)
-
-
 @app.route('/api/login', methods=['GET', 'POST'])
 def login():
 	user = request.form['username']
@@ -160,7 +151,16 @@ def verifyToken():
 				except DoesNotExist:
 					return 'User does not exist. Try again or register.'
 
-@app.route('/api/addsites/<id>', methods=['POST'])
+
+@app.route('/api/sites', methods=['GET'])
+@login_required
+def returnSites():
+	username = session['user_id']
+	with switch_collection(User, 'users') as toGet:
+		userObj = User.objects.get(username__exact = username)
+		return jsonify(userObj.sites)
+
+@app.route('/api/site/<id>', methods=['POST'])
 @login_required
 def addsites(id):
 	with switch_collection(User, 'users') as toAdd:
