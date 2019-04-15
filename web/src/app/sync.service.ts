@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { PasswordEntry } from './entry';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import aes from 'aes-js';
 
 function pad(value) {
@@ -36,9 +36,11 @@ export class SyncService {
       .pipe(
         map( data => {
           return data.map(dataEntry => {
-            const aesCbc = new aes.ModeOfOperation.cbc(this.key, dataEntry.id);
-            const entryJson = unpad(aes.utils.utf8.fromBytes(aesCbc.decrypt(dataEntry.content)));
-            new PasswordEntry(this).deserialize({ id: dataEntry.id, ...JSON.parse(entryJson) });
+            const aesCbc = new aes.ModeOfOperation.cbc(this.key, aes.utils.utf8.toBytes(dataEntry.id));
+            // content is hex encoded and encrypted.  First decode hex, then decrypt,
+            //   then get JSON string from bytes, then remove padding
+            const entryJson = unpad(aes.utils.utf8.fromBytes(aesCbc.decrypt(aes.utils.hex.toBytes(dataEntry.content))));
+            return new PasswordEntry(this).deserialize({ id: dataEntry.id, ...JSON.parse(entryJson) });
           });
         }),
         catchError( error => {
@@ -47,11 +49,23 @@ export class SyncService {
           return of([]);
         })
       );
+
+    // temp for logging in
+    const headers = new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded'});
+    const token = prompt('token');
+    this.http.post(this.api + 'login', `username=test&password=test`, { headers })
+      .subscribe(() => {
+        this.http.post(this.api + 'token', `token=${token}`, { headers })
+          .subscribe(() => {
+            console.log('token success');
+          });
+      });
   }
 
   syncEntry(entry: PasswordEntry) {
-    const aesCbc = new aes.ModeOfOperation.cbc(this.key, entry.id);
-    this.http.post(this.api + 'sites', { id: entry.id, content: aesCbc.encrypt(aes.utils.utf8.toBytes(pad(entry.serialize()))) })
+    const aesCbc = new aes.ModeOfOperation.cbc(this.key, aes.utils.utf8.toBytes(entry.id));
+    const data = new Uint8Array(aesCbc.encrypt(aes.utils.utf8.toBytes(pad(entry.serialize()))));
+    this.http.post(this.api + 'site/' + entry.id , data.buffer)
       .subscribe();
   }
 

@@ -33,7 +33,7 @@ export class PasswordEntry implements Serializable<PasswordEntry> {
 
     // When creating new entry
     this.tags = [];
-    this.id = makeid(32);
+    this.id = makeid(16);
 
     const { observables, proxy } = observe<PasswordEntry>(this);
     ['title', 'url', 'username', 'email', 'password', 'tags', 'notes'].forEach(prop => {

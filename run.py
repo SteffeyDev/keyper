@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import re, os, datetime, json
 from flask import Flask, request, session, flash, jsonify, make_response
@@ -35,7 +35,7 @@ class SiteInfo(EmbeddedDocument):
 
 class User(Document):
 	username = StringField(max_length=64, required=True)
-	email = StringField(max_length=64, required=True)
+	email = EmailField(required=True)
 	password = StringField(required=True)
 	sites = ListField(EmbeddedDocumentField(SiteInfo))
 
@@ -158,7 +158,7 @@ def returnSites():
 	username = session['user_id']
 	with switch_collection(User, 'users') as toGet:
 		userObj = User.objects.get(username__exact = username)
-		return jsonify(list(map(lambda site: {"content" : bytes.hex(site.content), "id" : site.id}, userObj.sites)))
+		return jsonify(list(map(lambda site: {"content" : site.content.hex(), "id" : site.id}, userObj.sites)))
 
 @app.route('/api/site/<id>', methods=['POST'])
 @login_required
@@ -171,7 +171,7 @@ def addsites(id):
 			User.objects(id = user.id).update_one(push__sites = info)
 
 		user.save(validate = True)
-		return 'Success'
+		return jsonify({ "success": "updated" if updated else "new" })
 
 
 @app.route('/api/logout', methods=['GET', 'POST'])
