@@ -173,7 +173,7 @@ def addsites(id):
 		user.save(validate = True)
 		return jsonify({ "success": "updated" if updated else "new" })
 
-@app.route('/DELETE/api/site/<id>', methods=['GET', 'POST'])
+@app.route('/api/site/<id>', methods=['DELETE'])
 @login_required
 def deleteSites(id):
 	with switch_collection(User, 'users') as toDel:
@@ -184,7 +184,7 @@ def deleteSites(id):
 				removed = User.objects(id = user.id).get(sites__id = id)
 				User.objects(id = user.id).update_one(pull__sites = {'id' : id})
 				user.save(validate = True)
-				return 'Success'
+				return jsonify({ 'success': id });
 
 			except DoesNotExist:
 				return 'Site info does not exist.'
