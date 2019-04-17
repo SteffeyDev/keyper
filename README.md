@@ -46,6 +46,7 @@
   ```
 * Install components
   ```
+  $ cd /opt/keyper
   $ pip install -r requironments.txt
   $ cd web
   $ yarn install
