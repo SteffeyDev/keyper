@@ -1,7 +1,36 @@
-<div>
-  <form class="example-form">
-    <mat-form-field class="example-full-width">
-      <input matInput placeholder="Favorite food" value="Sushi">
-    </mat-form-field>
-  </form>
+<div class="layout-fullpage">
+
+  <!--Logo-->
+  <img src="/assets/keyper_logo.png" class="img-logo">
+
+  <div class="layout-container">
+
+    <!--Username-->
+    <form class="layout-form" style="margin-top: 10px">
+      <mat-form-field class="layout-full-width">
+        <input matInput placeholder="Username" value="">
+      </mat-form-field>
+    </form>
+
+    <!--Password-->
+    <form class="layout-form">
+      <mat-form-field class="layout-full-width">
+        <input matInput placeholder="Password" value="" type="password">
+      </mat-form-field>
+    </form>
+
+    <!--Buttons-->
+    <form class="layout-form">
+      <div class="layout-button layout-buttons-large">
+        <button mat-stroked-button routerLink = "../signup"><mat-icon class="layout-icon-padright">create</mat-icon>Signup</button>
+        <button mat-stroked-button routerLink = "../2fa">Login<mat-icon class="layout-icon-padleft">lock_open</mat-icon></button>
+      </div>
+      <div class="layout-button layout-buttons-small">
+        <button mat-stroked-button class="layout-full-width" style="margin-bottom: 7px">Login<mat-icon class="layout-icon-padleft">lock_open</mat-icon></button>
+        <button mat-stroked-button class="layout-full-width" style="margin-top: 7px">Signup<mat-icon class="layout-icon-padleft">create</mat-icon></button>
+      </div>
+    </form>
+
+  </div>
+
 </div>

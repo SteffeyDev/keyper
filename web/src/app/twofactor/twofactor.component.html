@@ -1,3 +1,34 @@
-<p>
-  twofactor works!
-</p>
+<div class="layout-fullpage">
+
+  <!--Logo-->
+  <img src="/assets/keyper_logo.png" class="img-logo">
+
+  <div class="layout-container">
+
+    <!--Username Display-->
+    <h1>
+      Authentication for "{{Username}}"
+    </h1>
+
+    <!--Code Input-->
+    <form class="layout-form" style="margin-top: 10px">
+      <mat-form-field class="layout-full-width">
+        <input matInput placeholder="Enter Authentication Code" value="">
+      </mat-form-field>
+    </form>
+
+    <!--Buttons-->
+    <form class="layout-form">
+      <div class="layout-button layout-buttons-large">
+        <button mat-stroked-button routerLink = "../login"><mat-icon class="layout-icon-padright">keyboard_backspace</mat-icon>Return To Login</button>
+        <button mat-stroked-button>Submit Code<mat-icon class="layout-icon-padleft">vpn_key</mat-icon></button>
+      </div>
+      <div class="layout-button layout-buttons-small">
+        <button mat-stroked-button class="layout-full-width" style="margin-bottom: 7px">Create Account<mat-icon class="layout-icon-padleft">create</mat-icon></button>
+        <button mat-stroked-button class="layout-full-width" style="margin-top: 7px"><mat-icon class="layout-icon-padright">keyboard_backspace</mat-icon>Return to Login</button>
+      </div>
+    </form>
+
+  </div>
+
+</div>
