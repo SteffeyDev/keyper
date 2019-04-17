@@ -13,7 +13,7 @@
     <!--Code Input-->
     <form class="layout-form" style="margin-top: 10px">
       <mat-form-field class="layout-full-width">
-        <input matInput placeholder="Enter Authentication Code" value="">
+        <input matInput placeholder="Enter Authentication Code" type="password" value="">
       </mat-form-field>
     </form>
 
@@ -21,7 +21,7 @@
     <form class="layout-form">
       <div class="layout-button layout-buttons-large">
         <button mat-stroked-button routerLink = "../login"><mat-icon class="layout-icon-padright">keyboard_backspace</mat-icon>Return To Login</button>
-        <button mat-stroked-button>Submit Code<mat-icon class="layout-icon-padleft">vpn_key</mat-icon></button>
+        <button mat-stroked-button routerLink="../home">Submit Code<mat-icon class="layout-icon-padleft">vpn_key</mat-icon></button>
       </div>
       <div class="layout-button layout-buttons-small">
         <button mat-stroked-button class="layout-full-width" style="margin-bottom: 7px">Create Account<mat-icon class="layout-icon-padleft">create</mat-icon></button>
