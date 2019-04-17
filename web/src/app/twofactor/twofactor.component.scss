@@ -1,23 +1,29 @@
 h1 {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 100%;
+  text-align: center;
+}
+h2 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 80%;
+  text-align: center;
 }
 
 .img-logo {
-  width: 40%;
+  width: 20%;
 }
 
 // Make logo larger on mobile
 @media (max-width: 767px) {
   .img-logo {
-    width: 80%;
+    width: 40%;
   }
 }
 
 // Make logo larger on desktop
 @media (min-width: 1400px) {
   .img-logo {
-    width: 55%;
+    width: 25%;
   }
 }
 

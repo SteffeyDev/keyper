@@ -14,6 +14,11 @@ import { MatButtonModule, MatFormFieldModule, MatInputModule, MatSliderModule, M
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
+// Webstorage
+import { StorageServiceModule } from 'angular-webstorage-service';
+// QR Code Gen
+import { QRCodeModule } from 'angularx-qrcode';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,7 +41,10 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatTableModule,
     MatSortModule,
     MatProgressBarModule,
-    MatIconModule
+    MatIconModule,
+    BrowserModule,
+    StorageServiceModule,
+    QRCodeModule
   ],
   providers: [],
   bootstrap: [AppComponent]
