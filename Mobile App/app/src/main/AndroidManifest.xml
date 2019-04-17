@@ -14,7 +14,7 @@
             android:name=".PasswordGeneratorActivity"
             android:label="@string/title_activity_password_generator"
             android:parentActivityName=".HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" ></activity>
         <activity
             android:name=".EditPasswordActivity"
             android:label="@string/title_activity_edit_password"
