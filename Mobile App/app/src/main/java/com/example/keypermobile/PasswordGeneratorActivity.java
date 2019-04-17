@@ -19,8 +19,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Switch;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
-public class PasswordGeneratorActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.Random;
+
+public class PasswordGeneratorActivity extends AppCompatActivity implements IPasswordGenerator{
 
     DrawerLayout drawerLayout;
 
@@ -42,6 +46,8 @@ public class PasswordGeneratorActivity extends AppCompatActivity {
 
     ImageButton imageButtonCopyGenerated;
     ImageButton imageButtonOpenDrawer;
+
+    int passwordLength = DEFAULT_PASSWORD_LENGTH;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +84,7 @@ public class PasswordGeneratorActivity extends AppCompatActivity {
         switchNumbers.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
+                textViewGeneratedPassword.setText(generatePassword(passwordLength));
             }
         });
 
@@ -86,7 +92,7 @@ public class PasswordGeneratorActivity extends AppCompatActivity {
         switchLetters.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
+                 textViewGeneratedPassword.setText(generatePassword(passwordLength));
             }
         });
 
@@ -94,25 +100,28 @@ public class PasswordGeneratorActivity extends AppCompatActivity {
         switchSpecialCharacters.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
+                 textViewGeneratedPassword.setText(generatePassword(passwordLength));
             }
         });
 
         seekBarLength = findViewById(R.id.seekBarLength);
+        seekBarLength.setMax((SEEK_BAR_MAX - SEEK_BAR_MIN)/1);
         seekBarLength.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+                // Change the value for the generated password length, update generated password
+                passwordLength = SEEK_BAR_MAX + (progress * SEEK_BAR_STEP);
+                textViewGeneratedPassword.setText(generatePassword(passwordLength));
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
+                // only gen new password when seekbar moves
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                // only gen new password when seekbar moves
             }
         });
 
@@ -123,6 +132,8 @@ public class PasswordGeneratorActivity extends AppCompatActivity {
                 ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clipData = ClipData.newPlainText("Generated Password", textViewGeneratedPassword.getText());
                 clipboardManager.setPrimaryClip(clipData);
+                // Using toast to notify user the text has been copied
+                Toast.makeText(getApplicationContext(), "Copied", Toast.LENGTH_SHORT);
             }
         });
 
@@ -145,4 +156,21 @@ public class PasswordGeneratorActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    // Generate password using the user inputs in this activity
+    @Override
+    public String generatePassword(int length)
+    {
+        // Finish method by checking switch cases and choosing accordingly
+        Random random = new Random();
+        int randomInt = random.nextInt(10);
+        String generatedPassword = "";
+
+        for (int i = 0; i < length; i++)
+        {
+            generatedPassword.concat(Integer.toString(randomInt));
+        }
+        return generatedPassword;
+    }
+
 }
