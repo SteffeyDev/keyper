@@ -30,6 +30,8 @@ public class LoginActivity extends AppCompatActivity {
                 launchSignUpActivity();
             }
         });
+
+
     }
 
     private void launchSignUpActivity(){
