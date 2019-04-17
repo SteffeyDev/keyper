@@ -37,3 +37,28 @@
 ### Android App
 * Develop with Android Studio
 * Java
+
+## Deployment
+* Clone github
+  ```
+  $ cd /opt
+  $ git clone https://github.com/SteffeyDev/keyper.git
+  ```
+* Install components
+  ```
+  $ pip install -r requironments.txt
+  $ cd web
+  $ yarn install
+  ```
+* Build website
+  ```
+  $ cd /opt/keyper/web
+  $ yarn run build
+  ```
+* Start server
+  ```
+  $ cd /opt/keyper
+  $ cp keyper.service /etc/systemd/system/
+  $ systemctl enable keyper.service
+  $ systemctl start keyper.service
+  ```
