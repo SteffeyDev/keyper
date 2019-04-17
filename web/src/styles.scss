@@ -5,3 +5,7 @@
 @import "theme.scss";
 @include mat-core();
 @include angular-material-theme($my-theme); */
+
+body {
+  margin: 0;
+}
