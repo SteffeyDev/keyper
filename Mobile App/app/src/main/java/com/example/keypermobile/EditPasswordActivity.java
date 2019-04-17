@@ -5,8 +5,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -14,8 +12,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.net.Uri;
+import android.widget.Toast;
+import java.util.Random;
 
-public class EditPasswordActivity extends AppCompatActivity {
+public class EditPasswordActivity extends AppCompatActivity implements IPasswordGenerator {
 
     Toolbar toolbar;
 
@@ -41,6 +42,8 @@ public class EditPasswordActivity extends AppCompatActivity {
     ImageButton imageButtonCopy;
     ImageButton imageButtonAddTag;
 
+    User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +68,16 @@ public class EditPasswordActivity extends AppCompatActivity {
         buttonSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Take you to website url and copy password to clipboard
+                ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clipData = ClipData.newPlainText("Password", textViewPassword.getText());
+                clipboardManager.setPrimaryClip(clipData);
+                Toast.makeText(getApplicationContext(), "Password Copied", Toast.LENGTH_SHORT);
 
+                Uri webPage = Uri.parse("http://" + editTextWebsite.getText().toString());
+                Intent webIntent = new Intent(Intent.ACTION_VIEW,webPage);
+
+                startActivity(webIntent);
             }
         });
 
@@ -73,7 +85,7 @@ public class EditPasswordActivity extends AppCompatActivity {
         buttonDeletePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                // Delete this site object for this user, when JSON IO is finished
             }
         });
 
@@ -92,14 +104,13 @@ public class EditPasswordActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent savePasswordIntent = new Intent(getApplicationContext(), HomeActivity.class);
 
-                // TODO: Add Tags to this intent
+                // pass the saved data to the home page to update the cards
                 savePasswordIntent.putExtra("title", editTextTitle.getText().toString());
                 savePasswordIntent.putExtra("website", editTextWebsite.getText().toString());
-                savePasswordIntent.putExtra("username", editTextUsername.getText().toString());
-                savePasswordIntent.putExtra("password", editTextPassword.getText().toString());
-                savePasswordIntent.putExtra("notes", editTextNotes.getText().toString());
 
                 startActivity(savePasswordIntent);
+
+                // send saved data back to the datanase once JsonIo is done
             }
         });
 
@@ -107,7 +118,8 @@ public class EditPasswordActivity extends AppCompatActivity {
         imageButtonGeneratePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                // use default values for password generator to gen password
+                 editTextPassword.setText(generatePassword(DEFAULT_PASSWORD_LENGTH));
             }
         });
 
@@ -118,6 +130,8 @@ public class EditPasswordActivity extends AppCompatActivity {
                 ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clipData = ClipData.newPlainText("Password", textViewPassword.getText());
                 clipboardManager.setPrimaryClip(clipData);
+                Toast.makeText(getApplicationContext(), "Copied", Toast.LENGTH_SHORT);
+
             }
         });
 
@@ -125,9 +139,25 @@ public class EditPasswordActivity extends AppCompatActivity {
         imageButtonAddTag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                // add tag to current user site when JSON IO completed
             }
         });
+    }
+
+    // Generate password using the user inputs in this activity
+    @Override
+    public String generatePassword(int length)
+    {
+        // Finish method by checking switch cases and choosing accordingly
+        Random random = new Random();
+        int randomInt = random.nextInt(10);
+        String generatedPassword = "";
+
+        for (int i = 0; i < length; i++)
+        {
+            generatedPassword.concat(Integer.toString(randomInt));
+        }
+        return generatedPassword;
     }
 
 }
