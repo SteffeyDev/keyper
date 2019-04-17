@@ -1,10 +1,18 @@
 import { debounceTime, distinctUntilChanged, switchMapTo, takeUntil } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material';
 import { observe } from 'rxjs-observe';
 import Util from './util';
 import { SyncService } from './sync.service';
 
-function revisedRandId() {
-  return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10);
+function makeid(length) {
+  let text = '';
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+  for (let i = 0; i < length; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+
+  return text;
 }
 
 interface Serializable<T> {
@@ -21,21 +29,13 @@ export class PasswordEntry implements Serializable<PasswordEntry> {
   tags?: string[];
   notes?: string;
   passwordVisible = true;
+  lastSync: string;
 
-  constructor(private syncService: SyncService) {
+  constructor(private syncService: SyncService, private snackBar: MatSnackBar) {
 
     // When creating new entry
     this.tags = [];
-    this.id = 'new';
-
-    const { observables, proxy } = observe<PasswordEntry>(this);
-    ['title', 'url', 'username', 'email', 'password', 'tags', 'notes'].forEach(prop => {
-      observables[prop].pipe(
-        debounceTime(400),
-        distinctUntilChanged(),
-      ).subscribe(() => this.sync());
-    });
-    return proxy;
+    this.id = makeid(16);
   }
 
   deserialize(input: any) {
@@ -48,6 +48,7 @@ export class PasswordEntry implements Serializable<PasswordEntry> {
     this.tags = input.tags || [];
     this.notes = input.notes;
 
+    this.lastSync = this.serialize();
     this.passwordVisible = false;
 
     return this;
@@ -67,7 +68,13 @@ export class PasswordEntry implements Serializable<PasswordEntry> {
   }
 
   sync() {
-    this.syncService.syncEntry(this);
+    setTimeout(() => {
+      if (this.serialize() !== this.lastSync) {
+        this.lastSync = this.serialize();
+        this.syncService.syncEntry(this)
+          .subscribe(() => this.snackBar.open('Saved', null, { duration: 2000 }));
+      }
+    }, 50);
   }
 
   showPassword() {
@@ -76,14 +83,17 @@ export class PasswordEntry implements Serializable<PasswordEntry> {
 
   copyPassword() {
     Util.copyToClipboard(this.password);
+    this.snackBar.open('Password copied to clipboard', null, { duration: 2000 });
   }
 
   copyUsername() {
     Util.copyToClipboard(this.username);
+    this.snackBar.open('Username copied to clipboard', null, { duration: 2000 });
   }
 
   copyEmail() {
     Util.copyToClipboard(this.email);
+    this.snackBar.open('Email copied to clipboard', null, { duration: 2000 });
   }
 
   openUrl() {

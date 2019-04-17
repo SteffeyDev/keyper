@@ -2,7 +2,7 @@
   <div class="mat-elevation-z3 bg-primary" id="header">
     <div fxLayout="row" fxLayoutAlign="space-between">
       <h3>Keyper</h3>
-      <button mat-button>Log Out</button>
+      <button mat-flat-button (click)="logout()" color="accent" style="margin: 8px;">Log Out</button>
     </div>
   </div>
 
@@ -37,7 +37,7 @@
         </button>
       </div>
       <div fxLayout="row" fxLayoutAlign="space-between center">
-        <app-input fxFlex style="font-family: monospace; font-size: 12pt;" [(ngModel)]="password"></app-input>
+        <app-input fxFlex style="font-family: monospace; font-size: 12pt; word-break: break-all;" [(ngModel)]="password"></app-input>
         <button
           (click)="generateNewPassword()"
           matTooltip="Generate New Password"
@@ -64,7 +64,7 @@
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let entry" [style.width.px]="tagColumnWidth">
         <div fxLayout="column wrap" >
-          <div *ngFor="let tag of entry.tags" [matTooltip]="tag" class="tag-dot" [style.backgroundColor]="getColor(tag)"></div>
+          <div *ngFor="let tag of entry.tags" (click)="removeTag(entry, tag)" [matTooltip]="tag + ' (click to remove)'" class="tag-dot" [style.backgroundColor]="getColor(tag)"></div>
         </div>
       </td>
     </ng-container>
@@ -74,7 +74,7 @@
       <td mat-cell *matCellDef="let entry">
         <div fxLayoutAlign='start center'>
           <img height="16" width="16" [src]="'http://www.google.com/s2/favicons?domain=' + entry.url" />
-          <app-input name="title" tabindex="0" ngDefaultControl style="padding-left: 10px;" [(ngModel)]="entry.title"></app-input>
+          <app-input name="title" tabindex="0" (ngModelChange)="entry.sync()" ngDefaultControl style="padding-left: 10px;" [(ngModel)]="entry.title"></app-input>
         </div>
       </td>
     </ng-container>
@@ -82,7 +82,7 @@
     <ng-container matColumnDef="url">
       <th mat-header-cell *matHeaderCellDef> URL </th>
       <td mat-cell *matCellDef="let entry">
-        <app-input name="url" tabindex="0" style="padding-left: 10px;" [(ngModel)]="entry.url"></app-input>
+        <app-input name="url" tabindex="0" (ngModelChange)="entry.sync()" style="padding-left: 10px;" [(ngModel)]="entry.url"></app-input>
         <button
           *ngIf="entry.url"
           tabindex="-1"
@@ -97,7 +97,7 @@
     <ng-container matColumnDef="username">
       <th mat-header-cell *matHeaderCellDef> Username </th>
       <td mat-cell *matCellDef="let entry">
-        <app-input name="username" tabindex="0" [(ngModel)]="entry.username"></app-input>
+        <app-input name="username" tabindex="0" (ngModelChange)="entry.sync()" [(ngModel)]="entry.username"></app-input>
         <button
           *ngIf="entry.username"
           tabindex="-1"
@@ -112,7 +112,7 @@
     <ng-container matColumnDef="email">
       <th mat-header-cell *matHeaderCellDef> Email </th>
       <td mat-cell *matCellDef="let entry">
-        <app-input name="email" tabindex="0" [(ngModel)]="entry.email"></app-input>
+        <app-input name="email" tabindex="0" (ngModelChange)="entry.sync()" [(ngModel)]="entry.email"></app-input>
         <button
           *ngIf="entry.email"
           tabindex="-1"
@@ -128,7 +128,7 @@
       <th mat-header-cell *matHeaderCellDef> Password </th>
       <td mat-cell *matCellDef="let entry">
         <ng-container *ngIf="entry.passwordVisible; else elseBlock">
-          <app-input name="password" tabindex="0" style="font-family: monospace" [(ngModel)]="entry.password"></app-input>
+          <app-input name="password" tabindex="0" (ngModelChange)="entry.sync()" style="font-family: monospace" [(ngModel)]="entry.password"></app-input>
           <button
             (click)="entry.showPassword()"
             tabindex="-1"

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { PasswordEntry } from './entry';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import aes from 'aes-js';
 
 function pad(value) {
@@ -18,11 +19,12 @@ function unpad(value) {
   providedIn: 'root'
 })
 export class SyncService {
-  api = 'https://keyper.pro/site';
+  // api = 'https://keyper.pro/site';
+  api = 'http://127.0.0.1:5000/api/';
   key: Uint8Array;
   iv = [ 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36 ];
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private snackBar: MatSnackBar) {
     this.setKey('testtesttesttesttesttesttesttest');
   }
 
@@ -31,13 +33,15 @@ export class SyncService {
   }
 
   getEntries(): Observable<PasswordEntry[]> {
-    const aesCbc = new aes.ModeOfOperation.cbc(this.key, this.iv);
-    return this.http.get<any>(this.api)
+    return this.http.get<any>(this.api + 'sites')
       .pipe(
         map( data => {
           return data.map(dataEntry => {
-            const entryJson = unpad(aes.utils.utf8.fromBytes(aesCbc.decrypt(dataEntry.content)));
-            new PasswordEntry(this).deserialize({ id: dataEntry.id, ...JSON.parse(entryJson) });
+            const aesCbc = new aes.ModeOfOperation.cbc(this.key, aes.utils.utf8.toBytes(dataEntry.id));
+            // content is hex encoded and encrypted.  First decode hex, then decrypt,
+            //   then get JSON string from bytes, then remove padding
+            const entryJson = unpad(aes.utils.utf8.fromBytes(aesCbc.decrypt(aes.utils.hex.toBytes(dataEntry.content))));
+            return new PasswordEntry(this, this.snackBar).deserialize({ id: dataEntry.id, ...JSON.parse(entryJson) });
           });
         }),
         catchError( error => {
@@ -46,15 +50,30 @@ export class SyncService {
           return of([]);
         })
       );
+
+    // temp for logging in
+    const headers = new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded'});
+    const token = prompt('token');
+    this.http.post(this.api + 'login', `username=test&password=test`, { headers })
+      .subscribe(() => {
+        this.http.post(this.api + 'token', `token=${token}`, { headers })
+          .subscribe(() => {
+            console.log('token success');
+          });
+      });
   }
 
   syncEntry(entry: PasswordEntry) {
-    if (entry.id === 'new') {
-      delete entry.id;
-    }
+    const aesCbc = new aes.ModeOfOperation.cbc(this.key, aes.utils.utf8.toBytes(entry.id));
+    const data = new Uint8Array(aesCbc.encrypt(aes.utils.utf8.toBytes(pad(entry.serialize()))));
+    return this.http.post(this.api + 'site/' + entry.id, data.buffer);
+  }
 
-    const aesCbc = new aes.ModeOfOperation.cbc(this.key, this.iv);
-    this.http.post(this.api, { id: entry.id, content: aesCbc.encrypt(aes.utils.utf8.toBytes(pad(entry.serialize()))) })
-      .subscribe();
+  deleteEntry(id: string) {
+    return this.http.delete(this.api + 'site/' + id);
+  }
+
+  logout() {
+    return this.http.get(this.api + 'logout');
   }
 }

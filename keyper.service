@@ -1,0 +1,13 @@
+[Unit]
+Description=Keyper Password Manager
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/keyper/run.py
+Restart=always
+Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"
+EnvironmentFile=-/etc/environment
+WorkingDirectory=/opt/keyper
+
+[Install]
+WantedBy=multi-user.target
