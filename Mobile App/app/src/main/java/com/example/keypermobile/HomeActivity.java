@@ -80,7 +80,7 @@ public class HomeActivity extends AppCompatActivity {
                 msg = "Logout";
                 break;
         }
-        Toast.makeText(this, msg + " Checked", Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, msg + " Checked", Toast.LENGTH_LONG).show();
         return super.onOptionsItemSelected(item);
     }
 }
