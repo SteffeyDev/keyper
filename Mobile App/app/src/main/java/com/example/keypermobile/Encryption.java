@@ -19,18 +19,16 @@ public class Encryption {
         // Generate Key
         SecretKey key = keyGenerator.generateKey();
 
-        // Generating IV.
+        // Generating IV (random 16 character string nums and letters)
         byte[] IV = new byte[16];
         SecureRandom random = new SecureRandom();
         random.nextBytes(IV);
 
         byte[] cipherText = Encrypt(plainText.getBytes(),key, IV);
-        System.out.println("Encrypted Text : "+ Base64.getEncoder().encodeToString(cipherText));
 
         String decryptedText = Decrypt(cipherText,key, IV);
-        System.out.println("Decrypted Text : "+decryptedText);
     }
-
+    // key and IV should be 32 bytes
     public static byte[] Encrypt(byte[] plaintext, SecretKey key, byte[] IV)
             throws Exception
     {
