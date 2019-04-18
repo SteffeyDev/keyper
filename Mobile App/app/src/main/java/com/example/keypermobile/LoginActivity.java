@@ -20,7 +20,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent genIntent = new Intent(getApplicationContext(), EditPasswordActivity.class);
+                Intent genIntent = new Intent(getApplicationContext(), PasswordGeneratorActivity.class);
                 startActivity(genIntent);
             }
         });
