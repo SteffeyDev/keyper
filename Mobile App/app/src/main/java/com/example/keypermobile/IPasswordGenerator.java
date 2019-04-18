@@ -9,5 +9,15 @@ interface IPasswordGenerator
       int SEEK_BAR_MAX = 64;
       int SEEK_BAR_STEP = 1;
 
-      String generatePassword(int length);
+      String ALL_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?";
+      String NUMBERS = "0123456789";
+      String LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+      String SPECIAL_CHARACTERS = "~`!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?";
+      String NUMBERS_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      String NUMBERS_SPECIAL_CHARACTERS = "0123456789~`!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?";
+      String LETTERS_SPECIAL_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~`!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?";
+
+
+
+      String generatePassword(int length, String characterSet);
 }
