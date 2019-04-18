@@ -21,6 +21,7 @@ import android.widget.Switch;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -84,7 +85,7 @@ public class PasswordGeneratorActivity extends AppCompatActivity implements IPas
         switchNumbers.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                textViewGeneratedPassword.setText(generatePassword(passwordLength));
+                textViewGeneratedPassword.setText(generatePassword(passwordLength, getCharacterSet()));
             }
         });
 
@@ -92,7 +93,7 @@ public class PasswordGeneratorActivity extends AppCompatActivity implements IPas
         switchLetters.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                 textViewGeneratedPassword.setText(generatePassword(passwordLength));
+                textViewGeneratedPassword.setText(generatePassword(passwordLength, getCharacterSet()));
             }
         });
 
@@ -100,7 +101,7 @@ public class PasswordGeneratorActivity extends AppCompatActivity implements IPas
         switchSpecialCharacters.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                 textViewGeneratedPassword.setText(generatePassword(passwordLength));
+                textViewGeneratedPassword.setText(generatePassword(passwordLength, getCharacterSet()));
             }
         });
 
@@ -111,7 +112,7 @@ public class PasswordGeneratorActivity extends AppCompatActivity implements IPas
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 // Change the value for the generated password length, update generated password
                 passwordLength = SEEK_BAR_MAX + (progress * SEEK_BAR_STEP);
-                textViewGeneratedPassword.setText(generatePassword(passwordLength));
+                textViewGeneratedPassword.setText(generatePassword(passwordLength, getCharacterSet()));
             }
 
             @Override
@@ -159,18 +160,37 @@ public class PasswordGeneratorActivity extends AppCompatActivity implements IPas
 
     // Generate password using the user inputs in this activity
     @Override
-    public String generatePassword(int length)
+    public String generatePassword(int length, String characterSet)
     {
         // Finish method by checking switch cases and choosing accordingly
-        Random random = new Random();
-        int randomInt = random.nextInt(10);
+        SecureRandom random = new SecureRandom();
         String generatedPassword = "";
 
         for (int i = 0; i < length; i++)
         {
-            generatedPassword.concat(Integer.toString(randomInt));
+            int randomInt = random.nextInt(length);
+            generatedPassword.concat(Character.toString(characterSet.charAt(randomInt)));
         }
         return generatedPassword;
+    }
+
+    // return the characterSet corresponding to the checked switches
+    public String getCharacterSet()
+    {
+        if (switchLetters.isChecked() && switchNumbers.isChecked() && switchSpecialCharacters.isChecked())
+            return ALL_CHARACTERS;
+        else if (switchLetters.isChecked() && switchNumbers.isChecked())
+            return NUMBERS_LETTERS;
+        else if (switchLetters.isChecked() && switchSpecialCharacters.isChecked())
+            return LETTERS_SPECIAL_CHARACTERS;
+        else if (switchNumbers.isChecked() &&switchSpecialCharacters.isChecked())
+            return NUMBERS_SPECIAL_CHARACTERS;
+        else if (switchLetters.isChecked())
+            return LETTERS;
+        else if (switchNumbers.isChecked())
+            return NUMBERS;
+        else
+            return SPECIAL_CHARACTERS;
     }
 
 }
