@@ -29,7 +29,10 @@ public class User
         String notes;
         LocalDateTime dateAdded;
         LocalDateTime dateLastUsed;
+        String id;
 
+        // put serialization and deserialization in site use constructor to deserialize
+        // padding to mult of 32 when serializing , unpad when deserializing 
         public Site(String title, String username, String email, String password, String url,
                     ArrayList<String> tags, String notes,  LocalDateTime dateAdded, LocalDateTime dateLastUsed)
         {
