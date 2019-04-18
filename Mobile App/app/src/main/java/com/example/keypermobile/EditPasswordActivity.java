@@ -123,8 +123,8 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
             public void onClick(View v) {
                 // use default values for password generator to gen password
                 String genPassword = generatePassword(DEFAULT_PASSWORD_LENGTH, ALL_CHARACTERS);
-                 editTextPassword.setText(genPassword);
-                 System.out.println("In Generate Password genPassword = " + genPassword);
+                editTextPassword.setText(genPassword);
+                System.out.println("In Generate Password genPassword = " + genPassword);
             }
         });
 
@@ -153,15 +153,15 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
     @Override
     public String generatePassword(int length, String characterSet)
     {
-        // Finish method by checking switch cases and choosing accordingly
         SecureRandom random = new SecureRandom();
-        String generatedPassword = "";
+        StringBuilder generatedPassword = new StringBuilder(length);
 
         for (int i = 0; i < length; i++)
         {
-            int randomInt = random.nextInt(length);
-            generatedPassword.concat(Character.toString(characterSet.charAt(randomInt)));
+            int randomIndex = random.nextInt(characterSet.length());
+            generatedPassword.append(characterSet.charAt(randomIndex));
+            System.out.println("Generating... " + generatedPassword);
         }
-        return generatedPassword;
+        return generatedPassword.toString();
     }
 }
