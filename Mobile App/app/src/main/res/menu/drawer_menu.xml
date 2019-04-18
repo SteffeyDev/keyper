@@ -18,4 +18,8 @@
             android:id="@+id/item_log_out"
             android:title="@string/title_log_out" />
     </group>
+    <item
+        android:id="@+id/menu_none"
+        android:title=""
+        android:visible="false"/>
 </menu>
