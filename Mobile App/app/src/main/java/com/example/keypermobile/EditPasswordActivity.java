@@ -14,9 +14,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.net.Uri;
 import android.widget.Toast;
-
 import java.security.SecureRandom;
-import java.util.Random;
 
 public class EditPasswordActivity extends AppCompatActivity implements IPasswordGenerator {
 
@@ -52,7 +50,6 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
         setContentView(R.layout.activity_edit_password);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        System.out.println("creating edit components");
 
         textViewTitle = findViewById(R.id.textViewTitle);
         textViewWebsite = findViewById(R.id.textViewWebsite);
@@ -72,11 +69,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
             @Override
             public void onClick(View v) {
                 // Take you to website url and copy password to clipboard
-                ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clipData = ClipData.newPlainText("Password", textViewPassword.getText());
-                clipboardManager.setPrimaryClip(clipData);
-                Toast.makeText(getApplicationContext(), "Password Copied", Toast.LENGTH_SHORT);
-
+                CopyPassword();
                 Uri webPage = Uri.parse("http://" + editTextWebsite.getText().toString());
                 Intent webIntent = new Intent(Intent.ACTION_VIEW,webPage);
 
@@ -89,6 +82,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
             @Override
             public void onClick(View v) {
                 // Delete this site object for this user, when JSON IO is finished
+
             }
         });
 
@@ -110,10 +104,9 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
                 // pass the saved data to the home page to update the cards
                 savePasswordIntent.putExtra("title", editTextTitle.getText().toString());
                 savePasswordIntent.putExtra("website", editTextWebsite.getText().toString());
-
                 startActivity(savePasswordIntent);
 
-                // send saved data back to the datanase once JsonIo is done
+                // send saved data back to the database once JsonIo is done
             }
         });
 
@@ -124,7 +117,6 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
                 // use default values for password generator to gen password
                 String genPassword = generatePassword(DEFAULT_PASSWORD_LENGTH, ALL_CHARACTERS);
                 editTextPassword.setText(genPassword);
-                System.out.println("In Generate Password genPassword = " + genPassword);
             }
         });
 
@@ -132,11 +124,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
         imageButtonCopy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clipData = ClipData.newPlainText("Password", textViewPassword.getText());
-                clipboardManager.setPrimaryClip(clipData);
-                Toast.makeText(getApplicationContext(), "Copied", Toast.LENGTH_SHORT);
-
+                CopyPassword();
             }
         });
 
@@ -160,8 +148,16 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
         {
             int randomIndex = random.nextInt(characterSet.length());
             generatedPassword.append(characterSet.charAt(randomIndex));
-            System.out.println("Generating... " + generatedPassword);
         }
         return generatedPassword.toString();
+    }
+
+    // Copy password to the clipboard and notify the user
+    public void CopyPassword()
+    {
+        ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clipData = ClipData.newPlainText("Password", editTextPassword.getText());
+        clipboardManager.setPrimaryClip(clipData);
+        Toast.makeText(getApplicationContext(), "Password Copied", Toast.LENGTH_SHORT).show();
     }
 }
