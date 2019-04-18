@@ -14,6 +14,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.net.Uri;
 import android.widget.Toast;
+
+import java.security.SecureRandom;
 import java.util.Random;
 
 public class EditPasswordActivity extends AppCompatActivity implements IPasswordGenerator {
@@ -50,6 +52,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
         setContentView(R.layout.activity_edit_password);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        System.out.println("creating edit components");
 
         textViewTitle = findViewById(R.id.textViewTitle);
         textViewWebsite = findViewById(R.id.textViewWebsite);
@@ -119,7 +122,9 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
             @Override
             public void onClick(View v) {
                 // use default values for password generator to gen password
-                 editTextPassword.setText(generatePassword(DEFAULT_PASSWORD_LENGTH));
+                String genPassword = generatePassword(DEFAULT_PASSWORD_LENGTH, ALL_CHARACTERS);
+                 editTextPassword.setText(genPassword);
+                 System.out.println("In Generate Password genPassword = " + genPassword);
             }
         });
 
@@ -146,18 +151,17 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
 
     // Generate password using the user inputs in this activity
     @Override
-    public String generatePassword(int length)
+    public String generatePassword(int length, String characterSet)
     {
         // Finish method by checking switch cases and choosing accordingly
-        Random random = new Random();
-        int randomInt = random.nextInt(10);
+        SecureRandom random = new SecureRandom();
         String generatedPassword = "";
 
         for (int i = 0; i < length; i++)
         {
-            generatedPassword.concat(Integer.toString(randomInt));
+            int randomInt = random.nextInt(length);
+            generatedPassword.concat(Character.toString(characterSet.charAt(randomInt)));
         }
         return generatedPassword;
     }
-
 }
