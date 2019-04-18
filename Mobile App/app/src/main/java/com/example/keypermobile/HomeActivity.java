@@ -7,10 +7,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.example.keypermobile.PasswordAdapter;
-import com.example.keypermobile.R;
+import com.example.keypermobile.models.Password;
+import com.example.keypermobile.utils.PasswordAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.example.keypermobile;
+package com.example.keypermobile.utils;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,6 +10,9 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.keypermobile.R;
+import com.example.keypermobile.models.Password;
 
 import java.util.ArrayList;
 import java.util.List;

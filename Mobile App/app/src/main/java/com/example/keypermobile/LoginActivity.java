@@ -10,12 +10,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
+import com.example.keypermobile.utils.JsonIO;
 import com.loopj.android.http.*;
+
+import static java.sql.DriverManager.println;
 
 public class LoginActivity extends AppCompatActivity {
 
     private Button signUp;
+    private Button login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +36,28 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        login = (Button) findViewById(R.id.login_button);
 
+        login.setOnClickListener(new View.OnClickListener(){
+              @Override
+              public void onClick (View view) {
+                  EditText username = (EditText)findViewById(R.id.username);
+                  EditText password = (EditText)findViewById(R.id.password);
+                  JsonIO.sendPostRequest("http://13.59.202.229:5000/api/login", );
+                  launchHomeActivity();
+              }
+    });
     }
+
+    private void launchHomeActivity(){
+        Intent intent;
+        intent = new Intent(this, JsonIO.class);
+        System.out.println("BLUE BLUE");
+        startActivity(intent);
+    }
+
+
+
 
     private void launchSignUpActivity(){
 

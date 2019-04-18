@@ -1,4 +1,4 @@
-package com.example.keypermobile;
+package com.example.keypermobile.models;
 
 public class Password {
 
