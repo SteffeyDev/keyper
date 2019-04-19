@@ -64,10 +64,6 @@ def load_user(username):
 		return user
 
 @app.route('/')
-def root():
-    return app.send_static_file('web/dist/keyper/index.html')
-
-@app.route('/')
 @app.route('/home')
 @app.route('/login')
 @app.route('/signup')

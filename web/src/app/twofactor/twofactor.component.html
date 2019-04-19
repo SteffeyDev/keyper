@@ -7,11 +7,13 @@
 
     <!--Username Display - Parts are selectivly shown on condition of Authentication App-->
     <h1>Authenticate "{{username}}"</h1>
-    <div *ngIf="totpUri">
+    <div *ngIf="totpUri" fxLayout="column" fxLayoutAlign="center">
       <h2>
         Scan the QR code below with your smartphone authentication app
       </h2>
-      <qrcode [qrdata]="totpUri" [size]="180" [level]="'M'"></qrcode>
+      <div style="margin: auto">
+        <qrcode [qrdata]="totpUri" [size]="180" [level]="'M'"></qrcode>
+      </div>
     </div>
 
     <form class="layout-form" style="margin-top: 10px">

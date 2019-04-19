@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
     this.hash = sha512(this.passwordEntry);
 
     // https://Keyper.pro/api/login
-    this.httpClient.post('http://127.0.0.1:5000/api/login', `username=${this.usernameEntry}&password=${this.hash.substring(0, 32)}`,
+    this.httpClient.post('http://127.0.0.1:5000/api/login', `username=${this.usernameEntry}&password=${this.hash.substring(0, 50)}`,
     {
       headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
     })
@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
   }
 
   setPassword(): void {
-    this.saveInSession('key', this.hash.substring(32)); // Last part - put in session storage for home
+    this.saveInSession('key', this.hash.substring(64)); // Last part - put in session storage for home
   }
 
   constructor(@Inject(SESSION_STORAGE) private storage: WebStorageService, private httpClient: HttpClient) { }

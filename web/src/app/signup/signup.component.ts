@@ -28,7 +28,7 @@ export class SignupComponent implements OnInit {
     this.hash = sha512(this.passwordEntry);
 
     this.httpClient.post('http://127.0.0.1:5000/api/register',
-      `username=${this.usernameEntry}&email=${this.emailEntry}&password=${this.hash.substring(0, 32)}`,
+      `username=${this.usernameEntry}&email=${this.emailEntry}&password=${this.hash.substring(0, 50)}`,
     {
       headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded'),
       responseType: 'text'
@@ -59,7 +59,7 @@ export class SignupComponent implements OnInit {
     this.saveInSession('username', this.usernameEntry);
   }
   setPassword(): void {
-    this.saveInSession('key', this.hash.substring(32)); // Last part - put in session storage for home
+    this.saveInSession('key', this.hash.substring(64)); // Last part - put in session storage for home
   }
 
   // Save value for QR on 2fa page

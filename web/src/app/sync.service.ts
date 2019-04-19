@@ -30,7 +30,7 @@ export class SyncService {
   }
 
   setKey(key: string) {
-    this.key = aes.utils.utf8.toBytes(key);
+    this.key = aes.utils.hex.toBytes(key);
   }
 
   getEntries(): Observable<PasswordEntry[]> {
@@ -75,6 +75,10 @@ export class SyncService {
   }
 
   logout() {
-    return this.http.get(this.api + 'logout');
+    return this.http.get(this.api + 'logout',
+    {
+      headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded'),
+      responseType: 'text'
+    });
   }
 }
