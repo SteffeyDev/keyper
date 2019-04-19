@@ -20,6 +20,11 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { InputComponent } from './input/input.component';
 import { PGDialogComponent } from './pgdialog/pgdialog.component';
 
+// Webstorage
+import { StorageServiceModule } from 'angular-webstorage-service';
+// QR Code Gen
+import { QRCodeModule } from 'angularx-qrcode';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -52,12 +57,15 @@ import { PGDialogComponent } from './pgdialog/pgdialog.component';
     MatDialogModule,
     MatCheckboxModule,
     HttpClientModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    StorageServiceModule,
+    QRCodeModule
   ],
   entryComponents: [
     PGDialogComponent
   ],
   providers: [
+    BrowserModule,
   ],
   bootstrap: [AppComponent]
 })
