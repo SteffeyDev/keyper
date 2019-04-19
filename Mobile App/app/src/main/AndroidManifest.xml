@@ -2,27 +2,22 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.keypermobile">
 
+    <uses-permission android:name="android.permission.ACCOUNT_MANAGER" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity
-            android:name=".SearchActivity"
-            android:label="@string/title_activity_search"
-            android:parentActivityName=".HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.keypermobile.HomeActivity" />
-        </activity>
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".TwoFactorAuthActivity" />
         <activity
             android:name=".PasswordGeneratorActivity"
             android:label="@string/title_activity_password_generator"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:parentActivityName=".HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar" ></activity>
         <activity
             android:name=".EditPasswordActivity"
             android:label="@string/title_activity_edit_password"
@@ -35,7 +30,6 @@
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
