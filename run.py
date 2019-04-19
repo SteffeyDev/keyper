@@ -20,7 +20,8 @@ if not SECRET_KEY:
 
 app.config['SECRET_KEY'] = SECRET_KEY
 
-TOTP_SECRET = pyotp.random_base32()
+#TOTP_SECRET = pyotp.random_base32()
+TOTP_SECRET = os.environ.get("TOTP_SECRET")
 totp = pyotp.TOTP(TOTP_SECRET)
 skip_TOTP = False
 
