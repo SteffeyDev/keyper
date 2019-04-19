@@ -6,43 +6,31 @@
   <div class="layout-container">
 
     <!--Username Display - Parts are selectivly shown on condition of Authentication App-->
-    <h1>
-      Authenticate "{{getUsername()}}"
-    </h1>
-    <div *ngIf="!hasSavedAuthApp">
+    <h1>Authenticate "{{username}}"</h1>
+    <div *ngIf="totpUri">
       <h2>
         Scan the QR code below with your smartphone authentication app
       </h2>
+      <qrcode [qrdata]="totpUri" [size]="180" [level]="'M'"></qrcode>
     </div>
 
-    <!--QR Code-->
-    <div *ngIf="!hasSavedAuthApp">
-      <qrcode [qrdata]="getQRCode()" [size]="180" [level]="'M'"></qrcode>
-    </div>
-
-    <!--Code Input-->
     <form class="layout-form" style="margin-top: 10px">
+      <!--Code Input-->
       <mat-form-field class="layout-full-width">
-        <input matInput placeholder="Enter Authentication Code From App" type="password" value="">
+        <input matInput name="token" placeholder="Enter Authentication Code From App" [(ngModel)]="authEntry">
       </mat-form-field>
-    </form>
 
-    <!--Error Alert-->
-    <form class="layout-form" *ngIf="inputError!=null">
-      <p style="color: red">{{inputError}}</p>
-    </form>
+      <!--Error Alert-->
+      <div class="layout-form" *ngIf="inputError!=null">
+        <p style="color: red">{{inputError}}</p>
+      </div>
 
-    <!--Buttons-->
-    <form class="layout-form">
+      <!--Buttons-->
       <div class="layout-button layout-buttons-large">
-        <button mat-stroked-button (click)="hashAndSendAuth()">Submit Code<mat-icon class="layout-icon-padleft">vpn_key</mat-icon></button>
-        <button mat-stroked-button *ngIf="hasSavedAuthApp" (click)="resetSavedAuthApp()">Generate QR Code.<mat-icon class="layout-icon-padleft">refresh</mat-icon></button>
-        <button mat-stroked-button routerLink="../login"><mat-icon class="layout-icon-padright">keyboard_backspace</mat-icon>Return To Login</button>
+        <button mat-stroked-button (click)="sendAuth()">Submit Code<mat-icon class="layout-icon-padleft">vpn_key</mat-icon></button>
       </div>
       <div class="layout-button layout-buttons-small">
-        <button mat-stroked-button class="layout-full-width" style="margin-bottom: 7px" (click)="hashAndSendAuth()">Submit Code<mat-icon class="layout-icon-padleft">vpn_key</mat-icon></button>
-        <button mat-stroked-button class="layout-full-width" style="margin-bottom: 7px; margin-top: 7px" *ngIf="hasSavedAuthApp"  (click)="resetSavedAuthApp()">Generate QR Code.<mat-icon class="layout-icon-padleft">refresh</mat-icon></button>
-        <button mat-stroked-button class="layout-full-width" style="margin-top: 7px" routerLink="../login"><mat-icon class="layout-icon-padright">keyboard_backspace</mat-icon>Return to Login</button>
+        <button mat-stroked-button class="layout-full-width" style="margin-bottom: 7px" (click)="sendAuth()">Submit Code<mat-icon class="layout-icon-padleft">vpn_key</mat-icon></button>
       </div>
     </form>
 

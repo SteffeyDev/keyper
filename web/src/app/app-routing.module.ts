@@ -10,6 +10,7 @@ const routes: Routes = [
   { path: 'signup', component: SignupComponent },
   { path: '2fa', component: TwoFactorComponent },
   { path: 'home', component: HomeComponent },
+  { path: '', redirectTo: '/home', pathMatch: 'full' }
 ];
 
 @NgModule({
