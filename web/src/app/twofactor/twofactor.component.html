@@ -1,3 +1,41 @@
-<p>
-  twofactor works!
-</p>
+<div class="layout-fullpage">
+
+  <!--Logo-->
+  <img src="/assets/keyper_logo.png" class="img-logo">
+
+  <div class="layout-container">
+
+    <!--Username Display - Parts are selectivly shown on condition of Authentication App-->
+    <h1>Authenticate "{{username}}"</h1>
+    <div *ngIf="totpUri" fxLayout="column" fxLayoutAlign="center">
+      <h2>
+        Scan the QR code below with your smartphone authentication app
+      </h2>
+      <div style="margin: auto">
+        <qrcode [qrdata]="totpUri" [size]="180" [level]="'M'"></qrcode>
+      </div>
+    </div>
+
+    <form class="layout-form" style="margin-top: 10px">
+      <!--Code Input-->
+      <mat-form-field class="layout-full-width">
+        <input matInput name="token" placeholder="Enter Authentication Code From App" [(ngModel)]="authEntry">
+      </mat-form-field>
+
+      <!--Error Alert-->
+      <div class="layout-form" *ngIf="inputError!=null">
+        <p style="color: red">{{inputError}}</p>
+      </div>
+
+      <!--Buttons-->
+      <div class="layout-button layout-buttons-large">
+        <button mat-stroked-button (click)="sendAuth()">Submit Code<mat-icon class="layout-icon-padleft">vpn_key</mat-icon></button>
+      </div>
+      <div class="layout-button layout-buttons-small">
+        <button mat-stroked-button class="layout-full-width" style="margin-bottom: 7px" (click)="sendAuth()">Submit Code<mat-icon class="layout-icon-padleft">vpn_key</mat-icon></button>
+      </div>
+    </form>
+
+  </div>
+
+  </div>

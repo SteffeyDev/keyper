@@ -1,0 +1,118 @@
+h1 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 100%;
+  text-align: center;
+}
+h2 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 80%;
+  text-align: center;
+}
+
+.img-logo {
+  width: 20%;
+}
+
+// Make logo larger on mobile
+@media (max-width: 767px) {
+  .img-logo {
+    width: 40%;
+  }
+}
+
+// Make logo larger on desktop
+@media (min-width: 1400px) {
+  .img-logo {
+    width: 25%;
+  }
+}
+
+.layout-fullpage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+  min-height: 100vh;
+  min-width: 100%;
+  min-width: 100vw;
+  background: linear-gradient(to top right, #06beb6, #398893);
+}
+
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+  width: 40%;
+  background: #ffffff;
+  box-shadow: 0px 3px 7px 5px rgba(102, 102, 102, 0.20);
+}
+
+// Layout size for Desktop size and above
+@media (min-width : 1224px) {
+  // Smaller width for desktop size
+  .layout-container {
+    width: 35%;
+  }
+}
+
+// Layout size for Mobile
+@media (max-width : 500px) {
+  // Larger width for mobile size
+  .layout-container {
+    width: 85%;
+  }
+}
+
+.layout-form {
+  width: 80%;
+}
+
+.layout-full-width {
+  width: 100%;
+}
+
+.layout-button {
+  width: 100%;
+  padding-bottom: 10px;
+}
+
+.layout-icon-padleft {
+  padding-left: 3px;
+  padding-bottom: 3px;
+}
+
+.layout-icon-padright {
+  padding-right: 3px;
+  padding-bottom: 3px;
+}
+
+// Button row when larger than mobile
+.layout-buttons-large {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+}
+
+// Button row when tablet or lower
+.layout-buttons-small {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  display: none;
+}
+
+// Only show tablet-version button row
+@media (max-width: 1900px) {
+
+  .layout-buttons-small {
+    display: flex;
+  }
+
+  .layout-buttons-large {
+    display: none;
+  }
+}

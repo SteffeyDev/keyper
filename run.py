@@ -7,6 +7,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required, l
 import pyotp
 from mongoengine import *
 from mongoengine.context_managers import switch_collection
+from werkzeug.exceptions import BadRequest
 
 app = Flask(__name__, static_url_path='', static_folder='web/dist/keyper')
 lm = LoginManager()
@@ -19,14 +20,15 @@ if not SECRET_KEY:
 
 app.config['SECRET_KEY'] = SECRET_KEY
 
-TOTP_SECRET = pyotp.random_base32()
+#TOTP_SECRET = pyotp.random_base32()
+TOTP_SECRET = os.environ.get("TOTP_SECRET")
 totp = pyotp.TOTP(TOTP_SECRET)
 skip_TOTP = False
 
 # db = keyper, mongodb://172.0.0.1:27017
-connect('keyper')
+#connect('keyper')
 # test database below. only need line above in prod.
-#connect('keyper', host='mongodb://test:testUser1@ds161104.mlab.com:61104/practice')
+connect('keyper', host='mongodb://test:testUser1@ds161104.mlab.com:61104/practice')
 
 # Encrypted site specific password blobs
 class SiteInfo(EmbeddedDocument):
@@ -63,14 +65,10 @@ def load_user(username):
 		return user
 
 @app.route('/')
-def root():
-    return app.send_static_file('web/dist/keyper/index.html')
-
-@app.route('/')
 @app.route('/home')
 @app.route('/login')
 @app.route('/signup')
-@app.route('/twofactor')
+@app.route('/2fa')
 def basic_pages(**kwargs):
     return make_response(open('web/dist/keyper/index.html').read())
 
@@ -83,14 +81,15 @@ def insert():
 	with switch_collection(User, 'users') as toGet:
 		try:
 			if User.objects.get(username__exact = str(request.form['username'])):
-				return 'Registration Error, please try again.'
+				raise BadRequest('Registration Error, please try again.')
 
 		except DoesNotExist:
 			with switch_collection(User, 'users') as toAdd:
 				newUser.save(validate=True)
 				uri = totp.provisioning_uri(request.form['email'], issuer_name ='Kepyer.pro')
+				session['verify'] = newUser.username
 				# totp uri, can be used to generate QR code
-				return uri + '\tNew user added.'
+				return uri
 
 @app.route('/api/delete', methods=['GET', 'POST'])
 @login_required
@@ -134,11 +133,11 @@ def login():
 @app.route('/api/token', methods=['GET', 'POST'])
 def verifyToken():
 	if not session['verify']:
-		return 'Please verify username and password.'
+		raise BadRequest('Please verify username and password.')
 
 	else:
 		if not totp.verify(request.form['token']):
-			return 'False'
+			raise BadRequest('Incorrect auth code')
 		else:
 			username = session['verify']
 			with switch_collection(User, 'users') as toGet:

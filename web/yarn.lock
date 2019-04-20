@@ -656,6 +656,18 @@ amdefine@>=0.0.4:
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
   integrity sha1-SlKCrBZHKek2Gbz9OtFR+BfOkfU=
 
+angular-webstorage-service@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/angular-webstorage-service/-/angular-webstorage-service-1.0.2.tgz#caa21ae8deba822666dc0aaa49124b94a72664ed"
+  integrity sha512-LPTAW+P3DlACdCfOd2Cpg4jqciIIfsIZjQafVl5IrjrcoplpUiOImrKo+R0jfVIZ/V04OJWKDDGqLm9YraDIcw==
+
+angularx-qrcode@^1.5.3:
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/angularx-qrcode/-/angularx-qrcode-1.5.3.tgz#4ce9a4e8f4c5b00e87c329c563d8f4389c07cfd9"
+  integrity sha512-9WTsnOGNv3IvSriVSHOc7k6PIBcqqjivAQXhEF9SjDYgcio63zCkcsAC627vSaTqUoDkgE5MRoT4PO2UMROk2w==
+  dependencies:
+    qrcodejs2 "0.0.2"
+
 ansi-colors@^3.0.0:
   version "3.2.4"
   resolved "https://registry.yarnpkg.com/ansi-colors/-/ansi-colors-3.2.4.tgz#e3a3da4bfbae6c86a9c285625de124a234026fbf"
@@ -3663,6 +3675,11 @@ js-base64@^2.1.8:
   resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.5.1.tgz#1efa39ef2c5f7980bb1784ade4a8af2de3291121"
   integrity sha512-M7kLczedRMYX4L8Mdh4MzyAMM9O5osx+4FcOQuTvr3A9F2D9S5JXheN0ewNbrvK2UatkTRhL5ejGmGSjNMiZuw==
 
+js-sha512@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/js-sha512/-/js-sha512-0.8.0.tgz#dd22db8d02756faccf19f218e3ed61ec8249f7d4"
+  integrity sha512-PWsmefG6Jkodqt+ePTvBZCSMFgN7Clckjd0O7su3I0+BW2QWUTJNzjktHsztGLhncP2h8mcF9V9Y2Ha59pAViQ==
+
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
@@ -5320,6 +5337,11 @@ qjobs@^1.1.4:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/qjobs/-/qjobs-1.2.0.tgz#c45e9c61800bd087ef88d7e256423bdd49e5d071"
   integrity sha512-8YOJEHtxpySA3fFDyCRxA+UUV+fA+rTWnuWvylOK/NCjhY+b4ocCtmu8TtsWb+mYeU+GCHf/S66KZF/AsteKHg==
+
+qrcodejs2@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/qrcodejs2/-/qrcodejs2-0.0.2.tgz#465afe5e39f19facecb932c11f7a186109146ae1"
+  integrity sha1-Rlr+Xjnxn6zsuTLBH3oYYQkUauE=
 
 qs@6.5.2, qs@~6.5.2:
   version "6.5.2"

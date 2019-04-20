@@ -1,3 +1,44 @@
-<p>
-  login works!
-</p>
+<div class="layout-fullpage">
+
+  <!--Logo-->
+  <img src="/assets/keyper_logo.png" class="img-logo">
+
+  <div class="layout-container">
+
+
+    <!--Username-->
+      <form class="layout-form" style="margin-top: 10px">
+        <mat-form-field class="layout-full-width">
+          <input matInput placeholder="Username" [(ngModel)]="usernameEntry" #ctrl="ngModel" [ngModelOptions]="{standalone: true}">
+        </mat-form-field>
+      </form>
+
+    <!--Password-->
+    <form class="layout-form">
+      <mat-form-field class="layout-full-width">
+        <input matInput placeholder="Password" type="password" [(ngModel)]="passwordEntry" #ctrl="ngModel" [ngModelOptions]="{standalone: true}">
+      </mat-form-field>
+    </form>
+
+    <!--Error Alert-->
+    <form class="layout-form" *ngIf="inputError!=null">
+      <p style="color: red">{{inputError}}</p>
+    </form>
+
+    <!--Buttons-->
+    <form class="layout-form">
+      <div class="layout-button layout-buttons-large">
+        <button mat-stroked-button routerLink="../signup"><mat-icon class="layout-icon-padright">create</mat-icon>Signup</button>
+        <button mat-stroked-button (click)="hashAndSendPassword()">Login<mat-icon class="layout-icon-padleft">lock_open</mat-icon></button>
+      </div>
+      <div class="layout-button layout-buttons-small">
+        <button mat-stroked-button class="layout-full-width" style="margin-bottom: 7px" (click)="hashAndSendPassword()">
+          Login<mat-icon class="layout-icon-padleft">lock_open</mat-icon>
+        </button>
+        <button mat-stroked-button class="layout-full-width" style="margin-top: 7px" routerLink="../signup">Signup<mat-icon class="layout-icon-padleft">create</mat-icon></button>
+      </div>
+    </form>
+
+  </div>
+
+</div>
