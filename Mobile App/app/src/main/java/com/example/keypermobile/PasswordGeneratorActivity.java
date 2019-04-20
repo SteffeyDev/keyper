@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -45,6 +44,7 @@ public class PasswordGeneratorActivity extends AppCompatActivity implements IPas
 
     ImageButton imageButtonCopyGenerated;
     ImageButton imageButtonOpenDrawer;
+    ImageButton imageButtonRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +52,7 @@ public class PasswordGeneratorActivity extends AppCompatActivity implements IPas
         setContentView(R.layout.navigation_drawer_password_generator);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         textViewGenerated = findViewById(R.id.textViewGenerated);
         textViewLength = findViewById(R.id.textViewLength);
@@ -76,7 +74,7 @@ public class PasswordGeneratorActivity extends AppCompatActivity implements IPas
                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                 else if (menuItem.getItemId() == R.id.item_log_out)
                     startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                // User is in password generator, so no need to check
+                // User is in password generator, so no need to check item_password_generator
 
                 //close drawer when item is selected
                 drawerLayout.closeDrawers();
@@ -94,7 +92,7 @@ public class PasswordGeneratorActivity extends AppCompatActivity implements IPas
         switchNumbers.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                textViewGeneratedPassword.setText(generatePassword(seekBarLength.getProgress(), getCharacterSet()));
+        textViewGeneratedPassword.setText(generatePassword(seekBarLength.getProgress(), getCharacterSet()));
             }
         });
 
@@ -116,30 +114,33 @@ public class PasswordGeneratorActivity extends AppCompatActivity implements IPas
             }
         });
 
+        // Seekbar current length textView
         final TextView textViewProgress = findViewById(R.id.progress);
         textViewProgress.setVisibility(View.GONE);
 
         seekBarLength = findViewById(R.id.seekBarLength);
-        seekBarLength.setMax((SEEK_BAR_MAX - SEEK_BAR_MIN)/1);
+        seekBarLength.setMax(SEEK_BAR_MAX);
+        seekBarLength.setMin(SEEK_BAR_MIN);
         seekBarLength.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 // Update generated password
                 textViewGeneratedPassword.setText(generatePassword(seekBarLength.getProgress(), getCharacterSet()));
-                int val = (progress * (seekBar.getWidth() - 2 * seekBar.getThumbOffset())) / seekBar.getMax();
+                // Getting the position to set the progress text
+                int position = (progress * (seekBar.getWidth() - 2 * seekBar.getThumbOffset())) / seekBar.getMax();
                 textViewProgress.setText("" + progress);
-                textViewProgress.setX(seekBar.getX() + val + seekBar.getThumbOffset() / 2);
+                textViewProgress.setX((seekBar.getX() + position + seekBar.getThumbOffset() / 2) - 40);
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                // only gen new password when seekbar moves
+                // Set the current number to be visible when touched
                 textViewProgress.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                // only gen new password when seekbar moves
+                // Set the  current number to be invisible when released
                 textViewProgress.setVisibility(View.GONE);
             }
         });
@@ -158,6 +159,15 @@ public class PasswordGeneratorActivity extends AppCompatActivity implements IPas
             public void onClick(View v) {
                 drawerLayout.openDrawer(GravityCompat.START);
            }
+        });
+
+        imageButtonRefresh = findViewById(R.id.imageButtonRefresh);
+        imageButtonRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Refresh the generated password
+                textViewGeneratedPassword.setText(generatePassword(seekBarLength.getProgress(), getCharacterSet()));
+            }
         });
 
         // Generate password
@@ -179,7 +189,7 @@ public class PasswordGeneratorActivity extends AppCompatActivity implements IPas
         return generatedPassword.toString();
     }
 
-    // return the characterSet corresponding to the checked switches
+    // Return the characterSet corresponding to the checked switches
     public String getCharacterSet()
     {
         if (switchLetters.isChecked() && switchNumbers.isChecked() && switchSpecialCharacters.isChecked())
