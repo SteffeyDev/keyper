@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.keypermobile"
-        minSdkVersion 26
+        minSdkVersion 22
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -37,6 +37,7 @@ dependencies {
     implementation 'com.google.apis:google-api-services-people:v1-rev4-1.22.0'
     // volley
     implementation 'com.android.volley:volley:1.1.0'
-    // to deserialize/serialize json ibjects returned by Authy
+    // to deserialize/serialize json ibjects returned by the backend
     implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.amitshekhar.android:android-networking:1.0.2'
 }
