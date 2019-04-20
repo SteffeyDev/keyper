@@ -18,6 +18,8 @@ public class User
         this.sites = sites;
     }
 
+    public User() {}
+
     public class Site
     {
         String title;
