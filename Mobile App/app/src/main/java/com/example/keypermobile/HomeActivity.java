@@ -1,5 +1,9 @@
 package com.example.keypermobile;
 
+import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,6 +30,12 @@ public class HomeActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     PasswordAdapter adapter;
 
+    DrawerLayout drawerLayout;
+
+    NavigationView navigationView;
+
+    Menu navigationViewMenu;
+
     List<Password> passwordList;
 
     @Override
@@ -41,9 +51,38 @@ public class HomeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Keyper");
 
+        drawerLayout = findViewById(R.id.drawer_layout);
+
+        navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                // highlight selected item
+                menuItem.setChecked(true);
+
+                if (menuItem.getItemId() == R.id.item_password_generator)
+                    startActivity(new Intent(getApplicationContext(), PasswordGeneratorActivity.class));
+                else if (menuItem.getItemId() == R.id.item_tags)
+                    // Might change, unsure where to send on tags
+                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                else if (menuItem.getItemId() == R.id.item_log_out)
+                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                // User is in home, so no need to check item_home
+
+                //close drawer when item is selected
+                drawerLayout.closeDrawers();
+
+                navigationView.setCheckedItem(R.id.menu_none);
+
+                return true;
+            }
+        });
+
+        navigationViewMenu = navigationView.getMenu();
+
         passwordList = new ArrayList<>();
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 

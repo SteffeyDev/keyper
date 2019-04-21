@@ -7,7 +7,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required, l
 import pyotp
 from mongoengine import *
 from mongoengine.context_managers import switch_collection
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, Unauthorized
 
 app = Flask(__name__, static_url_path='', static_folder='web/dist/keyper')
 lm = LoginManager()
@@ -22,13 +22,16 @@ app.config['SECRET_KEY'] = SECRET_KEY
 
 #TOTP_SECRET = pyotp.random_base32()
 TOTP_SECRET = os.environ.get("TOTP_SECRET")
+if not TOTP_SECRET:
+	raise ValueError("No secret key for TOTP in OS for API")
+
 totp = pyotp.TOTP(TOTP_SECRET)
 skip_TOTP = False
 
 # db = keyper, mongodb://172.0.0.1:27017
-#connect('keyper')
+connect('keyper')
 # test database below. only need line above in prod.
-connect('keyper', host='mongodb://test:testUser1@ds161104.mlab.com:61104/practice')
+#connect('keyper', host='mongodb://test:testUser1@ds161104.mlab.com:61104/practice')
 
 # Encrypted site specific password blobs
 class SiteInfo(EmbeddedDocument):
@@ -97,17 +100,17 @@ def delete():
 	if login_fresh() == True:
 		try:
 			error = None
-			user = str(request.form['username'])
+			user = session['user_id']
 			with switch_collection(User, 'users') as toDel:
 				User.objects(username=user).delete()
 				logout_user()
 				return 'User %s has been deleted' %user
 
 		except DoesNotExist:
-				return 'User %s does not exist.' %user
+				raise BadRequest('User does not exist.')
 
 	else:
-		return lm.unauthorized()
+		raise Unauthorized('Session is not fresh.')
 
 @app.route('/api/login', methods=['GET', 'POST'])
 def login():
@@ -125,19 +128,19 @@ def login():
 					return jsonify(success=True)
 
 			else:
-				return 'Invalid username or password. Try again.'
+				raise Unauthorized('Registration error. Try again.')
 
 		except DoesNotExist:
-			return 'User does not exist. Try again or register.'
+			raise BadRequest('Registration Error. Try again.')
 
 @app.route('/api/token', methods=['GET', 'POST'])
 def verifyToken():
 	if not session['verify']:
-		raise BadRequest('Please verify username and password.')
+		raise Unauthorized('Please verify username and password.')
 
 	else:
 		if not totp.verify(request.form['token']):
-			raise BadRequest('Incorrect auth code')
+			raise Unauthorized('Incorrect auth code')
 		else:
 			username = session['verify']
 			with switch_collection(User, 'users') as toGet:
@@ -148,7 +151,7 @@ def verifyToken():
 					return 'True'
 
 				except DoesNotExist:
-					return 'User does not exist. Try again or register.'
+					raise BadRequest('Error has occurred. Try again.')
 
 
 @app.route('/api/sites', methods=['GET'])
@@ -186,10 +189,10 @@ def deleteSites(id):
 				return jsonify({ 'success': id });
 
 			except DoesNotExist:
-				return 'Site info does not exist.'
+				raise BadRequest('Site info does not exist.')
 
 		except DoesNotExist:
-			return 'User not found.'
+			raise BadRequest('User not found.')
 
 @app.route('/api/logout', methods=['GET', 'POST'])
 @login_required

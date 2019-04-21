@@ -13,7 +13,18 @@
         android:background="@color/design_default_color_primary_dark"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:layout_collapseMode="pin" />
+        app:layout_collapseMode="pin" >
+
+    <ImageButton
+        android:id="@+id/imageButtonOpenDrawer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/image_button_open_drawer"
+        android:tint="@android:color/white"
+        app:srcCompat="@drawable/ic_menu_white_24dp" />
+
+    </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
