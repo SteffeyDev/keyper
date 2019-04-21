@@ -320,7 +320,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
         });
 
         // Add current tags to the view
-        for (String tag : site.tags)
+        for (final String tag : site.tags)
         {
             final Button buttonTag = new Button(linearLayout.getContext());
             buttonTag.setText(tag);
@@ -339,7 +339,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
                 @Override
                 public void onClick(View v) {
                     linearLayout.removeView(buttonTag);
-                    site.tags.remove(editTextCreateTags.getText().toString());
+                    site.tags.remove(tag);
                 }
             });
         }
@@ -350,6 +350,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
             public void onClick(View v) {
 
                 if (!editTextCreateTags.getText().toString().isEmpty()) {
+                    final String tag = editTextCreateTags.getText().toString();
                     site.tags.add(editTextCreateTags.getText().toString());
                     final Button buttonTag = new Button(linearLayout.getContext());
                     buttonTag.setText(editTextCreateTags.getText().toString());
@@ -369,7 +370,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
                         @Override
                         public void onClick(View v) {
                             linearLayout.removeView(buttonTag);
-                            site.tags.remove(editTextCreateTags.getText().toString());
+                            site.tags.remove(tag);
                         }
                     });
                 }
