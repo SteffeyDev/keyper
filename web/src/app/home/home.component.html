@@ -157,6 +157,20 @@
       </td>
     </ng-container>
 
+    <ng-container matColumnDef="notes">
+      <th mat-header-cell *matHeaderCellDef> Notes </th>
+      <td mat-cell *matCellDef="let entry">
+        <button
+          (click)="showNotesDialog(entry)"
+          tabindex="-1"
+          matTooltip="Edit notes"
+          mat-icon-button>
+          <mat-icon *ngIf="entry.notes && entry.notes.length > 0" aria-hidden="false" aria-label="Edit Notes">insert_comment</mat-icon>
+          <mat-icon *ngIf="!entry.notes || entry.notes.length === 0" aria-hidden="false" aria-label="Add Notes">add_comment</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
     <ng-container matColumnDef="delete">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let entry">

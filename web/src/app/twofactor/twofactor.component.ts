@@ -35,6 +35,9 @@ export class TwoFactorComponent implements OnInit {
   constructor(@Inject(SESSION_STORAGE) private storage: WebStorageService, private httpClient: HttpClient) {
     this.totpUri = this.storage.get('QRCode');
     this.username = this.storage.get('username');
+    if (!this.username) {
+      window.location.href = '/login';
+    }
   }
 
   ngOnInit() { }
