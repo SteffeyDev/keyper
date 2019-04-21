@@ -58,7 +58,7 @@ public class SignUpActivity extends AppCompatActivity {
                     MessageDigest md = MessageDigest.getInstance("SHA-512");
                     final String hash = String.valueOf(Hex.encodeHex(md.digest(password.getBytes())));
 
-                    NetworkUtils.injectCookies(AndroidNetworking.post("http://keyper.pro:5000/api/register")
+                    NetworkUtils.injectCookies(AndroidNetworking.post("http://192.168.1.182:5000/api/register")
                             .addUrlEncodeFormBodyParameter("username", username)
                             .addUrlEncodeFormBodyParameter("email", email)
                             .addUrlEncodeFormBodyParameter("password", hash.substring(0, 50)), signUpActivity)
@@ -76,7 +76,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onError(ANError anError) {
-                                    (new AlertDialog.Builder(signUpActivity)).setTitle("Issue Signing Up").setMessage(anError.getMessage()).show();
+                                    (new AlertDialog.Builder(signUpActivity)).setTitle("Issue Signing Up").setMessage("Username already taken").show();
                                 }
                             });
                 } catch (NoSuchAlgorithmException e) {}
