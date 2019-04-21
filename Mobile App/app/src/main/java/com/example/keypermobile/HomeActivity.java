@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
@@ -52,6 +53,8 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
 
     FloatingActionButton floatingActionButtonAdd;
 
+    TextView textViewLogout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +77,14 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
             }
         });
 
+        textViewLogout = findViewById(R.id.item_log_out);
+        textViewLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout();
+            }
+        });
+
         drawerLayout = findViewById(R.id.drawer_layout);
 
         navigationView = findViewById(R.id.nav_view);
@@ -85,9 +96,6 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
 
                 if (menuItem.getItemId() == R.id.item_password_generator)
                     startActivity(new Intent(getApplicationContext(), PasswordGeneratorActivity.class));
-                else if (menuItem.getItemId() == R.id.item_log_out) {
-                    logout();
-                }
                 // User is in home, so no need to check item_home
 
                 //close drawer when item is selected

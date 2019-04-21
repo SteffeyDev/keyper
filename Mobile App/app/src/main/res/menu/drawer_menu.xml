@@ -11,7 +11,7 @@
             android:title="@string/title_activity_password_generator" />
     </group>
 
-    <group android:checkableBehavior="none"
+    <group android:checkableBehavior="single"
             android:id="@+id/empty_group">
         <item
             android:id="@+id/menu_none"
