@@ -11,11 +11,12 @@
         android:layout_width="408dp"
         android:layout_height="55dp"
         android:layout_marginTop="16dp"
+        android:text="TextView"
         android:textAlignment="center"
         android:textSize="30sp"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="1dp"
-        android:text="2-Factor Authentication" />
+        tools:text="2-Factor Authentication" />
 
     <View
         android:id="@+id/divider"
@@ -28,11 +29,22 @@
         tools:layout_editor_absoluteX="1dp" />
 
 
+    <Button
+        android:id="@+id/open"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="140dp"
+        android:text="Open in Authenticator app"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <EditText
         android:id="@+id/token"
         android:layout_width="238dp"
         android:layout_height="43dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="184dp"
         android:ems="10"
         android:hint="Enter Code"
         android:inputType="number"
@@ -46,13 +58,40 @@
         android:id="@+id/verify"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:minWidth="200dp"
+        android:layout_marginTop="16dp"
         android:textStyle="bold"
+        android:minWidth="200dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/token"
         android:text="Verify" />
+
+    <TextView
+        android:id="@+id/step2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="212dp"
+        android:layout_marginEnd="20dp"
+        android:ellipsize="none"
+        android:scrollHorizontally="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="Step 2: Enter 6-digit code from authenticator app to confirm it is set up correctly." />
+
+    <TextView
+        android:id="@+id/step1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="101dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="Step 1: Link Keyper with your authentication app." />
 
 </android.support.constraint.ConstraintLayout>
