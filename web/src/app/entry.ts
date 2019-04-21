@@ -35,7 +35,7 @@ export class PasswordEntry implements Serializable<PasswordEntry> {
 
     // When creating new entry
     this.tags = [];
-    this.id = makeid(32);
+    this.id = makeid(16);
   }
 
   deserialize(input: any) {
