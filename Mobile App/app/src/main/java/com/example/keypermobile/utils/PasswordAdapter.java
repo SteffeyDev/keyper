@@ -1,6 +1,7 @@
 package com.example.keypermobile.utils;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.keypermobile.R;
 import com.example.keypermobile.models.Password;
@@ -26,11 +28,13 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
     private Context mCtx;
     private List<Password> passwordList;
     private List<Password> passwordListFull;
+    private OnPasswordClickListener onPasswordClickListener;
 
-    public PasswordAdapter(Context mCtx, List<Password> passwordList) {
+    public PasswordAdapter(Context mCtx, List<Password> passwordList, OnPasswordClickListener onPasswordClickListener) {
         this.mCtx = mCtx;
         this.passwordList = passwordList;
         passwordListFull = new ArrayList<>(passwordList);
+        this.onPasswordClickListener = onPasswordClickListener;
     }
 
     @NonNull
@@ -38,7 +42,7 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
     public PasswordViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         LayoutInflater inflater = LayoutInflater.from(mCtx);
         View view = inflater.inflate(R.layout.list_layout, null);
-        return new PasswordViewHolder(view);
+        return new PasswordViewHolder(view, onPasswordClickListener);
     }
 
     @Override
@@ -91,19 +95,32 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
         }
     };
 
-    class PasswordViewHolder extends RecyclerView.ViewHolder {
+    class PasswordViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView imageView;
         TextView textViewTitle, textViewWebsite;
+        OnPasswordClickListener onPasswordClickListener;
 
 
-        public PasswordViewHolder(View itemView){
+        public PasswordViewHolder(View itemView, OnPasswordClickListener onPasswordClickListener){
             super(itemView);
 
             imageView = itemView.findViewById(R.id.imageView);
             textViewTitle = itemView.findViewById(R.id.textViewTitle);
             textViewWebsite = itemView.findViewById(R.id.textViewWebsite);
+            this.onPasswordClickListener = onPasswordClickListener;
 
+            itemView.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            onPasswordClickListener.onPasswordClick(getAdapterPosition());
+        }
+    }
+
+    public interface OnPasswordClickListener
+    {
+        void onPasswordClick(int position);
     }
 }
