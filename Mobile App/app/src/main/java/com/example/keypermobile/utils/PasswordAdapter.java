@@ -14,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.keypermobile.R;
-import com.example.keypermobile.models.Password;
+import com.example.keypermobile.models.Site;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +26,11 @@ import java.util.List;
 public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.PasswordViewHolder> implements Filterable {
 
     private Context mCtx;
-    private List<Password> passwordList;
-    private List<Password> passwordListFull;
+    private List<Site> passwordList;
+    private List<Site> passwordListFull;
     private OnPasswordClickListener onPasswordClickListener;
 
-    public PasswordAdapter(Context mCtx, List<Password> passwordList, OnPasswordClickListener onPasswordClickListener) {
+    public PasswordAdapter(Context mCtx, List<Site> passwordList, OnPasswordClickListener onPasswordClickListener) {
         this.mCtx = mCtx;
         this.passwordList = passwordList;
         passwordListFull = new ArrayList<>(passwordList);
@@ -47,12 +47,12 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
 
     @Override
     public void onBindViewHolder(@NonNull PasswordViewHolder holder, int position) {
-        Password password = passwordList.get(position);
+        Site password = passwordList.get(position);
 
         holder.textViewTitle.setText(password.getTitle());
-        holder.textViewWebsite.setText(password.getWebsite());
+        holder.textViewWebsite.setText(password.getUrl());
 
-        holder.imageView.setImageDrawable(mCtx.getResources().getDrawable(password.getImage()));
+        // holder.imageView.setImageDrawable(mCtx.getResources().getDrawable(password.getImage()));
     }
 
     @Override
@@ -64,7 +64,7 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
     private Filter passwordFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            List<Password> filteredList = new ArrayList<>();
+            List<Site> filteredList = new ArrayList<>();
 
             // for when you haven't typed anything in the searchbar it shows the full list
             if (constraint == null || constraint.length() == 0)
@@ -74,9 +74,9 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
                 //keeps searched for string lowercases and trims them
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
-                for(Password password : passwordListFull) {
+                for(Site password : passwordListFull) {
                     //Searches through all the titles of every password or Searches through all the websites of every password
-                    if(password.getTitle().toLowerCase().contains(filterPattern) || password.getWebsite().toLowerCase().contains(filterPattern)){
+                    if(password.getTitle().toLowerCase().contains(filterPattern) || password.getUrl().toLowerCase().contains(filterPattern)){
                         filteredList.add(password);
                     }
                 }

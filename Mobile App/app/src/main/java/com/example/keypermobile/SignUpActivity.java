@@ -97,6 +97,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void launchTwoFactorActivity(String totpUri) {
         Intent intent = new Intent(this, TwoFactorAuthActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
         intent.putExtra("totpUri", totpUri);
         startActivity(intent);
     }

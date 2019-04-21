@@ -6,20 +6,31 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.example.keypermobile.models.Password;
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONArrayRequestListener;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.example.keypermobile.models.Site;
+import com.example.keypermobile.utils.EncryptionUtils;
+import com.example.keypermobile.utils.NetworkUtils;
 import com.example.keypermobile.utils.PasswordAdapter;
+
+import org.apache.commons.codec.binary.Hex;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +48,7 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
 
     Menu navigationViewMenu;
 
-    List<Password> passwordList;
+    List<Site> passwordList;
 
     FloatingActionButton floatingActionButtonAdd;
 
@@ -45,6 +56,9 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.navigation_drawer_home);
+
+        AndroidNetworking.initialize(getApplicationContext());
+        getSites();
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -97,33 +111,33 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
             }
         });
 
-        passwordList = new ArrayList<>();
+        passwordList = new ArrayList<Site>();
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        passwordList.add(
-                new Password(1,"Google Account","www.google.com", R.drawable.logo_google)
-        );
-        passwordList.add(
-                new Password(2,"NOT Google Account","www.notgoogle.com", R.drawable.logo_google)
-        );
-        passwordList.add(
-                new Password(3,"Goggles Account","www.goggles.com", R.drawable.logo_google)
-        );
-        passwordList.add(
-                new Password(4,"A Account","www.alabama.gov", R.drawable.logo_google)
-        );
-        passwordList.add(
-                new Password(5,"B Account","www.bet.com", R.drawable.logo_google)
-        );
-        passwordList.add(
-                new Password(6,"C Account","www.ComedyCentral.com", R.drawable.logo_google)
-        );
-        passwordList.add(
-                new Password(7,"Desmos","www.Desmos.com", R.drawable.logo_google)
-        );
+//        passwordList.add(
+//                new Password(1,"Google Account","www.google.com", R.drawable.logo_google)
+//        );
+//        passwordList.add(
+//                new Password(2,"NOT Google Account","www.notgoogle.com", R.drawable.logo_google)
+//        );
+//        passwordList.add(
+//                new Password(3,"Goggles Account","www.goggles.com", R.drawable.logo_google)
+//        );
+//        passwordList.add(
+//                new Password(4,"A Account","www.alabama.gov", R.drawable.logo_google)
+//        );
+//        passwordList.add(
+//                new Password(5,"B Account","www.bet.com", R.drawable.logo_google)
+//        );
+//        passwordList.add(
+//                new Password(6,"C Account","www.ComedyCentral.com", R.drawable.logo_google)
+//        );
+//        passwordList.add(
+//                new Password(7,"Desmos","www.Desmos.com", R.drawable.logo_google)
+//        );
         adapter = new PasswordAdapter(this, passwordList, this);
         recyclerView.setAdapter(adapter);
     }
@@ -133,7 +147,7 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
         passwordList.get(position);
         Intent editPasswordIntent = new Intent(getApplicationContext(), EditPasswordActivity.class);
         editPasswordIntent.putExtra("Title", passwordList.get(position).getTitle());
-        editPasswordIntent.putExtra("Website", passwordList.get(position).getWebsite());
+        editPasswordIntent.putExtra("Website", passwordList.get(position).getUrl());
         editPasswordIntent.putExtra("Activity Title", getResources().getString(R.string.title_activity_edit_password));
         startActivity(editPasswordIntent);
     }
@@ -158,6 +172,42 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
         }
 //        Toast.makeText(this, msg + " Checked", Toast.LENGTH_LONG).show();
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        getSites();
+    }
+
+    public void getSites()
+    {
+        NetworkUtils.injectCookies(AndroidNetworking.get("http://192.168.1.182:5000/api/sites"), getApplicationContext())
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray jsonArray) {
+                        for (int i = 0; i < jsonArray.length(); i++)
+                        {
+                            try
+                            {
+                                JSONObject object = jsonArray.getJSONObject(i);
+                                passwordList.add(EncryptionUtils.DecryptSite(Hex.decodeHex(object.getString("content").toCharArray()),
+                                        object.getString("id"), getApplicationContext()));
+                            }
+                            catch (Exception e)
+                            {
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(loginIntent);
+                    }
+                });
     }
 
 }

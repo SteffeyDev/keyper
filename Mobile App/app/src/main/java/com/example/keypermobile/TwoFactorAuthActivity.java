@@ -1,5 +1,6 @@
 package com.example.keypermobile;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -93,7 +94,8 @@ public class TwoFactorAuthActivity extends AppCompatActivity {
     }
 
     private void launchHomeActivity() {
-        Intent intent = new Intent(this, HomeActivity.class);
-        startActivity(intent);
+        Intent intent = new Intent();
+        setResult(Activity.RESULT_OK, intent);
+        finish();
     }
 }

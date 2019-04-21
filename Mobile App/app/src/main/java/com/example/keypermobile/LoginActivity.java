@@ -99,11 +99,13 @@ public class LoginActivity extends AppCompatActivity {
 
     private void launchTwoFactorActivity(){
         Intent intent = new Intent(this, TwoFactorAuthActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
         startActivity(intent);
     }
 
     private void launchSignUpActivity(){
         Intent intent = new Intent(this, SignUpActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
         startActivity(intent);
     }
 

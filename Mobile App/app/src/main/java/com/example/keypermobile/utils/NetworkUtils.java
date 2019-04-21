@@ -21,4 +21,12 @@ public class NetworkUtils {
             okHttpClient = new OkHttpClient.Builder().cookieJar(cookieJar).build();
         return builder.setOkHttpClient(okHttpClient);
     }
+
+    public static ANRequest.GetRequestBuilder injectCookies(ANRequest.GetRequestBuilder builder, Context context) {
+        if (cookieJar == null)
+            cookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
+        if (okHttpClient == null)
+            okHttpClient = new OkHttpClient.Builder().cookieJar(cookieJar).build();
+        return builder.setOkHttpClient(okHttpClient);
+    }
 }

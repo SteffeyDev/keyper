@@ -1,16 +1,20 @@
 package com.example.keypermobile;
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -21,7 +25,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.net.Uri;
 import android.widget.Toast;
+
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.example.keypermobile.models.Site;
+import com.example.keypermobile.utils.EncryptionUtils;
+import com.example.keypermobile.utils.NetworkUtils;
 import com.google.gson.Gson;
+
+import org.json.JSONObject;
+
 import java.security.SecureRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,9 +71,9 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
     ImageButton imageButtonCopy;
     ImageButton imageButtonAddTag;
 
-    User user = new User();
-
     LinearLayout linearLayout;
+
+    Site site;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +82,8 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        site = new Site(getIntent().getExtras().getString("Site"));
 
         textViewToolBarText = findViewById(R.id.toolbar_text);
         getIntent().getExtras().getString("Activity Title");
@@ -86,7 +102,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
 
         // hide keyboard when clicked off editTextTitle
         editTextTitle = findViewById(R.id.editTextTitle);
-        editTextTitle.setText(getIntent().getExtras().getString("Title"));
+        editTextTitle.setText(site.getTitle());
         editTextTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -98,7 +114,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
 
         // hide keyboard when clicked off editTextWebsite
         editTextWebsite = findViewById(R.id.editTextWebsite);
-        editTextWebsite.setText(getIntent().getExtras().getString("Website"));
+        editTextWebsite.setText(site.getUrl());
         editTextWebsite.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -193,8 +209,9 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
         imageButtonClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent closeIntent = new Intent(getApplicationContext(), HomeActivity.class);
-                startActivity(closeIntent);
+                Intent closeIntent = new Intent();
+                setResult(Activity.RESULT_CANCELED, closeIntent);
+                finish();
             }
         });
 
@@ -202,15 +219,29 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
         imageButtonSavePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Gson gson = new Gson();
-               // call gson.toJson() to serialize to object before making post request
+                // Update from text fields
 
-                Intent savePasswordIntent = new Intent(getApplicationContext(), HomeActivity.class);
+                final Intent savePasswordIntent = new Intent();
 
-                // pass the saved data to the home page to update the cards
-                savePasswordIntent.putExtra("title", editTextTitle.getText().toString());
-                savePasswordIntent.putExtra("website", editTextWebsite.getText().toString());
-                startActivity(savePasswordIntent);
+                NetworkUtils.injectCookies(AndroidNetworking.post("http://192.168.1.182:5000/api/site/" + site.getId())
+                        .addByteBody(EncryptionUtils.EncryptSite(site, getApplicationContext())), getApplicationContext())
+                        .build()
+                        .getAsJSONObject(new JSONObjectRequestListener() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                savePasswordIntent.putExtra("id", site.getId());
+                                savePasswordIntent.putExtra("site", site.toJson());
+                                setResult(Activity.RESULT_OK, savePasswordIntent);
+                                Toast.makeText(getApplicationContext(), "Password Updated", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+
+                            @Override
+                            public void onError(ANError anError) {
+                                Log.e("Keyper Networking Error", anError.getErrorDetail());
+                                (new AlertDialog.Builder(getApplicationContext())).setTitle("Incorrect username or password").setMessage("Please double checked you entered your credentials correctly").show();
+                            }
+                        });
 
                 // send saved data back to the database once JsonIo is done
             }
@@ -234,6 +265,11 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
             }
         });
 
+        for (String tag : site.tags)
+        {
+
+        }
+
         imageButtonAddTag = findViewById(R.id.imageButtonAddTag);
         imageButtonAddTag.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -241,6 +277,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
                 // add tag to current user site when JSON IO completed
                 // user.sites.get(currentSite).tags.add(editTextCreateTags);
                 if (!editTextCreateTags.getText().toString().isEmpty()) {
+                    site.tags.add(editTextCreateTags.getText().toString());
                     final Button buttonTag = new Button(linearLayout.getContext());
                     buttonTag.setText(editTextCreateTags.getText().toString());
 
