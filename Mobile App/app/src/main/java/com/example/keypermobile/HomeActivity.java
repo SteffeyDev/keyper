@@ -205,7 +205,7 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
                     @Override
                     public void onError(ANError anError) {
                         Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
-                        startActivity(loginIntent);
+                        startActivityForResult(loginIntent, 0);
                     }
                 });
     }
@@ -218,13 +218,13 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
                     @Override
                     public void onResponse(JSONArray jsonArray) {
                         Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
-                        startActivity(loginIntent);
+                        startActivityForResult(loginIntent, 0);
                     }
 
                     @Override
                     public void onError(ANError anError) {
                         Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
-                        startActivity(loginIntent);
+                        startActivityForResult(loginIntent, 0);
                     }
                 });
     }

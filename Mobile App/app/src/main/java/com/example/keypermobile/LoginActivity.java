@@ -101,12 +101,14 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(this, TwoFactorAuthActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
         startActivity(intent);
+        finish();
     }
 
     private void launchSignUpActivity(){
         Intent intent = new Intent(this, SignUpActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
         startActivity(intent);
+        finish();
     }
 
 }
