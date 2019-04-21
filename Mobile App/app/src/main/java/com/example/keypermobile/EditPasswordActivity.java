@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -218,38 +219,48 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
         buttonDeletePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Delete this site object for this user, when JSON IO is finished
-                site.setTitle("");
-                site.setUrl("");
-                site.setEmail("");
-                site.setPassword("");
-                site.setUsername("");
-                site.setNotes("");
-
-                for (String tag : site.tags)
-                    site.tags.remove(tag);
-
-                final Intent closePasswordIntent = new Intent();
-
-                NetworkUtils.injectCookies(AndroidNetworking.delete(NetworkUtils.getApiUrl(getApplicationContext()) + "site/" + site.getId()),
-                        getApplicationContext())
-                        .build()
-                        .getAsJSONObject(new JSONObjectRequestListener() {
+                // Get user confirmation before deleting site
+                new AlertDialog.Builder(v.getContext())
+                        .setTitle("Delete Item")
+                        .setMessage("Are you sure want to delete this item? This action cannot be undone.")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
-                            public void onResponse(JSONObject response) {
-                                closePasswordIntent.putExtra("id", site.getId());
-                                closePasswordIntent.putExtra("site", site.toJson());
-                                setResult(Activity.RESULT_OK, closePasswordIntent);
-                                Toast.makeText(getApplicationContext(), "Password Deleted", Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
+                            public void onClick(DialogInterface dialog, int which) {
 
-                            @Override
-                            public void onError(ANError anError) {
-                                Log.e("Keyper Networking Error", anError.getErrorDetail());
-                                (new AlertDialog.Builder(getApplicationContext())).setTitle("Deletion failed").setMessage("Password could not be deleted").show();
-                            }
-                        });
+                                site.setTitle("");
+                                site.setUrl("");
+                                site.setEmail("");
+                                site.setPassword("");
+                                site.setUsername("");
+                                site.setNotes("");
+
+                                for (String tag : site.tags)
+                                    site.tags.remove(tag);
+
+                                final Intent closePasswordIntent = new Intent();
+
+                                NetworkUtils.injectCookies(AndroidNetworking.delete(NetworkUtils.getApiUrl(getApplicationContext()) + "site/" + site.getId()),
+                                        getApplicationContext())
+                                        .build()
+                                        .getAsJSONObject(new JSONObjectRequestListener() {
+                                            @Override
+                                            public void onResponse(JSONObject response) {
+                                                closePasswordIntent.putExtra("id", site.getId());
+                                                closePasswordIntent.putExtra("site", site.toJson());
+                                                setResult(Activity.RESULT_OK, closePasswordIntent);
+                                                Toast.makeText(getApplicationContext(), "Password Deleted", Toast.LENGTH_SHORT).show();
+                                                finish();
+                                            }
+
+                                            @Override
+                                            public void onError(ANError anError) {
+                                                Log.e("Keyper Networking Error", anError.getErrorDetail());
+                                                (new AlertDialog.Builder(getApplicationContext())).setTitle("Deletion failed").setMessage("Password could not be deleted").show();
+                                            }
+                                        });
+                            }})
+                        .setNegativeButton(android.R.string.no, null).show();
+
             }
         });
 
@@ -296,8 +307,6 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
                                 (new AlertDialog.Builder(getApplicationContext())).setTitle("Invalid Password entry").setMessage("Please double checked you entered valid information").show();
                             }
                         });
-
-                // send saved data back to the database once JsonIo is done
             }
         });
 
@@ -338,8 +347,18 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
             buttonTag.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    linearLayout.removeView(buttonTag);
-                    site.tags.remove(tag);
+                    // Get user confirmation before deleting tag
+                    new AlertDialog.Builder(v.getContext())
+                            .setTitle("Delete Tag")
+                            .setMessage("Are you sure want to delete this tag?")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    linearLayout.removeView(buttonTag);
+                                    site.tags.remove(tag);
+                                    Toast.makeText(getApplicationContext(), "Tag Deleted", Toast.LENGTH_SHORT).show();
+                                }})
+                            .setNegativeButton(android.R.string.no, null).show();
                 }
             });
         }
@@ -369,8 +388,18 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
                     buttonTag.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            linearLayout.removeView(buttonTag);
-                            site.tags.remove(tag);
+                        // Get user confirmation before deleting tag
+                        new AlertDialog.Builder(v.getContext())
+                                .setTitle("Delete Tag")
+                                .setMessage("Are you sure want to delete this tag?")
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        linearLayout.removeView(buttonTag);
+                                        site.tags.remove(tag);
+                                        Toast.makeText(getApplicationContext(), "Tag Deleted", Toast.LENGTH_SHORT).show();
+                                    }})
+                                .setNegativeButton(android.R.string.no, null).show();
                         }
                     });
                 }
