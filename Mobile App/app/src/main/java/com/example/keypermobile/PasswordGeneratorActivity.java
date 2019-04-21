@@ -43,6 +43,7 @@ public class PasswordGeneratorActivity extends AppCompatActivity implements IPas
     TextView textViewGenerated;
     TextView textViewGeneratedPassword;
     TextView textViewLength;
+    TextView textViewLogout;
 
     Switch switchNumbers;
     Switch switchLetters;
@@ -66,6 +67,14 @@ public class PasswordGeneratorActivity extends AppCompatActivity implements IPas
         textViewLength = findViewById(R.id.textViewLength);
         textViewGeneratedPassword = findViewById(R.id.textViewGeneratedPassword);
 
+        textViewLogout = findViewById(R.id.item_log_out);
+        textViewLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout();
+            }
+        });
+
         drawerLayout = findViewById(R.id.drawer_layout);
 
         navigationView = findViewById(R.id.nav_view);
@@ -77,12 +86,7 @@ public class PasswordGeneratorActivity extends AppCompatActivity implements IPas
 
                 if (menuItem.getItemId() == R.id.item_home)
                     finish();
-                else if (menuItem.getItemId() == R.id.item_tags)
-                    // Might change, unsure where to send on tags
-                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                else if (menuItem.getItemId() == R.id.item_log_out) {
-                    logout();
-                }
+
                 // User is in password generator, so no need to check item_password_generator
 
                 //close drawer when item is selected
