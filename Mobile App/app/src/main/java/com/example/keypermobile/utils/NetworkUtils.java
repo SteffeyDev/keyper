@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.ANRequest;
+import com.androidnetworking.common.RequestBuilder;
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
@@ -32,6 +33,14 @@ public class NetworkUtils {
         if (okHttpClient == null)
             okHttpClient = new OkHttpClient.Builder().cookieJar(cookieJar).build();
         return builder.setOkHttpClient(okHttpClient);
+    }
+
+    public static ANRequest.DeleteRequestBuilder injectCookies(ANRequest.DeleteRequestBuilder builder, Context context) {
+        if (cookieJar == null)
+            cookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
+        if (okHttpClient == null)
+            okHttpClient = new OkHttpClient.Builder().cookieJar(cookieJar).build();
+        return (ANRequest.DeleteRequestBuilder)builder.setOkHttpClient(okHttpClient);
     }
 
     public static String getApiUrl(Context context) {

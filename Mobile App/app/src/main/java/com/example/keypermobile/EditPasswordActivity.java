@@ -216,7 +216,37 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
             @Override
             public void onClick(View v) {
                 // Delete this site object for this user, when JSON IO is finished
+                site.setTitle("");
+                site.setUrl("");
+                site.setEmail("");
+                site.setPassword("");
+                site.setUsername("");
+                site.setNotes("");
 
+                for (String tag : site.tags)
+                    site.tags.remove(tag);
+
+                final Intent closePasswordIntent = new Intent();
+
+                NetworkUtils.injectCookies(AndroidNetworking.delete(NetworkUtils.getApiUrl(getApplicationContext()) + "site/" + site.getId()),
+                        getApplicationContext())
+                        .build()
+                        .getAsJSONObject(new JSONObjectRequestListener() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                closePasswordIntent.putExtra("id", site.getId());
+                                closePasswordIntent.putExtra("site", site.toJson());
+                                setResult(Activity.RESULT_OK, closePasswordIntent);
+                                Toast.makeText(getApplicationContext(), "Password Deleted", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+
+                            @Override
+                            public void onError(ANError anError) {
+                                Log.e("Keyper Networking Error", anError.getErrorDetail());
+                                (new AlertDialog.Builder(getApplicationContext())).setTitle("Deletion failed").setMessage("Password could not be deleted").show();
+                            }
+                        });
             }
         });
 
@@ -260,7 +290,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
                             @Override
                             public void onError(ANError anError) {
                                 Log.e("Keyper Networking Error", anError.getErrorDetail());
-                                (new AlertDialog.Builder(getApplicationContext())).setTitle("Incorrect username or password").setMessage("Please double checked you entered your credentials correctly").show();
+                                (new AlertDialog.Builder(getApplicationContext())).setTitle("Invalid Password entry").setMessage("Please double checked you entered valid information").show();
                             }
                         });
 
@@ -290,7 +320,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
         for (String tag : site.tags)
         {
             final Button buttonTag = new Button(linearLayout.getContext());
-            buttonTag.setText(editTextCreateTags.getText().toString());
+            buttonTag.setText(tag);
 
             // Set background and text color
             int bgColor = getRandomColor();
