@@ -353,6 +353,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
                     site.tags.add(editTextCreateTags.getText().toString());
                     final Button buttonTag = new Button(linearLayout.getContext());
                     buttonTag.setText(editTextCreateTags.getText().toString());
+                    editTextCreateTags.setText("");
 
                     // Set background and text color
                     int bgColor = getRandomColor();
@@ -362,9 +363,6 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
 
                     // Add to button to the linear layout
                     linearLayout.addView(buttonTag);
-
-                    site.tags.add(editTextCreateTags.getText().toString());
-
 
                     // Remove tag on click
                     buttonTag.setOnClickListener(new View.OnClickListener() {
