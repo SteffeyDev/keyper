@@ -83,7 +83,14 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        site = new Site(getIntent().getExtras().getString("Site"));
+        Intent intent = getIntent();
+
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            if (extras.containsKey("Site")) {
+                site = new Site(getIntent().getExtras().getString("Site"));
+            }
+        }
 
         textViewToolBarText = findViewById(R.id.toolbar_text);
         getIntent().getExtras().getString("Activity Title");

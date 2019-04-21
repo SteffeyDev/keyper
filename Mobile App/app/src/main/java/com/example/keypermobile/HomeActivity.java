@@ -88,8 +88,9 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
                 else if (menuItem.getItemId() == R.id.item_tags)
                     // Might change, unsure where to send on tags
                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                else if (menuItem.getItemId() == R.id.item_log_out)
-                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                else if (menuItem.getItemId() == R.id.item_log_out) {
+                    logout();
+                }
                 // User is in home, so no need to check item_home
 
                 //close drawer when item is selected
@@ -146,8 +147,7 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
     public void onPasswordClick ( int position){
         passwordList.get(position);
         Intent editPasswordIntent = new Intent(getApplicationContext(), EditPasswordActivity.class);
-        editPasswordIntent.putExtra("Title", passwordList.get(position).getTitle());
-        editPasswordIntent.putExtra("Website", passwordList.get(position).getUrl());
+        editPasswordIntent.putExtra("Site", passwordList.get(position).toJson());
         editPasswordIntent.putExtra("Activity Title", getResources().getString(R.string.title_activity_edit_password));
         startActivity(editPasswordIntent);
     }
@@ -200,6 +200,25 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
                             {
                             }
                         }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(loginIntent);
+                    }
+                });
+    }
+
+    public void logout()
+    {
+        NetworkUtils.injectCookies(AndroidNetworking.get("http://192.168.1.182:5000/api/logout"), getApplicationContext())
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray jsonArray) {
+                        Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(loginIntent);
                     }
 
                     @Override
