@@ -8,6 +8,8 @@ import com.google.api.client.util.StringUtils;
 
 import org.apache.commons.codec.binary.Hex;
 
+import java.util.Random;
+
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
@@ -18,7 +20,7 @@ public class EncryptionUtils {
     public static String pad(String raw)
     {
         int size = raw.length();
-        int padding = 32 - (size % 32);
+        int padding = 16 - (size % 16);
 
         for (int i = 0; i < padding; i++)
             raw = "x" + raw;
@@ -96,13 +98,25 @@ public class EncryptionUtils {
         SharedPreferences pref = context.getSharedPreferences("keyper", 0);
         try
         {
-            SecretKey key = new SecretKeySpec(Hex.decodeHex(pref.getString("key", "").toCharArray()), "AES");
+            byte[] key = Hex.decodeHex(pref.getString("key", "").toCharArray());
             byte[] iv = id.getBytes();
-            return new Site(unpad(Decrypt(raw, key, iv)));
+            return new Site(unpad(Decrypt(raw, new SecretKeySpec(key, "AES"), iv)));
         }
         catch (Exception e)
         {
             return null;
         }
+    }
+
+    public static String getRandomId() {
+        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+        StringBuilder salt = new StringBuilder();
+        Random rnd = new Random();
+        while (salt.length() < 16) { // length of the random string.
+            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+            salt.append(SALTCHARS.charAt(index));
+        }
+        String saltStr = salt.toString();
+        return saltStr;
     }
 }

@@ -89,7 +89,11 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
         if (extras != null) {
             if (extras.containsKey("Site")) {
                 site = new Site(getIntent().getExtras().getString("Site"));
+            } else {
+                site = new Site();
             }
+        } else {
+            site = new Site();
         }
 
         textViewToolBarText = findViewById(R.id.toolbar_text);
@@ -161,7 +165,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
 
         // hide keyboard when clicked off editTextPassword
         editTextPasswordField = findViewById(R.id.editTextPasswordField);
-        editTextPasswordField.setText(site.getPassword().toString());
+        editTextPasswordField.setText(site.getPassword());
         editTextPasswordField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {

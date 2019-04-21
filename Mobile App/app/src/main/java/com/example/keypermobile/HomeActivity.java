@@ -118,27 +118,6 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-//        passwordList.add(
-//                new Password(1,"Google Account","www.google.com", R.drawable.logo_google)
-//        );
-//        passwordList.add(
-//                new Password(2,"NOT Google Account","www.notgoogle.com", R.drawable.logo_google)
-//        );
-//        passwordList.add(
-//                new Password(3,"Goggles Account","www.goggles.com", R.drawable.logo_google)
-//        );
-//        passwordList.add(
-//                new Password(4,"A Account","www.alabama.gov", R.drawable.logo_google)
-//        );
-//        passwordList.add(
-//                new Password(5,"B Account","www.bet.com", R.drawable.logo_google)
-//        );
-//        passwordList.add(
-//                new Password(6,"C Account","www.ComedyCentral.com", R.drawable.logo_google)
-//        );
-//        passwordList.add(
-//                new Password(7,"Desmos","www.Desmos.com", R.drawable.logo_google)
-//        );
         adapter = new PasswordAdapter(this, passwordList, this);
         recyclerView.setAdapter(adapter);
     }
@@ -188,18 +167,22 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
                 .getAsJSONArray(new JSONArrayRequestListener() {
                     @Override
                     public void onResponse(JSONArray jsonArray) {
+                        passwordList.clear();
                         for (int i = 0; i < jsonArray.length(); i++)
                         {
                             try
                             {
                                 JSONObject object = jsonArray.getJSONObject(i);
-                                passwordList.add(EncryptionUtils.DecryptSite(Hex.decodeHex(object.getString("content").toCharArray()),
-                                        object.getString("id"), getApplicationContext()));
+                                Site decryptedSite = EncryptionUtils.DecryptSite(Hex.decodeHex(object.getString("content").toCharArray()),
+                                        object.getString("id"), getApplicationContext());
+                                if (decryptedSite != null)
+                                    passwordList.add(decryptedSite);
                             }
                             catch (Exception e)
                             {
                             }
                         }
+                        adapter.notifyDataSetChanged();
                     }
 
                     @Override

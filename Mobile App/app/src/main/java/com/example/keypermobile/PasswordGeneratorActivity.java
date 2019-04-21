@@ -76,7 +76,7 @@ public class PasswordGeneratorActivity extends AppCompatActivity implements IPas
                 menuItem.setChecked(true);
 
                 if (menuItem.getItemId() == R.id.item_home)
-                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                    finish();
                 else if (menuItem.getItemId() == R.id.item_tags)
                     // Might change, unsure where to send on tags
                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
@@ -128,16 +128,15 @@ public class PasswordGeneratorActivity extends AppCompatActivity implements IPas
         textViewProgress.setVisibility(View.GONE);
 
         seekBarLength = findViewById(R.id.seekBarLength);
-        seekBarLength.setMax(SEEK_BAR_MAX);
-        seekBarLength.setMin(SEEK_BAR_MIN);
+        seekBarLength.setMax(SEEK_BAR_MAX - SEEK_BAR_MIN);
         seekBarLength.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 // Update generated password
-                textViewGeneratedPassword.setText(generatePassword(seekBarLength.getProgress(), getCharacterSet()));
+                textViewGeneratedPassword.setText(generatePassword(seekBarLength.getProgress() + SEEK_BAR_MIN, getCharacterSet()));
                 // Getting the position to set the progress text
                 int position = (progress * (seekBar.getWidth() - 2 * seekBar.getThumbOffset())) / seekBar.getMax();
-                textViewProgress.setText("" + progress);
+                textViewProgress.setText("" + (progress + SEEK_BAR_MIN));
                 textViewProgress.setX((seekBar.getX() + position + seekBar.getThumbOffset() / 2) - 40);
             }
 

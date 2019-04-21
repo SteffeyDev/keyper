@@ -1,5 +1,6 @@
 package com.example.keypermobile.models;
 
+import com.example.keypermobile.utils.EncryptionUtils;
 import com.google.gson.Gson;
 
 import java.time.LocalDateTime;
@@ -16,18 +17,15 @@ public class Site
     String notes;
     private String id;
 
-    // put serialization and deserialization in site use constructor to deserialize
-    // padding to mult of 32 when serializing , unpad when deserializing
-    public Site(String title, String username, String email, String password, String url,
-                ArrayList<String> tags, String notes)
-    {
-        this.title = title;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.url = url;
-        this.tags = tags;
-        this.notes = notes;
+    public Site() {
+        this.id = EncryptionUtils.getRandomId();
+        this.title = "";
+        this.username = "";
+        this.email = "";
+        this.password = "";
+        this.url = "";
+        this.tags = new ArrayList<>();
+        this.notes = "";
     }
 
     public Site(String json)
