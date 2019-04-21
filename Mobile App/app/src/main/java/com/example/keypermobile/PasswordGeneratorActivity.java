@@ -36,8 +36,6 @@ public class PasswordGeneratorActivity extends AppCompatActivity implements IPas
 
     NavigationView navigationView;
 
-    Menu navigationViewMenu;
-
     Toolbar toolbar;
 
     TextView textViewGenerated;
@@ -81,24 +79,15 @@ public class PasswordGeneratorActivity extends AppCompatActivity implements IPas
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                // highlight selected item
-                menuItem.setChecked(true);
 
                 if (menuItem.getItemId() == R.id.item_home)
                     finish();
 
-                // User is in password generator, so no need to check item_password_generator
-
-                //close drawer when item is selected
                 drawerLayout.closeDrawers();
-
-                navigationView.setCheckedItem(R.id.menu_none);
 
                 return true;
             }
         });
-
-        navigationViewMenu = navigationView.getMenu();
 
         switchNumbers = findViewById(R.id.switchNumbers);
         switchNumbers.setChecked(true);

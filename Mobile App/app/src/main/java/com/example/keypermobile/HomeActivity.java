@@ -50,8 +50,6 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
 
     ImageButton imageButtonOpenDrawer;
 
-    Menu navigationViewMenu;
-
     List<Site> passwordList;
 
     FloatingActionButton floatingActionButtonAdd;
@@ -94,23 +92,16 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                // highlight selected item
-                menuItem.setChecked(true);
 
                 if (menuItem.getItemId() == R.id.item_password_generator)
                     startActivity(new Intent(getApplicationContext(), PasswordGeneratorActivity.class));
-                // User is in home, so no need to check item_home
 
                 //close drawer when item is selected
                 drawerLayout.closeDrawers();
 
-                navigationView.setCheckedItem(R.id.menu_none);
-
                 return true;
             }
         });
-
-        navigationViewMenu = navigationView.getMenu();
 
         imageButtonOpenDrawer = findViewById(R.id.imageButtonOpenDrawer);
         imageButtonOpenDrawer.setOnClickListener(new View.OnClickListener() {
