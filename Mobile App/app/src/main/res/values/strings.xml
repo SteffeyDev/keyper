@@ -28,4 +28,5 @@
     <string name= "text_view_email">Email</string>
     <string name= "text_view_min">6</string>
     <string name= "text_view_max">40</string>
+    <string name= "title_activity_add_password">Add Password</string>
 </resources>
