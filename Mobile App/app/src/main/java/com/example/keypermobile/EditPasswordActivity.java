@@ -36,6 +36,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
     TextView textViewPassword;
     TextView textViewTags;
     TextView textViewNotes;
+    TextView textViewToolBarText;
 
     EditText editTextTitle;
     EditText editTextEmail;
@@ -68,6 +69,10 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        textViewToolBarText = findViewById(R.id.toolbar_text);
+        getIntent().getExtras().getString("Activity Title");
+            textViewToolBarText.setText(getIntent().getExtras().getString("Activity Title"));
+
         linearLayout = findViewById(R.id.linearLayoutId);
 
         textViewTitle = findViewById(R.id.textViewTitle);
@@ -81,6 +86,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
 
         // hide keyboard when clicked off editTextTitle
         editTextTitle = findViewById(R.id.editTextTitle);
+        editTextTitle.setText(getIntent().getExtras().getString("Title"));
         editTextTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -92,6 +98,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
 
         // hide keyboard when clicked off editTextWebsite
         editTextWebsite = findViewById(R.id.editTextWebsite);
+        editTextWebsite.setText(getIntent().getExtras().getString("Website"));
         editTextWebsite.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -233,7 +240,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
             public void onClick(View v) {
                 // add tag to current user site when JSON IO completed
                 // user.sites.get(currentSite).tags.add(editTextCreateTags);
-                if (editTextCreateTags.getText().toString() != "") {
+                if (!editTextCreateTags.getText().toString().isEmpty()) {
                     final Button buttonTag = new Button(linearLayout.getContext());
                     buttonTag.setText(editTextCreateTags.getText().toString());
 
@@ -259,6 +266,8 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
                         }
                     });
                 }
+                else
+                    Toast.makeText(getApplicationContext(), "Enter text to add a tag", Toast.LENGTH_SHORT).show();
             }
         });
     }
