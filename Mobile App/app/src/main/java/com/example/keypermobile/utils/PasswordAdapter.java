@@ -1,7 +1,10 @@
 package com.example.keypermobile.utils;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -12,8 +15,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,6 +69,29 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
 
         // Get a handler that can be used to post to the main thread
         final Handler mainHandler = new Handler(mCtx.getMainLooper());
+
+        holder.copyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ClipboardManager clipboardManager = (ClipboardManager) mCtx.getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clipData = ClipData.newPlainText("Password", password.getPassword());
+                clipboardManager.setPrimaryClip(clipData);
+                Toast.makeText(mCtx, "Password Copied", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        holder.openSiteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url = password.getUrl();
+                if (!url.startsWith("http"))
+                    url = "https://" + url;
+                Uri webPage = Uri.parse(url);
+                Intent webIntent = new Intent(Intent.ACTION_VIEW,webPage);
+
+                mCtx.startActivity(webIntent);
+            }
+        });
 
         // Get favicon and set
         new Thread(new Runnable(){
@@ -129,6 +157,8 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
 
         ImageView imageView;
         TextView textViewTitle, textViewWebsite;
+        ImageButton copyButton;
+        Button openSiteButton;
         OnPasswordClickListener onPasswordClickListener;
 
 
@@ -138,6 +168,8 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
             imageView = itemView.findViewById(R.id.imageView);
             textViewTitle = itemView.findViewById(R.id.textViewTitle);
             textViewWebsite = itemView.findViewById(R.id.textViewWebsite);
+            copyButton = itemView.findViewById(R.id.imageButtonCopy);
+            openSiteButton = itemView.findViewById(R.id.openSite);
             this.onPasswordClickListener = onPasswordClickListener;
 
             itemView.setOnClickListener(this);
