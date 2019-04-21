@@ -26,19 +26,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.keypermobile.HomeActivity" />
         </activity>
-        <activity android:name=".LoginActivity" android:theme="@style/AppTheme.Light">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".LoginActivity" android:theme="@style/AppTheme.Light"></activity>
         <activity android:name=".SignUpActivity" android:theme="@style/AppTheme.Light" />
         <activity android:name=".TwoFactorAuthActivity" android:theme="@style/AppTheme.Light" />
         <activity
             android:name=".HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

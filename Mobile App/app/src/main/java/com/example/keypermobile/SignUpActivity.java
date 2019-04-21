@@ -49,8 +49,19 @@ public class SignUpActivity extends AppCompatActivity {
                 String password = ((EditText)findViewById(R.id.password)).getText().toString();
                 String confirm = ((EditText)findViewById(R.id.confirm)).getText().toString();
 
+                if (password.length() == 0 || email.length() == 0 || username.length() == 0) {
+                    (new AlertDialog.Builder(signUpActivity)).setTitle("Incomplete Fields").setMessage("Please enter an email, username, and strong password").show();
+                    return;
+                }
+
                 if (!password.equals(confirm)) {
                     (new AlertDialog.Builder(signUpActivity)).setTitle("Passwords don't match").setMessage("Please double check you spelled your password correctly").show();
+                    return;
+                }
+
+                String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+                if (!email.matches(emailPattern)) {
+                    (new AlertDialog.Builder(signUpActivity)).setTitle("Invalid email address").setMessage("Please enter a valid email address").show();
                     return;
                 }
 
