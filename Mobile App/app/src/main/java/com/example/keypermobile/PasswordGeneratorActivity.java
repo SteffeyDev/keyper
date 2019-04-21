@@ -77,9 +77,6 @@ public class PasswordGeneratorActivity extends AppCompatActivity implements IPas
 
                 if (menuItem.getItemId() == R.id.item_home)
                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                else if (menuItem.getItemId() == R.id.item_tags)
-                    // Might change, unsure where to send on tags
-                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                 else if (menuItem.getItemId() == R.id.item_log_out) {
                     logout();
                 }

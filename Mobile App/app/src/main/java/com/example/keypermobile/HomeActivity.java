@@ -85,9 +85,6 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
 
                 if (menuItem.getItemId() == R.id.item_password_generator)
                     startActivity(new Intent(getApplicationContext(), PasswordGeneratorActivity.class));
-                else if (menuItem.getItemId() == R.id.item_tags)
-                    // Might change, unsure where to send on tags
-                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                 else if (menuItem.getItemId() == R.id.item_log_out) {
                     logout();
                 }
