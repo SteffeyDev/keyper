@@ -230,7 +230,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
 
                 final Intent savePasswordIntent = new Intent();
 
-                NetworkUtils.injectCookies(AndroidNetworking.post("http://192.168.1.182:5000/api/site/" + site.getId())
+                NetworkUtils.injectCookies(AndroidNetworking.post(NetworkUtils.getApiUrl(getApplicationContext()) + "site/" + site.getId())
                         .addByteBody(EncryptionUtils.EncryptSite(site, getApplicationContext())), getApplicationContext())
                         .build()
                         .getAsJSONObject(new JSONObjectRequestListener() {

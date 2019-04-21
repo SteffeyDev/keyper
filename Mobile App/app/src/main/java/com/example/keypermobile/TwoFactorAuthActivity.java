@@ -74,7 +74,7 @@ public class TwoFactorAuthActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String token = ((EditText)findViewById(R.id.token)).getText().toString();
 
-                NetworkUtils.injectCookies(AndroidNetworking.post("http://192.168.1.182:5000/api/token")
+                NetworkUtils.injectCookies(AndroidNetworking.post(NetworkUtils.getApiUrl(getApplicationContext()) + "token")
                         .addUrlEncodeFormBodyParameter("token", token)
                         .setContentType("application/x-www-form-urlencoded"), twoFactorAuthActivity)
                         .build()

@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
                       MessageDigest md = MessageDigest.getInstance("SHA-512");
                       final String hash = String.valueOf(Hex.encodeHex(md.digest(password.getBytes())));
 
-                      NetworkUtils.injectCookies(AndroidNetworking.post("http://192.168.1.182:5000/api/login")
+                      NetworkUtils.injectCookies(AndroidNetworking.post(NetworkUtils.getApiUrl(getApplicationContext()) + "login")
                               .addUrlEncodeFormBodyParameter("username", username)
                               .addUrlEncodeFormBodyParameter("password", hash.substring(0, 50))
                               .setContentType("application/x-www-form-urlencoded"), loginActivity)

@@ -69,7 +69,7 @@ public class SignUpActivity extends AppCompatActivity {
                     MessageDigest md = MessageDigest.getInstance("SHA-512");
                     final String hash = String.valueOf(Hex.encodeHex(md.digest(password.getBytes())));
 
-                    NetworkUtils.injectCookies(AndroidNetworking.post("http://192.168.1.182:5000/api/register")
+                    NetworkUtils.injectCookies(AndroidNetworking.post(NetworkUtils.getApiUrl(getApplicationContext()) + "register")
                             .addUrlEncodeFormBodyParameter("username", username)
                             .addUrlEncodeFormBodyParameter("email", email)
                             .addUrlEncodeFormBodyParameter("password", hash.substring(0, 50)), signUpActivity)

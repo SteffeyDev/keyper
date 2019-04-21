@@ -183,7 +183,7 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
 
     public void getSites()
     {
-        NetworkUtils.injectCookies(AndroidNetworking.get("http://192.168.1.182:5000/api/sites"), getApplicationContext())
+        NetworkUtils.injectCookies(AndroidNetworking.get(NetworkUtils.getApiUrl(getApplicationContext()) + "sites"), getApplicationContext())
                 .build()
                 .getAsJSONArray(new JSONArrayRequestListener() {
                     @Override
@@ -212,7 +212,7 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
 
     public void logout()
     {
-        NetworkUtils.injectCookies(AndroidNetworking.get("http://192.168.1.182:5000/api/logout"), getApplicationContext())
+        NetworkUtils.injectCookies(AndroidNetworking.get(NetworkUtils.getApiUrl(getApplicationContext()) + "logout"), getApplicationContext())
                 .build()
                 .getAsJSONArray(new JSONArrayRequestListener() {
                     @Override
