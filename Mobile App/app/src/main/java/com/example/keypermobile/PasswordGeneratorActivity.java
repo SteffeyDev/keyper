@@ -20,6 +20,14 @@ import android.widget.TextView;
 import android.widget.Switch;
 import android.widget.SeekBar;
 import android.widget.Toast;
+
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONArrayRequestListener;
+import com.example.keypermobile.utils.NetworkUtils;
+
+import org.json.JSONArray;
+
 import java.security.SecureRandom;
 
 public class PasswordGeneratorActivity extends AppCompatActivity implements IPasswordGenerator {
@@ -72,8 +80,9 @@ public class PasswordGeneratorActivity extends AppCompatActivity implements IPas
                 else if (menuItem.getItemId() == R.id.item_tags)
                     // Might change, unsure where to send on tags
                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                else if (menuItem.getItemId() == R.id.item_log_out)
-                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                else if (menuItem.getItemId() == R.id.item_log_out) {
+                    logout();
+                }
                 // User is in password generator, so no need to check item_password_generator
 
                 //close drawer when item is selected
@@ -224,5 +233,24 @@ public class PasswordGeneratorActivity extends AppCompatActivity implements IPas
         clipboardManager.setPrimaryClip(clipData);
         // Using toast to notify user the text has been copied
         Toast.makeText(getApplicationContext(), "Password Copied", Toast.LENGTH_SHORT).show();
+    }
+
+    public void logout()
+    {
+        NetworkUtils.injectCookies(AndroidNetworking.get("http://192.168.1.182:5000/api/logout"), getApplicationContext())
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray jsonArray) {
+                        Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(loginIntent);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(loginIntent);
+                    }
+                });
     }
 }

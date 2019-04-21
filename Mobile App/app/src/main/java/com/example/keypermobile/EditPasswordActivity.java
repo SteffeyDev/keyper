@@ -135,6 +135,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
 
         // hide keyboard when clicked off editTextEmail
         editTextEmail = findViewById(R.id.editTextEmail);
+        editTextEmail.setText(site.getEmail());
         editTextEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -148,6 +149,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
 
         // hide keyboard when clicked off editTextUsername
         editTextUsername = findViewById(R.id.editTextUsername);
+        editTextUsername.setText(site.getUsername());
         editTextUsername.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -159,6 +161,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
 
         // hide keyboard when clicked off editTextPassword
         editTextPasswordField = findViewById(R.id.editTextPasswordField);
+        editTextPasswordField.setText(site.getPassword().toString());
         editTextPasswordField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -181,6 +184,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
 
         // hide keyboard when clicked off editTextNotes
         editTextNotes = findViewById(R.id.editTextNotes);
+        editTextNotes.setText(site.getNotes().toString());
         editTextNotes.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -226,7 +230,13 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
         imageButtonSavePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Update from text fields
+                // Update site from text fields
+                site.setTitle(editTextTitle.getText().toString());
+                site.setUrl(editTextWebsite.getText().toString());
+                site.setEmail(editTextEmail.getText().toString());
+                site.setPassword(editTextPasswordField.getText().toString());
+                site.setUsername(editTextUsername.getText().toString());
+                site.setNotes(editTextNotes.getText().toString());
 
                 final Intent savePasswordIntent = new Intent();
 
@@ -272,17 +282,36 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
             }
         });
 
+        // Add current tags to the view
         for (String tag : site.tags)
         {
+            final Button buttonTag = new Button(linearLayout.getContext());
+            buttonTag.setText(editTextCreateTags.getText().toString());
 
+            // Set background and text color
+            int bgColor = getRandomColor();
+            int textColor = getContrastColor(bgColor);
+            buttonTag.setBackgroundColor(bgColor);
+            buttonTag.setTextColor(textColor);
+
+            // Add to button to the linear layout
+            linearLayout.addView(buttonTag);
+
+            // Remove tag on click
+            buttonTag.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    linearLayout.removeView(buttonTag);
+                    site.tags.remove(editTextCreateTags.getText().toString());
+                }
+            });
         }
 
         imageButtonAddTag = findViewById(R.id.imageButtonAddTag);
         imageButtonAddTag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // add tag to current user site when JSON IO completed
-                // user.sites.get(currentSite).tags.add(editTextCreateTags);
+
                 if (!editTextCreateTags.getText().toString().isEmpty()) {
                     site.tags.add(editTextCreateTags.getText().toString());
                     final Button buttonTag = new Button(linearLayout.getContext());
@@ -297,16 +326,15 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
                     // Add to button to the linear layout
                     linearLayout.addView(buttonTag);
 
-                    // TODO: Fix to work for current user/site, get currentSite through intent from home page
-                    // user.sites.get(currentSite).tags.add(buttonTag.getText());
+                    site.tags.add(editTextCreateTags.getText().toString());
+
 
                     // Remove tag on click
                     buttonTag.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             linearLayout.removeView(buttonTag);
-                            // TODO: Fix to work for current user/site, get currentSite through intent from home page
-                            // user.sites.get(currentSite).tags.add(buttonTag.getText());
+                            site.tags.remove(editTextCreateTags.getText().toString());
                         }
                     });
                 }
