@@ -204,7 +204,10 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
             public void onClick(View v) {
                 // Take you to website url and copy password to clipboard
                 CopyPassword();
-                Uri webPage = Uri.parse("http://" + editTextWebsite.getText().toString());
+                String url = editTextWebsite.getText().toString();
+                if (!url.startsWith("http"))
+                    url = "https://" + url;
+                Uri webPage = Uri.parse(url);
                 Intent webIntent = new Intent(Intent.ACTION_VIEW,webPage);
 
                 startActivity(webIntent);
