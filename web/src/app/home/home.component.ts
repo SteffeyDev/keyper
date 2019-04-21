@@ -2,6 +2,7 @@ import { Component, OnInit, HostListener, ViewChild, ElementRef, Inject, } from 
 import { MatTableDataSource, MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions, MatDialog,
   MatTable, MatSnackBar } from '@angular/material';
 import { PGDialogComponent, PGConfig } from '../pgdialog/pgdialog.component';
+import { NotesDialogComponent } from '../notes-dialog/notes-dialog.component';
 import yiq from 'yiq';
 import { generate } from 'generate-password-browser';
 import { PasswordEntry } from '../entry';
@@ -23,7 +24,7 @@ const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
   ],
 })
 export class HomeComponent implements OnInit {
-  displayedColumns: string[] = ['tags', 'title', 'url', 'username', 'email', 'password', 'delete'];
+  displayedColumns: string[] = ['tags', 'title', 'url', 'username', 'email', 'password', 'notes', 'delete'];
   dataSource = new MatTableDataSource<PasswordEntry>();
   tags: string[] = [];
   newTag: boolean;
@@ -103,8 +104,10 @@ export class HomeComponent implements OnInit {
   }
 
   removeTag(entry, tag) {
-    entry.tags = entry.tags.filter(t => t !== tag);
-    entry.sync();
+    if (confirm(`Are you sure you want to remove the tag '${tag}' from '${entry.title || entry.url}'?`)) {
+      entry.tags = entry.tags.filter(t => t !== tag);
+      entry.sync();
+    }
   }
 
   get visibleTags() {
@@ -142,6 +145,19 @@ export class HomeComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       this.passwordConfig = dialogRef.componentInstance.config;
       this.password = generate(this.passwordConfig);
+    });
+  }
+
+  showNotesDialog(entry) {
+    const dialogRef = this.dialog.open(NotesDialogComponent, {
+      width: '300px',
+    });
+    dialogRef.componentInstance.notes = entry.notes;
+    dialogRef.componentInstance.title = entry.title || entry.url;
+
+    dialogRef.afterClosed().subscribe(result => {
+      entry.notes = dialogRef.componentInstance.notes;
+      entry.sync();
     });
   }
 

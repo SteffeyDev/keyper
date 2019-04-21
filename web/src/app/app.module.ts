@@ -19,6 +19,7 @@ import { FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { InputComponent } from './input/input.component';
 import { PGDialogComponent } from './pgdialog/pgdialog.component';
+import { NotesDialogComponent } from './notes-dialog/notes-dialog.component';
 
 // Webstorage
 import { StorageServiceModule } from 'angular-webstorage-service';
@@ -33,7 +34,8 @@ import { QRCodeModule } from 'angularx-qrcode';
     TwoFactorComponent,
     HomeComponent,
     InputComponent,
-    PGDialogComponent
+    PGDialogComponent,
+    NotesDialogComponent
   ],
   imports: [
     FlexLayoutModule,
@@ -62,7 +64,8 @@ import { QRCodeModule } from 'angularx-qrcode';
     QRCodeModule
   ],
   entryComponents: [
-    PGDialogComponent
+    PGDialogComponent,
+    NotesDialogComponent
   ],
   providers: [
     BrowserModule,

@@ -40,4 +40,5 @@ dependencies {
     // to deserialize/serialize json ibjects returned by the backend
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.amitshekhar.android:android-networking:1.0.2'
+    implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
 }

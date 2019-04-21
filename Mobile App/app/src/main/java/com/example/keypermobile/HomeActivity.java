@@ -128,15 +128,15 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
         recyclerView.setAdapter(adapter);
     }
 
-        @Override
-        public void onPasswordClick ( int position){
-            passwordList.get(position);
-            Intent editPasswordIntent = new Intent(getApplicationContext(), EditPasswordActivity.class);
-            editPasswordIntent.putExtra("Title", passwordList.get(position).getTitle());
-            editPasswordIntent.putExtra("Website", passwordList.get(position).getWebsite());
-            editPasswordIntent.putExtra("Activity Title", getResources().getString(R.string.title_activity_edit_password));
-            startActivity(editPasswordIntent);
-        }
+    @Override
+    public void onPasswordClick ( int position){
+        passwordList.get(position);
+        Intent editPasswordIntent = new Intent(getApplicationContext(), EditPasswordActivity.class);
+        editPasswordIntent.putExtra("Title", passwordList.get(position).getTitle());
+        editPasswordIntent.putExtra("Website", passwordList.get(position).getWebsite());
+        editPasswordIntent.putExtra("Activity Title", getResources().getString(R.string.title_activity_edit_password));
+        startActivity(editPasswordIntent);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -161,3 +161,5 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
     }
 
 }
+
+

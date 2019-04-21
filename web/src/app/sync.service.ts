@@ -23,14 +23,9 @@ export class SyncService {
   // api = 'https://keyper.pro/site';
   api = 'http://127.0.0.1:5000/api/';
   key: Uint8Array;
-  iv = [ 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36 ];
 
   constructor(private http: HttpClient, private snackBar: MatSnackBar, @Inject(SESSION_STORAGE) private storage: WebStorageService) {
-    this.setKey(this.storage.get('key'));
-  }
-
-  setKey(key: string) {
-    this.key = aes.utils.hex.toBytes(key);
+    this.key = aes.utils.hex.toBytes(this.storage.get('key'));
   }
 
   getEntries(): Observable<PasswordEntry[]> {
@@ -75,6 +70,8 @@ export class SyncService {
   }
 
   logout() {
+    this.storage.remove('username');
+    this.storage.remove('key');
     return this.http.get(this.api + 'logout',
     {
       headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded'),
