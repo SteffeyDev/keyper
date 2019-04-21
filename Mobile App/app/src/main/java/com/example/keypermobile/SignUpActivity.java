@@ -100,5 +100,6 @@ public class SignUpActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
         intent.putExtra("totpUri", totpUri);
         startActivity(intent);
+        finish();
     }
 }
