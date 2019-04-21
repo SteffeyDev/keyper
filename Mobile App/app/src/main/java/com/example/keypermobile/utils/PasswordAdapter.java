@@ -47,8 +47,8 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
 
     public PasswordAdapter(Context mCtx, List<Site> passwordList, OnPasswordClickListener onPasswordClickListener) {
         this.mCtx = mCtx;
-        this.passwordList = passwordList;
-        passwordListFull = new ArrayList<>(passwordList);
+        this.passwordList = new ArrayList<>(passwordList);
+        passwordListFull = passwordList;
         this.onPasswordClickListener = onPasswordClickListener;
     }
 
@@ -128,14 +128,24 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
             if (constraint == null || constraint.length() == 0)
             {
                 filteredList.addAll(passwordListFull);
-            }else{
+            } else {
                 //keeps searched for string lowercases and trims them
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
                 for(Site password : passwordListFull) {
                     //Searches through all the titles of every password or Searches through all the websites of every password
-                    if(password.getTitle().toLowerCase().contains(filterPattern) || password.getUrl().toLowerCase().contains(filterPattern)){
+                    if(password.getTitle().toLowerCase().contains(filterPattern)
+                            || password.getUrl().toLowerCase().contains(filterPattern)
+                            || password.getUsername().toLowerCase().contains(filterPattern)
+                            || password.getEmail().toLowerCase().contains(filterPattern)) {
                         filteredList.add(password);
+                    } else {
+                        for (String tag : password.getTags()) {
+                            if (tag.toLowerCase().contains(filterPattern)) {
+                                filteredList.add(password);
+                                break;
+                            }
+                        }
                     }
                 }
             }

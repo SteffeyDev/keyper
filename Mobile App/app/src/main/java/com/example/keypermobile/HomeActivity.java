@@ -1,5 +1,7 @@
 package com.example.keypermobile;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -139,23 +142,23 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main,menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        String msg = " ";
-        switch(item.getItemId())
-        {
-            case R.id.setting:
-                msg = "Setting";
-                break;
-            case R.id.logout:
-                msg = "Logout";
-                break;
-        }
-//        Toast.makeText(this, msg + " Checked", Toast.LENGTH_LONG).show();
-        return super.onOptionsItemSelected(item);
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                adapter.getFilter().filter(s);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                adapter.getFilter().filter(s);
+                return false;
+            }
+        });
+
+        return true;
     }
 
     @Override
@@ -187,6 +190,7 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
                             {
                             }
                         }
+                        adapter.getFilter().filter("");
                         adapter.notifyDataSetChanged();
                     }
 
