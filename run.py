@@ -25,13 +25,12 @@ TOTP_SECRET = os.environ.get("TOTP_SECRET")
 if not TOTP_SECRET:
 	raise ValueError("No secret key for TOTP in OS for API")
 
-totp = pyotp.TOTP(TOTP_SECRET)
 skip_TOTP = False
 
 # db = keyper, mongodb://172.0.0.1:27017
-connect('keyper')
+#connect('keyper')
 # test database below. only need line above in prod.
-#connect('keyper', host='mongodb://test:testUser1@ds161104.mlab.com:61104/practice')
+connect('keyper', host='mongodb://test:testUser1@ds161104.mlab.com:61104/practice')
 
 # Encrypted site specific password blobs
 class SiteInfo(EmbeddedDocument):
@@ -42,6 +41,7 @@ class User(Document):
 	username = StringField(max_length=64, required=True)
 	email = EmailField(required=True)
 	password = StringField(required=True)
+  secretKey = BinaryField()
 	sites = ListField(EmbeddedDocumentField(SiteInfo))
 
 	# Necessary properties for User class to work with flask_login
@@ -88,7 +88,9 @@ def insert():
 
 		except DoesNotExist:
 			with switch_collection(User, 'users') as toAdd:
+        newUser.secretKey = pyotp.random_base32();
 				newUser.save(validate=True)
+        totp = pyotp.TOTP(newUser.secretKey)
 				uri = totp.provisioning_uri(request.form['email'], issuer_name ='Kepyer.pro')
 				session['verify'] = newUser.username
 				# totp uri, can be used to generate QR code
@@ -139,19 +141,21 @@ def verifyToken():
 		raise Unauthorized('Please verify username and password.')
 
 	else:
-		if not totp.verify(request.form['token']):
-			raise Unauthorized('Incorrect auth code')
-		else:
-			username = session['verify']
-			with switch_collection(User, 'users') as toGet:
-				try:
-					user = User.objects.get(username__exact = username)
-					login_user(user, remember=True, force=True, duration=datetime.timedelta(days=14))
-					session.pop('verify', None)
-					return 'True'
+		username = session['verify']
+		with switch_collection(User, 'users') as toGet:
+			try:
+				user = User.objects.get(username__exact = username)
 
-				except DoesNotExist:
-					raise BadRequest('Error has occurred. Try again.')
+				totp = pyotp.TOTP(user.secretKey if user.secretKey is not None else TOTP_SECRET)
+				if not totp.verify(request.form['token']):
+					raise Unauthorized('Incorrect auth code')
+
+				login_user(user, remember=True, force=True, duration=datetime.timedelta(days=14))
+				session.pop('verify', None)
+				return 'True'
+
+			except DoesNotExist:
+				raise BadRequest('Error has occurred. Try again.')
 
 
 @app.route('/api/sites', methods=['GET'])
