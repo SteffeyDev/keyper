@@ -25,7 +25,11 @@ export class SyncService {
   key: Uint8Array;
 
   constructor(private http: HttpClient, private snackBar: MatSnackBar, @Inject(SESSION_STORAGE) private storage: WebStorageService) {
-    this.key = aes.utils.hex.toBytes(this.storage.get('key'));
+    if (this.storage.get('key')) {
+      this.key = aes.utils.hex.toBytes(this.storage.get('key'));
+    } else {
+      window.location.href = '/login';
+    }
   }
 
   getEntries(): Observable<PasswordEntry[]> {
