@@ -109,7 +109,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
 
 
         linearLayout = findViewById(R.id.linearLayoutId);
-        
+
         textViewTitle = findViewById(R.id.textViewTitle);
         textViewWebsite = findViewById(R.id.textViewWebsite);
         textViewUsername = findViewById(R.id.textViewUsername);

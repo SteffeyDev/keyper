@@ -53,4 +53,10 @@ public class NetworkUtils {
         }
         return null;
     }
+
+    public static void removeCookies() {
+        if (cookieJar != null)
+            cookieJar.clear();
+
+    }
 }

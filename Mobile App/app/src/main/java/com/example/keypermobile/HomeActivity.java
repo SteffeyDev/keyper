@@ -3,6 +3,7 @@ package com.example.keypermobile;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -200,6 +201,11 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
                 .getAsJSONArray(new JSONArrayRequestListener() {
                     @Override
                     public void onResponse(JSONArray jsonArray) {
+                        SharedPreferences pref = getApplicationContext().getSharedPreferences("keyper", 0);
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.remove("key");
+                        editor.commit();
+                        NetworkUtils.removeCookies();
                         Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
                         startActivityForResult(loginIntent, 0);
                     }
