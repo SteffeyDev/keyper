@@ -47,7 +47,7 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
     private List<Site> passwordListFull;
     private OnPasswordClickListener onPasswordClickListener;
     private Map<String, Bitmap> faviconCache;
-    private String filterText;
+    public String filterText = "";
 
     public PasswordAdapter(Context mCtx, List<Site> passwordList, OnPasswordClickListener onPasswordClickListener) {
         this.mCtx = mCtx;
@@ -77,7 +77,7 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
             holder.textViewTitle.setText(password.getUrl());
         holder.textViewUsername.setText(password.getUsername() != null && password.getUsername().length() > 0 ? password.getUsername() : password.getEmail());
 
-        if (filterText != null && filterText.length() > 0 && siteHasTag(password, filterText)) {
+        if (filterText.length() > 0 && siteHasTag(password, filterText)) {
             String extra = "Matches Tags: ";
             for (String tag : password.getTags()) {
                 if (tag.toLowerCase().contains(filterText)) {
@@ -85,6 +85,9 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
                 }
             }
             holder.textViewExtra.setText(extra);
+            holder.textViewExtra.setVisibility(View.VISIBLE);
+        } else if (filterText.length() > 0 && password.getNotes().toLowerCase().contains(filterText)) {
+            holder.textViewExtra.setText("Matches Notes");
             holder.textViewExtra.setVisibility(View.VISIBLE);
         } else {
             holder.textViewExtra.setVisibility(View.GONE);
@@ -163,15 +166,16 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             List<Site> filteredList = new ArrayList<>();
-            filterText = constraint.toString();
 
             // for when you haven't typed anything in the searchbar it shows the full list
             if (constraint == null || constraint.length() == 0)
             {
                 filteredList.addAll(passwordListFull);
+                filterText = "";
             } else {
                 //keeps searched for string lowercases and trims them
                 String filterPattern = constraint.toString().toLowerCase().trim();
+                filterText = filterPattern;
 
                 for(Site password : passwordListFull) {
                     //Searches through all the titles of every password or Searches through all the websites of every password
@@ -179,6 +183,7 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
                             || password.getUrl().toLowerCase().contains(filterPattern)
                             || password.getUsername().toLowerCase().contains(filterPattern)
                             || password.getEmail().toLowerCase().contains(filterPattern)
+                            || password.getNotes().toLowerCase().contains(filterPattern)
                             || siteHasTag(password, filterPattern)) {
                         filteredList.add(password);
                     }
@@ -223,13 +228,13 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
 
         @Override
         public void onClick(View v) {
-            onPasswordClickListener.onPasswordClick(getAdapterPosition());
+            onPasswordClickListener.onPasswordClick(passwordList.get(getAdapterPosition()));
         }
     }
 
     public interface OnPasswordClickListener
     {
-        void onPasswordClick(int position);
+        void onPasswordClick(Site site);
     }
 
     private Bitmap fetchFavicon(Uri uri) {

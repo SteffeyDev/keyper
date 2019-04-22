@@ -123,10 +123,9 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
     }
 
     @Override
-    public void onPasswordClick ( int position){
-        passwordList.get(position);
+    public void onPasswordClick (Site site){
         Intent editPasswordIntent = new Intent(getApplicationContext(), EditPasswordActivity.class);
-        editPasswordIntent.putExtra("Site", passwordList.get(position).toJson());
+        editPasswordIntent.putExtra("Site", site.toJson());
         editPasswordIntent.putExtra("Activity Title", getResources().getString(R.string.title_activity_edit_password));
         startActivity(editPasswordIntent);
     }
@@ -182,7 +181,7 @@ public class HomeActivity extends AppCompatActivity implements PasswordAdapter.O
                             {
                             }
                         }
-                        adapter.getFilter().filter("");
+                        adapter.getFilter().filter(adapter.filterText);
                         adapter.notifyDataSetChanged();
                     }
 
