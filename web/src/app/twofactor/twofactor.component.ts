@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Inject, Injectable } from '@angular/core';
 import { SESSION_STORAGE, WebStorageService } from 'angular-webstorage-service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { apiUrl } from '../sync.service';
 
 @Component({
   selector: 'app-twofactor',
@@ -16,7 +17,7 @@ export class TwoFactorComponent implements OnInit {
 
   sendAuth(): void {
     // https://Keyper.pro/api/login
-    this.httpClient.post('http://13.59.202.229:5000/api/token', `token=${this.authEntry}`,
+    this.httpClient.post(apiUrl + 'token', `token=${this.authEntry}`,
     {
       headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded'),
       responseType: 'text'

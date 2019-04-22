@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 import { SESSION_STORAGE, WebStorageService } from 'angular-webstorage-service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { sha512 } from 'js-sha512';
+import { apiUrl } from '../sync.service';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,7 @@ export class LoginComponent implements OnInit {
     this.hash = sha512(this.passwordEntry);
 
     // https://Keyper.pro/api/login
-    this.httpClient.post('http://13.59.202.229:5000/api/login', `username=${this.usernameEntry}&password=${this.hash.substring(0, 50)}`,
+    this.httpClient.post(apiUrl + 'login', `username=${this.usernameEntry}&password=${this.hash.substring(0, 50)}`,
     {
       headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
     })

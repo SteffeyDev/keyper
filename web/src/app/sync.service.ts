@@ -16,24 +16,24 @@ function unpad(value) {
   return value.replace(/^x*{/, '{');
 }
 
+export const apiUrl = 'http://127.0.0.1:5000/api/';
+
 @Injectable({
   providedIn: 'root'
 })
 export class SyncService {
-  // api = 'https://keyper.pro/site';
-  api = 'http://13.59.202.229:5000/api/';
   key: Uint8Array;
 
   constructor(private http: HttpClient, private snackBar: MatSnackBar, @Inject(SESSION_STORAGE) private storage: WebStorageService) {
     if (this.storage.get('key')) {
       this.key = aes.utils.hex.toBytes(this.storage.get('key'));
     } else {
-      window.location.href = '/login';
+      // window.location.href = '/login';
     }
   }
 
   getEntries(): Observable<PasswordEntry[]> {
-    return this.http.get<any>(this.api + 'sites')
+    return this.http.get<any>(apiUrl + 'sites')
       .pipe(
         map( data => {
           return data.map(dataEntry => {
@@ -46,7 +46,7 @@ export class SyncService {
         }),
         catchError( error => {
           console.error(error);
-          window.location.href = '/login';
+          // window.location.href = '/login';
           return of([]);
         })
       );
@@ -54,9 +54,9 @@ export class SyncService {
     // temp for logging in
     const headers = new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded'});
     const token = prompt('token');
-    this.http.post(this.api + 'login', `username=test&password=test`, { headers })
+    this.http.post(apiUrl + 'login', `username=test&password=test`, { headers })
       .subscribe(() => {
-        this.http.post(this.api + 'token', `token=${token}`, { headers })
+        this.http.post(apiUrl + 'token', `token=${token}`, { headers })
           .subscribe(() => {
             console.log('token success');
           });
@@ -66,17 +66,17 @@ export class SyncService {
   syncEntry(entry: PasswordEntry) {
     const aesCbc = new aes.ModeOfOperation.cbc(this.key, aes.utils.utf8.toBytes(entry.id));
     const data = new Uint8Array(aesCbc.encrypt(aes.utils.utf8.toBytes(pad(entry.serialize()))));
-    return this.http.post(this.api + 'site/' + entry.id, data.buffer);
+    return this.http.post(apiUrl + 'site/' + entry.id, data.buffer);
   }
 
   deleteEntry(id: string) {
-    return this.http.delete(this.api + 'site/' + id);
+    return this.http.delete(apiUrl + 'site/' + id);
   }
 
   logout() {
     this.storage.remove('username');
     this.storage.remove('key');
-    return this.http.get(this.api + 'logout',
+    return this.http.get(apiUrl + 'logout',
     {
       headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded'),
       responseType: 'text'

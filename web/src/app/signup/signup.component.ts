@@ -5,6 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { sha512 } from 'js-sha512';
 import { catchError, retry } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { apiUrl } from '../sync.service';
 
 @Component({
   selector: 'app-signup',
@@ -27,7 +28,7 @@ export class SignupComponent implements OnInit {
     }
     this.hash = sha512(this.passwordEntry);
 
-    this.httpClient.post('http://13.59.202.229:5000/api/register',
+    this.httpClient.post(apiUrl + 'register',
       `username=${this.usernameEntry}&email=${this.emailEntry}&password=${this.hash.substring(0, 50)}`,
     {
       headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded'),
