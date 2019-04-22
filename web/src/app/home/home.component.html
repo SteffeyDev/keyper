@@ -37,7 +37,7 @@
         </button>
       </div>
       <div fxLayout="row" fxLayoutAlign="space-between center">
-        <app-input fxFlex style="font-family: monospace; font-size: 12pt; word-break: break-all;" [(ngModel)]="password"></app-input>
+        <span fxFlex style="font-family: monospace; font-size: 12pt; word-break: break-all;">{{password}}</span>
         <button
           (click)="generateNewPassword()"
           matTooltip="Generate New Password"

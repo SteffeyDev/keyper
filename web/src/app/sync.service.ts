@@ -28,7 +28,7 @@ export class SyncService {
     if (this.storage.get('key')) {
       this.key = aes.utils.hex.toBytes(this.storage.get('key'));
     } else {
-      // window.location.href = '/login';
+      window.location.href = '/login';
     }
   }
 
@@ -46,7 +46,7 @@ export class SyncService {
         }),
         catchError( error => {
           console.error(error);
-          // window.location.href = '/login';
+          window.location.href = '/login';
           return of([]);
         })
       );
