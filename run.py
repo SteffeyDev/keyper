@@ -28,9 +28,9 @@ if not TOTP_SECRET:
 skip_TOTP = False
 
 # db = keyper, mongodb://172.0.0.1:27017
-#connect('keyper')
+connect('keyper')
 # test database below. only need line above in prod.
-connect('keyper', host='mongodb://test:testUser1@ds161104.mlab.com:61104/practice')
+#connect('keyper', host='mongodb://test:testUser1@ds161104.mlab.com:61104/practice')
 
 # Encrypted site specific password blobs
 class SiteInfo(EmbeddedDocument):
@@ -41,7 +41,7 @@ class User(Document):
 	username = StringField(max_length=64, required=True)
 	email = EmailField(required=True)
 	password = StringField(required=True)
-	secretKey = BinaryField()
+	secretKey = StringField()
 	sites = ListField(EmbeddedDocumentField(SiteInfo))
 
 	# Necessary properties for User class to work with flask_login
