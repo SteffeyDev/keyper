@@ -41,7 +41,7 @@ public class EncryptionUtils {
             throws Exception
     {
         //Get Cipher Instance
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
 
         //Create SecretKeySpec
         SecretKeySpec keySpec = new SecretKeySpec(key.getEncoded(), "AES");
@@ -61,7 +61,7 @@ public class EncryptionUtils {
     public static String Decrypt(byte[] cipherText, SecretKey key,byte[] IV) throws Exception
     {
         //Get Cipher Instance
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
 
         //Create SecretKeySpec
         SecretKeySpec keySpec = new SecretKeySpec(key.getEncoded(), "AES");

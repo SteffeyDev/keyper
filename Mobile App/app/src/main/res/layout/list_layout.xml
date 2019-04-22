@@ -51,6 +51,14 @@
                     android:layout_marginTop="5dp"
                     tools:text="www.google.com"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
+
+                <TextView
+                    android:id="@+id/textViewExtra"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    tools:text="Tags: ..."
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
             </LinearLayout>
 
             <ImageButton
