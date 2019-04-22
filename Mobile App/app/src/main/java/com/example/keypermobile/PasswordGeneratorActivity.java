@@ -172,7 +172,7 @@ public class PasswordGeneratorActivity extends AppCompatActivity implements IPas
         });
 
         // Generate password
-        textViewGeneratedPassword.setText(generatePassword(seekBarLength.getProgress(), getCharacterSet()));
+        textViewGeneratedPassword.setText(generatePassword(seekBarLength.getProgress() + SEEK_BAR_MIN, getCharacterSet()));
     }
 
     // Generate password using the user inputs in this activity
