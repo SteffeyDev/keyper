@@ -40,19 +40,16 @@
                     android:id="@+id/textViewTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/imageView"
-                    android:text="Company's account"
+                    tools:text="Company's account"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                     android:textColor="#000000" />
 
                 <TextView
-                    android:id="@+id/textViewWebsite"
+                    android:id="@+id/textViewUsername"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/textViewTitle"
                     android:layout_marginTop="5dp"
-                    android:layout_toEndOf="@id/imageView"
-                    android:text="www.google.com"
+                    tools:text="www.google.com"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
             </LinearLayout>
 

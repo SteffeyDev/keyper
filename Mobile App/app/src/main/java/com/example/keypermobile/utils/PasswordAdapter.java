@@ -64,8 +64,13 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
     public void onBindViewHolder(@NonNull final PasswordViewHolder holder, int position) {
         final Site password = passwordList.get(position);
 
-        holder.textViewTitle.setText(password.getTitle());
-        holder.textViewWebsite.setText(password.getUrl());
+        if (password.getTitle() != null && password.getTitle().length() > 0 && password.getUrl() != null && password.getUrl().length() > 0)
+            holder.textViewTitle.setText(password.getTitle() + " (" + password.getUrl().substring(0, Math.min(password.getUrl().length() - 1, 10)) + ")");
+        else if (password.getTitle() != null && password.getTitle().length() > 0)
+            holder.textViewTitle.setText(password.getTitle());
+        else
+            holder.textViewTitle.setText(password.getUrl());
+        holder.textViewUsername.setText(password.getUsername() != null && password.getUsername().length() > 0 ? password.getUsername() : password.getEmail());
 
         // Get a handler that can be used to post to the main thread
         final Handler mainHandler = new Handler(mCtx.getMainLooper());
@@ -166,7 +171,7 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
     class PasswordViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView imageView;
-        TextView textViewTitle, textViewWebsite;
+        TextView textViewTitle, textViewUsername;
         ImageButton copyButton;
         Button openSiteButton;
         OnPasswordClickListener onPasswordClickListener;
@@ -177,7 +182,7 @@ public class PasswordAdapter extends RecyclerView.Adapter<PasswordAdapter.Passwo
 
             imageView = itemView.findViewById(R.id.imageView);
             textViewTitle = itemView.findViewById(R.id.textViewTitle);
-            textViewWebsite = itemView.findViewById(R.id.textViewWebsite);
+            textViewUsername = itemView.findViewById(R.id.textViewUsername);
             copyButton = itemView.findViewById(R.id.imageButtonCopy);
             openSiteButton = itemView.findViewById(R.id.openSite);
             this.onPasswordClickListener = onPasswordClickListener;

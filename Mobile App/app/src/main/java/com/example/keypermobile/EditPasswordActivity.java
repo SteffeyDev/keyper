@@ -17,7 +17,9 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -103,8 +105,11 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
 
         final EditPasswordActivity editPasswordActivity = this;
 
-        linearLayout = findViewById(R.id.linearLayoutId);
+        setupUI(findViewById(R.id.parent));
 
+
+        linearLayout = findViewById(R.id.linearLayoutId);
+        
         textViewTitle = findViewById(R.id.textViewTitle);
         textViewWebsite = findViewById(R.id.textViewWebsite);
         textViewUsername = findViewById(R.id.textViewUsername);
@@ -117,14 +122,6 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
         // hide keyboard when clicked off editTextTitle
         editTextTitle = findViewById(R.id.editTextTitle);
         editTextTitle.setText(site.getTitle());
-        editTextTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    hideKeyboard(v);
-                }
-            }
-        });
 
         // hide keyboard when clicked off editTextWebsite
         editTextWebsite = findViewById(R.id.editTextWebsite);
@@ -133,9 +130,8 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    hideKeyboard(v);
-                if (!isValidUrl(editTextWebsite.getText().toString()))
-                    editTextWebsite.setError("Please enter a valid URL.");
+                    if (!isValidUrl(editTextWebsite.getText().toString()))
+                        editTextWebsite.setError("Please enter a valid URL.");
                 }
             }
         });
@@ -147,9 +143,8 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    hideKeyboard(v);
-                if (!isValidEmail(editTextEmail.getText().toString()))
-                    editTextEmail.setError("Please enter a valid email address.");
+                    if (!isValidEmail(editTextEmail.getText().toString()))
+                        editTextEmail.setError("Please enter a valid email address.");
                 }
             }
         });
@@ -157,49 +152,17 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
         // hide keyboard when clicked off editTextUsername
         editTextUsername = findViewById(R.id.editTextUsername);
         editTextUsername.setText(site.getUsername());
-        editTextUsername.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    hideKeyboard(v);
-                }
-            }
-        });
 
         // hide keyboard when clicked off editTextPassword
         editTextPasswordField = findViewById(R.id.editTextPasswordField);
         editTextPasswordField.setText(site.getPassword());
-        editTextPasswordField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    hideKeyboard(v);
-                }
-            }
-        });
 
         // hide keyboard when clicked off editTextCreateTag
         editTextCreateTags = findViewById(R.id.editTextCreateTag);
-        editTextCreateTags.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    hideKeyboard(v);
-                }
-            }
-        });
 
         // hide keyboard when clicked off editTextNotes
         editTextNotes = findViewById(R.id.editTextNotes);
         editTextNotes.setText(site.getNotes().toString());
-        editTextNotes.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    hideKeyboard(v);
-                }
-            }
-        });
 
         buttonSignIn = findViewById(R.id.buttonSignIn);
         buttonSignIn.setOnClickListener(new View.OnClickListener() {
@@ -453,9 +416,33 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
     }
 
     // Hide the keyboard, used when user clicks away from editing text
-    public void hideKeyboard(View view) {
-        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(EditPasswordActivity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(
+                activity.getCurrentFocus().getWindowToken(), 0);
+    }
+
+    public void setupUI(View view) {
+
+        // Set up touch listener for non-text box views to hide keyboard.
+        if (!(view instanceof EditText)) {
+            view.setOnTouchListener(new View.OnTouchListener() {
+                public boolean onTouch(View v, MotionEvent event) {
+                    hideSoftKeyboard(EditPasswordActivity.this);
+                    return false;
+                }
+            });
+        }
+
+        //If a layout container, iterate over children and seed recursion.
+        if (view instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                View innerView = ((ViewGroup) view).getChildAt(i);
+                setupUI(innerView);
+            }
+        }
     }
 
     // Used to generate random colors for tag buttons
