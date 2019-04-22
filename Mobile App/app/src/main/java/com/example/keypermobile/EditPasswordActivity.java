@@ -99,7 +99,9 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
 
         textViewToolBarText = findViewById(R.id.toolbar_text);
         getIntent().getExtras().getString("Activity Title");
-            textViewToolBarText.setText(getIntent().getExtras().getString("Activity Title"));
+        textViewToolBarText.setText(getIntent().getExtras().getString("Activity Title"));
+
+        final EditPasswordActivity editPasswordActivity = this;
 
         linearLayout = findViewById(R.id.linearLayoutId);
 
@@ -222,7 +224,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
                 // Get user confirmation before deleting site
                 new AlertDialog.Builder(v.getContext())
                         .setTitle("Delete Item")
-                        .setMessage("Are you sure want to delete this item? This action cannot be undone.")
+                        .setMessage("Are you sure want to delete this site? This action cannot be undone.")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -239,8 +241,8 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
 
                                 final Intent closePasswordIntent = new Intent();
 
-                                NetworkUtils.injectCookies(AndroidNetworking.delete(NetworkUtils.getApiUrl(getApplicationContext()) + "site/" + site.getId()),
-                                        getApplicationContext())
+                                NetworkUtils.injectCookies(AndroidNetworking.delete(NetworkUtils.getApiUrl(editPasswordActivity) + "site/" + site.getId()),
+                                        editPasswordActivity)
                                         .build()
                                         .getAsJSONObject(new JSONObjectRequestListener() {
                                             @Override
@@ -255,7 +257,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
                                             @Override
                                             public void onError(ANError anError) {
                                                 Log.e("Keyper Networking Error", anError.getErrorDetail());
-                                                (new AlertDialog.Builder(getApplicationContext())).setTitle("Deletion failed").setMessage("Password could not be deleted").show();
+                                                (new AlertDialog.Builder(editPasswordActivity)).setTitle("Deletion failed").setMessage("Password could not be deleted").show();
                                             }
                                         });
                             }})
@@ -288,8 +290,8 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
 
                 final Intent savePasswordIntent = new Intent();
 
-                NetworkUtils.injectCookies(AndroidNetworking.post(NetworkUtils.getApiUrl(getApplicationContext()) + "site/" + site.getId())
-                        .addByteBody(EncryptionUtils.EncryptSite(site, getApplicationContext())), getApplicationContext())
+                NetworkUtils.injectCookies(AndroidNetworking.post(NetworkUtils.getApiUrl(editPasswordActivity) + "site/" + site.getId())
+                        .addByteBody(EncryptionUtils.EncryptSite(site, editPasswordActivity)), editPasswordActivity)
                         .build()
                         .getAsJSONObject(new JSONObjectRequestListener() {
                             @Override
@@ -304,7 +306,7 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
                             @Override
                             public void onError(ANError anError) {
                                 Log.e("Keyper Networking Error", anError.getErrorDetail());
-                                (new AlertDialog.Builder(getApplicationContext())).setTitle("Invalid Password entry").setMessage("Please double checked you entered valid information").show();
+                                (new AlertDialog.Builder(editPasswordActivity)).setTitle("Invalid Password entry").setMessage("Please double checked you entered valid information").show();
                             }
                         });
             }
@@ -315,8 +317,25 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
             @Override
             public void onClick(View v) {
                 // use default values for password generator to gen password
-                String genPassword = generatePassword(DEFAULT_PASSWORD_LENGTH, ALL_CHARACTERS);
-                editTextPasswordField.setText(genPassword);
+                final String genPassword = generatePassword(DEFAULT_PASSWORD_LENGTH, ALL_CHARACTERS);
+
+                if (site.getPassword().length() > 0) {
+                    new AlertDialog.Builder(editPasswordActivity)
+                            .setTitle("Overwrite password")
+                            .setMessage("Do you really want to overwrite the current password with a new, random one?")
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    site.setPassword("");
+                                    editTextPasswordField.setText(genPassword);
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, null).show();
+                } else {
+                    editTextPasswordField.setText(genPassword);
+                }
             }
         });
 
@@ -349,14 +368,14 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
                 public void onClick(View v) {
                     // Get user confirmation before deleting tag
                     new AlertDialog.Builder(v.getContext())
-                            .setTitle("Delete Tag")
-                            .setMessage("Are you sure want to delete this tag?")
+                            .setTitle("Remove Tag")
+                            .setMessage("Are you sure want to remove the tag '" + tag + "'?")
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     linearLayout.removeView(buttonTag);
                                     site.tags.remove(tag);
-                                    Toast.makeText(getApplicationContext(), "Tag Deleted", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(editPasswordActivity, "Tag Removed", Toast.LENGTH_SHORT).show();
                                 }})
                             .setNegativeButton(android.R.string.no, null).show();
                 }
@@ -390,21 +409,21 @@ public class EditPasswordActivity extends AppCompatActivity implements IPassword
                         public void onClick(View v) {
                         // Get user confirmation before deleting tag
                         new AlertDialog.Builder(v.getContext())
-                                .setTitle("Delete Tag")
-                                .setMessage("Are you sure want to delete this tag?")
+                                .setTitle("Remove Tag")
+                                .setMessage("Are you sure want to remove the tag '" + tag + "'?")
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         linearLayout.removeView(buttonTag);
                                         site.tags.remove(tag);
-                                        Toast.makeText(getApplicationContext(), "Tag Deleted", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(editPasswordActivity, "Tag Removed", Toast.LENGTH_SHORT).show();
                                     }})
                                 .setNegativeButton(android.R.string.no, null).show();
                         }
                     });
                 }
                 else
-                    Toast.makeText(getApplicationContext(), "Enter text to add a tag", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(editPasswordActivity, "Enter text to add a tag", Toast.LENGTH_SHORT).show();
             }
         });
     }

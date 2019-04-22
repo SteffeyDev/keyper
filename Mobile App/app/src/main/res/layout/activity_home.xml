@@ -59,7 +59,8 @@
         android:layout_gravity="bottom|end"
         android:clickable="true"
         android:focusable="true"
-        app:tint="@android:color/background_light"
+        app:backgroundTint="@color/colorAccent"
+        android:tint="@android:color/black"
         app:srcCompat="@android:drawable/ic_input_add" />
 
 </android.support.design.widget.CoordinatorLayout>
