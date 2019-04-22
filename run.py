@@ -88,9 +88,9 @@ def insert():
 
 		except DoesNotExist:
 			with switch_collection(User, 'users') as toAdd:
-        newUser.secretKey = pyotp.random_base32();
+				newUser.secretKey = pyotp.random_base32();
 				newUser.save(validate=True)
-        totp = pyotp.TOTP(newUser.secretKey)
+				totp = pyotp.TOTP(newUser.secretKey)
 				uri = totp.provisioning_uri(request.form['email'], issuer_name ='Kepyer.pro')
 				session['verify'] = newUser.username
 				# totp uri, can be used to generate QR code
