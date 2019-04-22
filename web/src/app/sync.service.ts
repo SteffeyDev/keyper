@@ -16,7 +16,7 @@ function unpad(value) {
   return value.replace(/^x*{/, '{');
 }
 
-export const apiUrl = 'http://127.0.0.1:5000/api/';
+export const apiUrl = 'https://keyper.pro/api/';
 
 @Injectable({
   providedIn: 'root'
