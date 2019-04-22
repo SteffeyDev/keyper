@@ -41,7 +41,7 @@ class User(Document):
 	username = StringField(max_length=64, required=True)
 	email = EmailField(required=True)
 	password = StringField(required=True)
-  secretKey = BinaryField()
+	secretKey = BinaryField()
 	sites = ListField(EmbeddedDocumentField(SiteInfo))
 
 	# Necessary properties for User class to work with flask_login
