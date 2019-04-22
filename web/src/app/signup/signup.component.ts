@@ -27,7 +27,7 @@ export class SignupComponent implements OnInit {
     }
     this.hash = sha512(this.passwordEntry);
 
-    this.httpClient.post('http://127.0.0.1:5000/api/register',
+    this.httpClient.post('http://13.59.202.229:5000/api/register',
       `username=${this.usernameEntry}&email=${this.emailEntry}&password=${this.hash.substring(0, 50)}`,
     {
       headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded'),

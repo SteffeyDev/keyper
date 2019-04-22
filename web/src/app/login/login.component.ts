@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
     this.hash = sha512(this.passwordEntry);
 
     // https://Keyper.pro/api/login
-    this.httpClient.post('http://127.0.0.1:5000/api/login', `username=${this.usernameEntry}&password=${this.hash.substring(0, 50)}`,
+    this.httpClient.post('http://13.59.202.229:5000/api/login', `username=${this.usernameEntry}&password=${this.hash.substring(0, 50)}`,
     {
       headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
     })

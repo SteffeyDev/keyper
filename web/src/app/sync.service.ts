@@ -21,7 +21,7 @@ function unpad(value) {
 })
 export class SyncService {
   // api = 'https://keyper.pro/site';
-  api = 'http://127.0.0.1:5000/api/';
+  api = 'http://13.59.202.229:5000/api/';
   key: Uint8Array;
 
   constructor(private http: HttpClient, private snackBar: MatSnackBar, @Inject(SESSION_STORAGE) private storage: WebStorageService) {

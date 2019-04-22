@@ -16,7 +16,7 @@ export class TwoFactorComponent implements OnInit {
 
   sendAuth(): void {
     // https://Keyper.pro/api/login
-    this.httpClient.post('http://127.0.0.1:5000/api/token', `token=${this.authEntry}`,
+    this.httpClient.post('http://13.59.202.229:5000/api/token', `token=${this.authEntry}`,
     {
       headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded'),
       responseType: 'text'
